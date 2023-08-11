@@ -1,18 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import clsx from "clsx"
 import { Link } from "@nextui-org/link"
 import { usePathname } from "next/navigation"
-import clsx from "clsx"
 
 type NavbarLinkProps = {
   text?: string
   href: string
-  icon?: React.ReactNode
+  icon: React.ReactNode
+  filledIcon?: React.ReactNode
 }
-const NavbarLink = ({ text, href, icon }: NavbarLinkProps) => {
+const NavbarLink = ({ text, href, icon, filledIcon }: NavbarLinkProps) => {
   const pathname = usePathname()
-  const [selected] = useState(pathname.split("/").includes(href))
+  const selectedLink = pathname.split("/").includes(href)
 
   return (
     <Link
@@ -22,10 +22,10 @@ const NavbarLink = ({ text, href, icon }: NavbarLinkProps) => {
       disableAnimation={false}
       className={clsx(
         "text-white text-xl hover:bg-slate-500 transition rounded-full flex gap-2 items-center w-fit px-2 justify-center text-center",
-        selected && "font-black"
+        selectedLink && "font-black"
       )}
     >
-      <span className='mr-3'>{icon}</span>
+      <span className='mr-3'>{selectedLink ? filledIcon : icon}</span>
       {text}
     </Link>
   )

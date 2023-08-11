@@ -17,7 +17,7 @@ const LoginModal = () => {
     </Button>
   )
 
-  const headerContent = <Logo height='h-6 mx-auto' />
+  const headerContent = <Logo className='h-6 mx-auto fill-white' />
 
   const bodyContent = (
     <>

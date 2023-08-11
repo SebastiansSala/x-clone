@@ -8,7 +8,7 @@ export default function Login() {
     <div className='bg-black'>
       <main className='container mx-auto min-h-screen grid md:grid-cols-2 place-content-center'>
         <section className='h-full'>
-          <Logo height='lg:max-h-unit-7xl' />
+          <Logo className='lg:max-h-unit-7xl fill-white' fill='currentColor' />
         </section>
         <section>
           <div>
@@ -45,7 +45,6 @@ export default function Login() {
           </div>
         </section>
       </main>
-      <footer></footer>
     </div>
   )
 }
