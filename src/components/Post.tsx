@@ -3,7 +3,7 @@ import React from "react"
 
 const Post = () => {
   return (
-    <li className='grid grid-cols-12 border-t-1 border-gray-600 p-4'>
+    <li className='grid grid-cols-12 border-t-1 border-[#2f3336] p-4'>
       <Avatar className='col-span-1' />
       <div className='col-span-11'>
         <div>

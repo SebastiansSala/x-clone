@@ -15,6 +15,7 @@ import {
   NotificationsFilledIcon,
 } from "@/components/Icons/NavbarIcons"
 import Logo from "@/components/Icons/Logo"
+import PostModal from "./PostModal"
 
 const AsideNav = () => {
   return (
@@ -58,6 +59,8 @@ const AsideNav = () => {
         icon={<ProfileIcon className='h-8' />}
         filledIcon={<ProfileFilledIcon className='h-8 fill-white' />}
       />
+
+      <PostModal />
       <div className='absolute bottom-0 color-white'>
         <span className='text-white'>Oliwis</span>
       </div>

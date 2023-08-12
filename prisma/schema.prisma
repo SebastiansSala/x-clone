@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["public", "auth"]
+}
+
+model User {
+  id               String     @id @default(cuid())
+  username         String
+  screen_name      String
+  email            String
+  avatar           String
+  location         String
+  url              String
+  description      String
+  followersCount   Int
+  listedCount      Int
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime
+  followers        User[]     @relation("UserFollow")
+  following        User[]     @relation("UserFollow")
+  likedPosts       Post[]     @relation("PostLikeBy")
+  posts            Post[]
+  retweets         Retweet[]  @relation("PostRetweetedBy")
+  likedComments    Comment[]  @relation("CommentsLikedBy")
+  comments         Comment[]
+  recievedMessages Messages[] @relation("RecievedMessage")
+  sentMessages     Messages[] @relation("SentMessage")
+
+  @@unique([username, email])
+  @@map("users")
+  @@schema("public")
+}
+
+model Messages {
+  id          String   @id @default(cuid())
+  text        String
+  image       String?
+  sender      User     @relation("SentMessage", fields: [senderId], references: [id])
+  senderId    String
+  recipient   User     @relation("RecievedMessage", fields: [recipientId], references: [id])
+  recipientId String
+  createdAt   DateTime @default(now())
+
+  @@map("messages")
+  @@schema("auth")
+}
+
+model Post {
+  id             String    @id @default(cuid())
+  name           String
+  text           String
+  author         User?     @relation(fields: [authorId], references: [id])
+  authorId       String?
+  retweets       Retweet[] @relation("RetweetedPost")
+  retweets_count Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  likes          User[]    @relation("PostLikeBy")
+  likes_count    Int       @default(0)
+  comments       Comment[] @relation("PostComment")
+
+  @@map("posts")
+  @@schema("public")
+}
+
+model Comment {
+  id          String  @id @default(cuid())
+  createdAt   String
+  updatedAt   String
+  likes       User[]  @relation("CommentsLikedBy")
+  likes_count Int     @default(0)
+  post        Post?   @relation("PostComment", fields: [postId], references: [id])
+  postId      String?
+  author      User    @relation(fields: [authorId], references: [id])
+  authorId    String
+
+  @@map("comments")
+  @@schema("public")
+}
+
+model Retweet {
+  id         String  @id @default(cuid())
+  created_at String
+  text       String
+  author     User    @relation("PostRetweetedBy", fields: [authorId], references: [id])
+  authorId   String
+  post       Post?   @relation("RetweetedPost", fields: [postId], references: [id])
+  postId     String?
+
+  @@map("retweets")
+  @@schema("public")
+}
