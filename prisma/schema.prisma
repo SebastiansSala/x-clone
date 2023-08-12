@@ -2,15 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  schemas   = ["public", "auth"]
 }
 
 model User {
@@ -38,7 +36,6 @@ model User {
 
   @@unique([username, email])
   @@map("users")
-  @@schema("public")
 }
 
 model Messages {
@@ -52,7 +49,6 @@ model Messages {
   createdAt   DateTime @default(now())
 
   @@map("messages")
-  @@schema("auth")
 }
 
 model Post {
@@ -70,7 +66,6 @@ model Post {
   comments       Comment[] @relation("PostComment")
 
   @@map("posts")
-  @@schema("public")
 }
 
 model Comment {
@@ -85,7 +80,6 @@ model Comment {
   authorId    String
 
   @@map("comments")
-  @@schema("public")
 }
 
 model Retweet {
@@ -98,5 +92,4 @@ model Retweet {
   postId     String?
 
   @@map("retweets")
-  @@schema("public")
 }
