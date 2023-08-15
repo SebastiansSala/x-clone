@@ -59,6 +59,7 @@ const LoginModal = () => {
       headerContent={headerContent}
       bodyContent={bodyContent}
       footerContent={footerContent}
+      backdrop='blur'
       size='lg'
     />
   )

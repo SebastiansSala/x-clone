@@ -60,10 +60,11 @@ model Post {
   retweets       Retweet[] @relation("RetweetedPost")
   retweets_count Int       @default(0)
   createdAt      DateTime  @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime?
   likes          User[]    @relation("PostLikeBy")
   likes_count    Int       @default(0)
   comments       Comment[] @relation("PostComment")
+  publicVisible  Boolean   @default(true)
 
   @@map("posts")
 }

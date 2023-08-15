@@ -1,9 +1,9 @@
-import Logo from "@/components/Icons/Logo"
 import Link from "next/link"
+import Logo from "@/components/Icons/Logo"
 import { Divider } from "@nextui-org/divider"
 import LoginModal from "@/components/LoginModal"
 
-export default function Login() {
+export default function SignIn() {
   return (
     <div className='bg-black'>
       <main className='container mx-auto min-h-screen grid md:grid-cols-2 place-content-center'>

@@ -1,0 +1,1 @@
+export const MAX_NUMBER_OF_IMAGES_ON_POSTS = 4

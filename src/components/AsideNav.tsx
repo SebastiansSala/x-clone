@@ -15,7 +15,7 @@ import {
   NotificationsFilledIcon,
 } from "@/components/Icons/NavbarIcons"
 import Logo from "@/components/Icons/Logo"
-import PostModal from "./PostModal"
+import PostModal from "./PostModal/PostModal"
 
 const AsideNav = () => {
   return (

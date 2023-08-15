@@ -15,6 +15,7 @@ type ModalProps = {
   footerContent?: React.ReactNode
   isOpen: boolean
   onClose: () => void
+  backdrop: "transparent" | "opaque" | "blur"
   size:
     | "xs"
     | "sm"
@@ -36,6 +37,7 @@ const CustomModal = ({
   bodyContent,
   footerContent,
   size,
+  backdrop,
 }: ModalProps) => {
   return (
     <>
@@ -44,8 +46,8 @@ const CustomModal = ({
         size={size}
         isOpen={isOpen}
         onClose={onClose}
-        className='bg-black text-white border-white border'
-        backdrop='transparent'
+        className='bg-black text-white'
+        backdrop={backdrop}
       >
         <ModalContent>
           <ModalHeader>{headerContent}</ModalHeader>
