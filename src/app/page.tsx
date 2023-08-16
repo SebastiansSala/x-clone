@@ -1,9 +1,15 @@
-import Link from "next/link"
-import Logo from "@/components/Icons/Logo"
-import { Divider } from "@nextui-org/divider"
+import { checkSessionServer } from "@/utils/supabase-server"
 import LoginModal from "@/components/LoginModal"
+import Logo from "@/components/Icons/Logo"
+import { redirect } from "next/navigation"
 
-export default function SignIn() {
+export default async function Page() {
+  const session = await checkSessionServer()
+
+  if (session) {
+    redirect("/home")
+  }
+
   return (
     <div className='bg-black'>
       <main className='container mx-auto min-h-screen grid md:grid-cols-2 place-content-center'>
@@ -24,18 +30,6 @@ export default function SignIn() {
             <button className='bg-white w-full max-w-xl py-2 rounded-full text-center font-bold'>
               Sign up with Apple
             </button>
-          </div>
-          <Divider className='bg-gray-600 w-72 mt-8' />
-          <div className='w-72 mt-8'>
-            <button className='py-2 rounded-full w-full max-w-xl bg-[#1d9bf0] text-center text-white'>
-              Create Account
-            </button>
-            <p className='text-gray-600 text-xs mt-2'>
-              By signing up, you agree to the{" "}
-              <Link href={"/terms"}>Terms of Service</Link> and{" "}
-              <Link href={"/terms"}>Privacy Policy</Link>, including{" "}
-              <Link href={"/terms"}>Cookie Use.</Link>
-            </p>
           </div>
           <div className='mt-20 w-72'>
             <p className='text-white text font-bold'>

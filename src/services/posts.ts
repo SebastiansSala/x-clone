@@ -1,9 +1,16 @@
 import { PostImage } from "@/types/posts"
-import prisma from "@/lib/prisma"
+import prisma from "@/utils/prisma"
 
 export const getPosts = async () => {
   try {
-    const posts = await prisma.post.findMany()
+    const posts = await prisma.post.findMany({
+      include: {
+        author: true,
+        likes: true,
+        retweets: true,
+        comments: true,
+      },
+    })
     return posts
   } catch (e) {
     console.error(e)

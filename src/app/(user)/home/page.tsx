@@ -1,7 +1,17 @@
 import Post from "@/components/Post"
+import prisma from "@/utils/prisma"
 import { Tabs, Tab } from "@nextui-org/tabs"
 
-const Home = () => {
+const Home = async () => {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: true,
+      likes: true,
+      retweets: true,
+      comments: true,
+    },
+  })
+
   return (
     <div className='text-white relative'>
       <section className='p-4 backdrop-blur-sm sticky inset-0 z-50'>
@@ -17,18 +27,9 @@ const Home = () => {
         <div></div>
       </section>
       <ul>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+        {posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
       </ul>
     </div>
   )

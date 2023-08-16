@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
-import { createPrismaPost } from "@/lib/actions"
+import { prisma } from "@/utils/prisma"
+import { createPrismaPost } from "@/utils/actions"
 
 export async function GET() {
   const posts = await prisma.post.findMany()
@@ -14,14 +14,12 @@ export const POST = async (req: Request) => {
 
     const user = await currentUser()
 
-    if (!user) {
+    if (!user || !user.username) {
       return NextResponse.json("Unauthorized", { status: 401 })
     }
 
-    if (user.username) {
-      const post = await createPrismaPost(user.username, user.id, text)
-      return NextResponse.json({ post })
-    }
+    const post = await createPrismaPost(user.username, user.id, text)
+    return NextResponse.json({ post })
   } catch (e) {
     console.error(e)
     return NextResponse.error()

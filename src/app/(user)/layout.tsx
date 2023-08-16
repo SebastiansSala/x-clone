@@ -1,8 +1,9 @@
-import { Input } from "@nextui-org/input"
 import AsideNav from "@/components/AsideNav"
-import MailFilledIcon from "@/components/Icons/MailFilledIcon"
 import { SearchIcon } from "@/components/Icons/NavbarIcons"
 import FollowingCard from "@/components/Card"
+import { Input } from "@nextui-org/input"
+
+import { redirect } from "next/navigation"
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -17,10 +18,12 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
         <aside className='col-span-3 px-10 relative space-y-4'>
           <div className='sticky inset-0 bg-black z-50 py-2'>
             <div className='relative w-full text-[#71767b] fill-transparent focus:fill-[#1d9bf0]'>
-              <SearchIcon className=' fill-inherit h-6 absolute inset-0 left-4 top-2' />
-              <input
-                placeholder='Search'
-                className='outline-none bg-[#2f3336] text-white rounded-full focus:bg-black  placeholder:text-[#71767b] py-2 px-3 pl-12 w-full focus:outline-1 focus:outline-[#1d9bf0]'
+              <Input
+                type='text'
+                placeholder='you@example.com'
+                startContent={
+                  <SearchIcon className=' fill-inherit h-6 absolute inset-0 left-4 top-2' />
+                }
               />
             </div>
           </div>

@@ -55,8 +55,8 @@ model Post {
   id             String    @id @default(cuid())
   name           String
   text           String
-  author         User?     @relation(fields: [authorId], references: [id])
-  authorId       String?
+  author         User      @relation(fields: [authorId], references: [id])
+  authorId       String
   retweets       Retweet[] @relation("RetweetedPost")
   retweets_count Int       @default(0)
   createdAt      DateTime  @default(now())
@@ -70,27 +70,27 @@ model Post {
 }
 
 model Comment {
-  id          String  @id @default(cuid())
+  id          String @id @default(cuid())
   createdAt   String
   updatedAt   String
-  likes       User[]  @relation("CommentsLikedBy")
-  likes_count Int     @default(0)
-  post        Post?   @relation("PostComment", fields: [postId], references: [id])
-  postId      String?
-  author      User    @relation(fields: [authorId], references: [id])
+  likes       User[] @relation("CommentsLikedBy")
+  likes_count Int    @default(0)
+  post        Post   @relation("PostComment", fields: [postId], references: [id])
+  postId      String
+  author      User   @relation(fields: [authorId], references: [id])
   authorId    String
 
   @@map("comments")
 }
 
 model Retweet {
-  id         String  @id @default(cuid())
+  id         String @id @default(cuid())
   created_at String
   text       String
-  author     User    @relation("PostRetweetedBy", fields: [authorId], references: [id])
+  author     User   @relation("PostRetweetedBy", fields: [authorId], references: [id])
   authorId   String
-  post       Post?   @relation("RetweetedPost", fields: [postId], references: [id])
-  postId     String?
+  post       Post   @relation("RetweetedPost", fields: [postId], references: [id])
+  postId     String
 
   @@map("retweets")
 }
