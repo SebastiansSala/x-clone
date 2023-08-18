@@ -12,11 +12,11 @@ datasource db {
 }
 
 model Users {
-  id               String     @id
+  id               String     @id @default(uuid())
   user_name        String
   name             String
-  description      String?
   avatar_url       String
+  description      String?
   followers        Users[]    @relation("UserFollow")
   following        Users[]    @relation("UserFollow")
   likedPosts       Posts[]    @relation("PostLikeBy")
@@ -26,6 +26,8 @@ model Users {
   comments         Comments[]
   recievedMessages Messages[] @relation("RecievedMessage")
   sentMessages     Messages[] @relation("SentMessage")
+
+  @@map("users")
 }
 
 model Messages {
@@ -37,6 +39,8 @@ model Messages {
   recipient   Users    @relation("RecievedMessage", fields: [recipientId], references: [id])
   recipientId String
   createdAt   DateTime @default(now())
+
+  @@map("messages")
 }
 
 model Posts {
@@ -50,6 +54,8 @@ model Posts {
   likes         Users[]    @relation("PostLikeBy")
   comments      Comments[] @relation("PostComment")
   publicVisible Boolean    @default(true)
+
+  @@map("posts")
 }
 
 model Comments {
@@ -61,6 +67,8 @@ model Comments {
   postId    String
   author    Users   @relation(fields: [authorId], references: [id])
   authorId  String
+
+  @@map("comments")
 }
 
 model Retweets {
@@ -71,4 +79,6 @@ model Retweets {
   authorId   String
   post       Posts  @relation("RetweetedPost", fields: [postId], references: [id])
   postId     String
+
+  @@map("retweets")
 }

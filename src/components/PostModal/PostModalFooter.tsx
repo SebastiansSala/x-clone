@@ -1,3 +1,5 @@
+"use client"
+
 import { ImageIcon } from "../Icons/PostActionsIcons"
 import ImageUploading from "react-images-uploading"
 import { Button } from "@nextui-org/button"

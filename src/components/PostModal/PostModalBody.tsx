@@ -1,8 +1,8 @@
+"use client"
+
 import { Avatar } from "@nextui-org/avatar"
 import CustomDropdown from "../CustomDropdown"
 import { Textarea } from "@nextui-org/input"
-import { useUser } from "@clerk/nextjs"
-import { useState } from "react"
 import { Button } from "@nextui-org/button"
 import clsx from "clsx"
 import Image from "next/image"
@@ -27,8 +27,6 @@ const PostModalBody = ({
   selectedOption,
   setSelectedOption,
 }: PostModalBodyProps) => {
-  const { user } = useUser()
-
   const dropDowntrigger = (
     <Button color='primary' variant='light'>
       {selectedOption}
@@ -40,7 +38,7 @@ const PostModalBody = ({
   return (
     <div>
       <div className='grid grid-cols-12 items-center'>
-        <Avatar className='col-span-1' src={user?.imageUrl} />
+        <Avatar className='col-span-1' />
         <div className='col-span-11 px-10 grid bg-black'>
           <CustomDropdown
             trigger={dropDowntrigger}

@@ -26,30 +26,10 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
             </div>
           </div>
           <ul className='bg-[#16181c] text-[#676b70] p-4 rounded-xl space-y-6'>
-            <FollowingCard
-              id='oinarstoarust'
-              avatar='arostenrat'
-              name='pedro'
-              username='pedro'
-            />
-            <FollowingCard
-              id='oinarstoarust'
-              avatar='arostenrat'
-              name='pedro'
-              username='pedro'
-            />
-            <FollowingCard
-              id='oinarstoarust'
-              avatar='arostenrat'
-              name='pedro'
-              username='pedro'
-            />
-            <FollowingCard
-              id='oinarstoarust'
-              avatar='arostenrat'
-              name='pedro'
-              username='pedro'
-            />
+            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
+            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
+            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
+            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
           </ul>
         </aside>
       </div>

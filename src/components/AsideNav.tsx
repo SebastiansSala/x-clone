@@ -63,6 +63,7 @@ const AsideNav = () => {
         filledIcon={<ProfileFilledIcon className='h-8 fill-white' />}
       />
 
+      <PostModal />
       <div className='absolute bottom-0 color-white'>
         <SignOutClientButton />
       </div>
