@@ -1,16 +1,9 @@
 export type User = {
   id: string
-  username: string
-  screen_name: string
-  email: string
-  avatar: string
-  location: string
-  url: string
-  description: string
-  followersCount: number
-  listedCount: number
-  createdAt: Date
-  updatedAt?: Date
+  user_name: string
+  name: string
+  avatar_url: string
+  description: string | null
 }
 
 export type UserWithPosts = User & {
@@ -51,14 +44,13 @@ export type Messages = {
 
 export type Post = {
   id: string
-  name: string
   text: string
   author: User
   authorId: string
-  retweets_count: number
+
   createdAt: Date
   updatedAt: Date | null
-  likes_count: number
+
   publicVisible: boolean
 }
 
@@ -72,6 +64,12 @@ export type PostWithComments = Post & {
 
 export type PostWithRetweets = Post & {
   retweets: Retweet[]
+}
+
+export type PostWithAll = Post & {
+  comments: Comment[]
+  retweets: Retweet[]
+  likes: User[]
 }
 
 export type Comment = {

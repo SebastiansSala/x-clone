@@ -1,9 +1,17 @@
 import Post from "@/components/Post"
 import prisma from "@/utils/prisma"
+import { getServerSession } from "@/utils/supabase-server"
 import { Tabs, Tab } from "@nextui-org/tabs"
+import { redirect } from "next/navigation"
 
 const Home = async () => {
-  const posts = await prisma.post.findMany({
+  const session = await getServerSession()
+
+  if (!session) {
+    redirect("/")
+  }
+
+  const posts = await prisma.posts.findMany({
     include: {
       author: true,
       likes: true,
@@ -27,9 +35,10 @@ const Home = async () => {
         <div></div>
       </section>
       <ul>
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
+        {posts.map((post, index) => (
+          <Post key={index} post={post} />
         ))}
+        {posts.length === 0 && <div className='text-white'>No posts yet</div>}
       </ul>
     </div>
   )

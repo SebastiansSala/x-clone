@@ -11,86 +11,64 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id               String     @id @default(cuid())
-  username         String
-  screen_name      String
-  email            String
-  avatar           String
-  location         String
-  url              String
-  description      String
-  followersCount   Int
-  listedCount      Int
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime
-  followers        User[]     @relation("UserFollow")
-  following        User[]     @relation("UserFollow")
-  likedPosts       Post[]     @relation("PostLikeBy")
-  posts            Post[]
-  retweets         Retweet[]  @relation("PostRetweetedBy")
-  likedComments    Comment[]  @relation("CommentsLikedBy")
-  comments         Comment[]
+model Users {
+  id               String     @id
+  user_name        String
+  name             String
+  description      String?
+  avatar_url       String
+  followers        Users[]    @relation("UserFollow")
+  following        Users[]    @relation("UserFollow")
+  likedPosts       Posts[]    @relation("PostLikeBy")
+  posts            Posts[]
+  retweets         Retweets[] @relation("PostRetweetedBy")
+  likedComments    Comments[] @relation("CommentsLikedBy")
+  comments         Comments[]
   recievedMessages Messages[] @relation("RecievedMessage")
   sentMessages     Messages[] @relation("SentMessage")
-
-  @@unique([username, email])
-  @@map("users")
 }
 
 model Messages {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   text        String
   image       String?
-  sender      User     @relation("SentMessage", fields: [senderId], references: [id])
+  sender      Users    @relation("SentMessage", fields: [senderId], references: [id])
   senderId    String
-  recipient   User     @relation("RecievedMessage", fields: [recipientId], references: [id])
+  recipient   Users    @relation("RecievedMessage", fields: [recipientId], references: [id])
   recipientId String
   createdAt   DateTime @default(now())
-
-  @@map("messages")
 }
 
-model Post {
-  id             String    @id @default(cuid())
-  name           String
-  text           String
-  author         User      @relation(fields: [authorId], references: [id])
-  authorId       String
-  retweets       Retweet[] @relation("RetweetedPost")
-  retweets_count Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime?
-  likes          User[]    @relation("PostLikeBy")
-  likes_count    Int       @default(0)
-  comments       Comment[] @relation("PostComment")
-  publicVisible  Boolean   @default(true)
-
-  @@map("posts")
+model Posts {
+  id            String     @id @default(uuid())
+  text          String
+  author        Users      @relation(fields: [authorId], references: [id])
+  authorId      String
+  retweets      Retweets[] @relation("RetweetedPost")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime?
+  likes         Users[]    @relation("PostLikeBy")
+  comments      Comments[] @relation("PostComment")
+  publicVisible Boolean    @default(true)
 }
 
-model Comment {
-  id          String @id @default(cuid())
-  createdAt   String
-  updatedAt   String
-  likes       User[] @relation("CommentsLikedBy")
-  likes_count Int    @default(0)
-  post        Post   @relation("PostComment", fields: [postId], references: [id])
-  postId      String
-  author      User   @relation(fields: [authorId], references: [id])
-  authorId    String
-
-  @@map("comments")
+model Comments {
+  id        String  @id @default(uuid())
+  createdAt String
+  updatedAt String
+  likes     Users[] @relation("CommentsLikedBy")
+  post      Posts   @relation("PostComment", fields: [postId], references: [id])
+  postId    String
+  author    Users   @relation(fields: [authorId], references: [id])
+  authorId  String
 }
 
-model Retweet {
-  id         String @id @default(cuid())
+model Retweets {
+  id         String @id @default(uuid())
   created_at String
   text       String
-  author     User   @relation("PostRetweetedBy", fields: [authorId], references: [id])
+  author     Users  @relation("PostRetweetedBy", fields: [authorId], references: [id])
   authorId   String
-  post       Post   @relation("RetweetedPost", fields: [postId], references: [id])
+  post       Posts  @relation("RetweetedPost", fields: [postId], references: [id])
   postId     String
-
-  @@map("retweets")
 }

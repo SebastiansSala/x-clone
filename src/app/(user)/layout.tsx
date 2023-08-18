@@ -3,8 +3,6 @@ import { SearchIcon } from "@/components/Icons/NavbarIcons"
 import FollowingCard from "@/components/Card"
 import { Input } from "@nextui-org/input"
 
-import { redirect } from "next/navigation"
-
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='bg-black'>

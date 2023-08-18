@@ -18,6 +18,7 @@ import {
 
 import Logo from "@/components/Icons/Logo"
 import PostModal from "./PostModal/PostModal"
+import SignOutClientButton from "./Buttons/signOut-client-button"
 
 const AsideNav = () => {
   return (
@@ -63,7 +64,7 @@ const AsideNav = () => {
       />
 
       <div className='absolute bottom-0 color-white'>
-        <span className='text-white'>Oliwis</span>
+        <SignOutClientButton />
       </div>
     </nav>
   )

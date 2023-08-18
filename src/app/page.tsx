@@ -1,10 +1,11 @@
-import { checkSessionServer } from "@/utils/supabase-server"
+import { getServerSession } from "@/utils/supabase-server"
 import LoginModal from "@/components/LoginModal"
 import Logo from "@/components/Icons/Logo"
 import { redirect } from "next/navigation"
+import AuthClientButton from "@/components/Buttons/auth-client-button"
 
 export default async function Page() {
-  const session = await checkSessionServer()
+  const session = await getServerSession()
 
   if (session) {
     redirect("/home")
@@ -24,12 +25,7 @@ export default async function Page() {
             <p className='text-white text-3xl font-black'>Join today</p>
           </div>
           <div className='mt-4 grid gap-y-3 w-72'>
-            <button className='bg-white w-full max-w-xl py-2 rounded-full text-center'>
-              Sign up with Google
-            </button>
-            <button className='bg-white w-full max-w-xl py-2 rounded-full text-center font-bold'>
-              Sign up with Apple
-            </button>
+            <AuthClientButton />
           </div>
           <div className='mt-20 w-72'>
             <p className='text-white text font-bold'>

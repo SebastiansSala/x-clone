@@ -10,7 +10,7 @@ type FollowingCardProps = {
 
 const FollowingCard = ({ id, name, username, avatar }: FollowingCardProps) => {
   return (
-    <li key={id} className='flex justify-between items-center'>
+    <li className='flex justify-between items-center'>
       <div className='flex gap-4 items-center'>
         <Avatar />
         <div>
