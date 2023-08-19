@@ -1,5 +1,5 @@
+import { getPostsSortedByDate } from "@/actions/posts"
 import Post from "@/components/Post"
-import prisma from "@/utils/prisma"
 import { getServerSession } from "@/utils/supabase-server"
 import { Tabs, Tab } from "@nextui-org/tabs"
 import { redirect } from "next/navigation"
@@ -11,14 +11,7 @@ const Home = async () => {
     redirect("/")
   }
 
-  const posts = await prisma.posts.findMany({
-    include: {
-      author: true,
-      likes: true,
-      retweets: true,
-      comments: true,
-    },
-  })
+  const posts = await getPostsSortedByDate()
 
   return (
     <div className='text-white relative'>

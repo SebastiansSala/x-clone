@@ -1,12 +1,13 @@
 import { PostImage } from "@/types/posts"
+import type { ImageListType } from "react-images-uploading"
 
 export const createPost = async (
   text: string,
   selectedOption: string,
-  images?: PostImage[]
+  images?: ImageListType[]
 ) => {
   try {
-    const res = await fetch("https://localhost:3000/api/posts", {
+    const res = await fetch("http://localhost:3000/api/posts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

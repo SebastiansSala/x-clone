@@ -33,7 +33,7 @@ model Users {
 model Messages {
   id          String   @id @default(uuid())
   text        String
-  image       String?
+  images      Images[]
   sender      Users    @relation("SentMessage", fields: [senderId], references: [id])
   senderId    String
   recipient   Users    @relation("RecievedMessage", fields: [recipientId], references: [id])
@@ -50,12 +50,27 @@ model Posts {
   authorId      String
   retweets      Retweets[] @relation("RetweetedPost")
   createdAt     DateTime   @default(now())
+  images        Images[]
   updatedAt     DateTime?
   likes         Users[]    @relation("PostLikeBy")
   comments      Comments[] @relation("PostComment")
   publicVisible Boolean    @default(true)
 
   @@map("posts")
+}
+
+model Images {
+  id        String    @id @default(uuid())
+  createdAt String
+  url       String
+  post      Posts?    @relation(fields: [postId], references: [id])
+  postId    String?
+  message   Messages? @relation(fields: [messageId], references: [id])
+  messageId String?
+  comment   Comments? @relation(fields: [commentId], references: [id])
+  commentId String?   @unique
+
+  @@map("images")
 }
 
 model Comments {
@@ -67,6 +82,7 @@ model Comments {
   postId    String
   author    Users   @relation(fields: [authorId], references: [id])
   authorId  String
+  image     Images?
 
   @@map("comments")
 }

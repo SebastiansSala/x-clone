@@ -12,19 +12,19 @@ import { useState } from "react"
 import PostModalBody from "./PostModalBody"
 import PostModalFooter from "./PostModalFooter"
 import { createPost } from "@/services/posts"
-import { PostImage } from "@/types/posts"
+import type { ImageListType } from "react-images-uploading"
 
 const PostModal = () => {
-  const [images, setImages] = useState<PostImage[]>([])
+  const [images, setImages] = useState([])
   const [textarea, setTextarea] = useState("")
   const [selectedOption, setSelectedOption] = useState("Everyone")
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleImageUpload = (
-    imagesList: PostImage[],
-    addUpdatedIndex: number
+    imagesList: ImageListType,
+    addUpdatedIndex: number[] | undefined
   ) => {
-    setImages(imagesList)
+    setImages(imagesList as never[])
   }
 
   const removeImage = (index: number) => {

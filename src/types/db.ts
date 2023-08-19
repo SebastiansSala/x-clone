@@ -47,10 +47,8 @@ export type Post = {
   text: string
   author: User
   authorId: string
-
   createdAt: Date
   updatedAt: Date | null
-
   publicVisible: boolean
 }
 

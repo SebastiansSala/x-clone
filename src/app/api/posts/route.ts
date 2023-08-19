@@ -1,24 +1,29 @@
-import { currentUser } from "@clerk/nextjs"
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/utils/prisma"
-import { createPrismaPost } from "@/utils/actions"
+import { createPrismaPost } from "@/actions/posts"
+import { getServerSession } from "@/utils/supabase-server"
 
 export async function GET() {
-  const posts = await prisma.post.findMany()
+  const posts = await prisma.posts.findMany()
   return NextResponse.json({ posts })
 }
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => {
   try {
     const { text, images, selectedOption } = await req.json()
 
-    const user = await currentUser()
+    const session = await getServerSession()
 
-    if (!user || !user.username) {
+    if (!session?.user) {
       return NextResponse.json("Unauthorized", { status: 401 })
     }
 
-    const post = await createPrismaPost(user.username, user.id, text)
+    const userId = session?.user.id
+
+    const publicVisible = selectedOption === "Everyone" ? true : false
+
+    console.log(userId, text, images, publicVisible)
+    const post = await createPrismaPost(userId, text, publicVisible, images)
     return NextResponse.json({ post })
   } catch (e) {
     console.error(e)

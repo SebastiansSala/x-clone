@@ -1,14 +1,17 @@
 "use client"
 
 import { ImageIcon } from "../Icons/PostActionsIcons"
-import ImageUploading from "react-images-uploading"
+import ImageUploading, { ImageListType } from "react-images-uploading"
 import { Button } from "@nextui-org/button"
 import { MAX_NUMBER_OF_IMAGES_ON_POSTS } from "@/const/posts"
 import { PostImage } from "@/types/posts"
 
 type PostModalFooterProps = {
   images: PostImage[]
-  handleImageUpload: (imagesList: PostImage[], addUpdatedIndex: number) => void
+  handleImageUpload: (
+    imagesList: ImageListType,
+    addUpdatedIndex: number[] | undefined
+  ) => void
   handleSubmit: () => void
 }
 
