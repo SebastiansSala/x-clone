@@ -1,5 +1,5 @@
 import { Avatar } from "@nextui-org/avatar"
-import { type Post } from "@/types/db"
+import type { Post } from "@/types/posts"
 import {
   CommentIcon,
   LikeIcon,
@@ -7,6 +7,7 @@ import {
   RetweetIcon,
 } from "./Icons/PostActionsIcons"
 import { Button } from "@nextui-org/button"
+import { Image } from "@nextui-org/image"
 
 type PostProps = {
   post: Post
@@ -19,7 +20,7 @@ const Post = async ({ post }: PostProps) => {
       <div className='col-span-11'>
         <div className='flex justify-between items-center'>
           <div className='flex gap-4'>
-            <h4>{post?.author.avatar_url}</h4>
+            <h4>{post?.author.name}</h4>
             <p className='text-gray-500'>{post.author?.user_name}</p>
           </div>
           <Button
@@ -34,6 +35,17 @@ const Post = async ({ post }: PostProps) => {
         </div>
         <div className='w-full'>
           <p className='truncate max-w-full'>{post.text}</p>
+        </div>
+        <div>
+          {post.images.map((image, index) => (
+            <Image
+              key={index}
+              isZoomed
+              width={240}
+              alt={index.toString()}
+              src={image.url}
+            />
+          ))}
         </div>
         <div className='flex justify-evenly py-2'>
           <Button

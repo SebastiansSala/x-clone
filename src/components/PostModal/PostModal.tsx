@@ -24,6 +24,7 @@ const PostModal = () => {
     imagesList: ImageListType,
     addUpdatedIndex: number[] | undefined
   ) => {
+    console.log(imagesList)
     setImages(imagesList as never[])
   }
 

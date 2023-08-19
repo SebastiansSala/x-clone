@@ -18,6 +18,7 @@ export const getPostsSortedByDate = async () => {
       likes: true,
       retweets: true,
       comments: true,
+      images: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -25,11 +26,10 @@ export const getPostsSortedByDate = async () => {
   })
 }
 
-export const createPrismaPost = async (
+export const createPost = async (
   id: string,
   text: string,
-  publicVisible: boolean,
-  images?: string[]
+  publicVisible: boolean
 ) => {
   return await prisma.posts.create({
     data: {
@@ -38,4 +38,23 @@ export const createPrismaPost = async (
       publicVisible,
     },
   })
+}
+
+export const updatePostImages = async (postId: string, url: string) => {
+  try {
+    return await prisma.posts.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        images: {
+          create: {
+            url,
+          },
+        },
+      },
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }

@@ -61,7 +61,7 @@ model Posts {
 
 model Images {
   id        String    @id @default(uuid())
-  createdAt String
+  createdAt DateTime  @default(now())
   url       String
   post      Posts?    @relation(fields: [postId], references: [id])
   postId    String?
