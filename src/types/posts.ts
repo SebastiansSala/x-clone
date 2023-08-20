@@ -1,9 +1,9 @@
-type User = {
-  id: string
+export type User = {
+  id?: string
   user_name: string
   name: string
   avatar_url: string
-  description: string | null
+  description?: string | null
 }
 
 export type Post = {

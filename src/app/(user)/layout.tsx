@@ -1,18 +1,21 @@
 import AsideNav from "@/components/AsideNav"
 import { SearchIcon } from "@/components/Icons/NavbarIcons"
-import FollowingCard from "@/components/Card"
+import FollowingCard from "@/components/FollowingCard"
 import { Input } from "@nextui-org/input"
+import { getUsers } from "@/actions/users"
 
-const UserLayout = ({ children }: { children: React.ReactNode }) => {
+const UserLayout = async ({ children }: { children: React.ReactNode }) => {
+  const users = await getUsers()
+
   return (
     <div className='bg-black'>
       <div className='grid grid-cols-10 container mx-auto relative h-auto'>
         <aside className='px-10 col-span-2'>
           <AsideNav />
         </aside>
-        <main className='col-span-5 border-x-1 border-[#2f3336] min-h-screen'>
+        <section className='col-span-5 border-x-1 border-[#2f3336] min-h-screen'>
           {children}
-        </main>
+        </section>
         <aside className='col-span-3 px-10 relative space-y-4'>
           <div className='sticky inset-0 bg-black z-50 py-2'>
             <div className='relative w-full text-[#71767b] fill-transparent focus:fill-[#1d9bf0]'>
@@ -25,11 +28,22 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
               />
             </div>
           </div>
-          <ul className='bg-[#16181c] text-[#676b70] p-4 rounded-xl space-y-6'>
-            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
-            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
-            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
-            <FollowingCard avatar='arostenrat' name='pedro' username='pedro' />
+
+          <ul className='bg-[#16181c] text-[#676b70] rounded-xl'>
+            <li className='text-xl text-white pt-4 px-4 font-black'>
+              What&apos;s happening
+            </li>
+            {users?.map(({ id, name, user_name, avatar_url }) => (
+              <FollowingCard
+                key={id}
+                avatar_url={avatar_url}
+                name={name}
+                user_name={user_name}
+              />
+            ))}
+            <li className='hover:bg-[#1d1f23] cursor-pointer transition duration-250 text-xl text-white p-4 rounded-b-xl font-black'>
+              <a>Show More</a>
+            </li>
           </ul>
         </aside>
       </div>
