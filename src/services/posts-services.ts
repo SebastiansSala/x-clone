@@ -23,7 +23,7 @@ export const createPost = async (
       throw new Error(res.statusText)
     }
 
-    return await res.json()
+    return res.json()
   } catch (e) {
     console.error(e)
   }
@@ -44,7 +44,25 @@ export const fetchPosts = async (
       throw new Error(res.statusText)
     }
 
-    return await res.json()
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export const addLike = async (postId: string) => {
+  try {
+    console.log(postId)
+    const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
+      method: "PUT",
+    })
+    console.log(res)
+
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
   } catch (e) {
     console.error(e)
   }

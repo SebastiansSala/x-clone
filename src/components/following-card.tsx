@@ -1,9 +1,9 @@
 import { Avatar } from "@nextui-org/avatar"
-import type { User } from "../types/posts"
+import type { UserType } from "../types/posts"
 import { Button } from "@nextui-org/button"
 import Link from "next/link"
 
-type FollowingCardProps = User & {}
+type FollowingCardProps = UserType & {}
 const FollowingCard = ({ name, user_name, avatar_url }: FollowingCardProps) => {
   return (
     <li>

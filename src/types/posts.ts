@@ -1,4 +1,4 @@
-export type User = {
+export type UserType = {
   id?: string
   user_name: string
   name: string
@@ -13,14 +13,14 @@ export type PostType = {
   createdAt: Date
   updatedAt: Date | null
   publicVisible: boolean
-  author: User
-  comments: Comment[]
-  retweets: Retweet[]
-  likes: User[]
-  images: Image[]
+  author: UserType
+  comments: CommentType[]
+  retweets: RetweetType[]
+  likes: UserType[]
+  images: ImageType[]
 }
 
-type Comment = {
+type CommentType = {
   id: string
   createdAt: string
   updatedAt: string
@@ -28,7 +28,7 @@ type Comment = {
   authorId: string
 }
 
-type Retweet = {
+type RetweetType = {
   id: string
   created_at: string
   text: string
@@ -36,7 +36,7 @@ type Retweet = {
   postId: string
 }
 
-type Image = {
+type ImageType = {
   id: string
   createdAt: Date
   url: string

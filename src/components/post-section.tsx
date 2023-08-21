@@ -5,7 +5,6 @@ import { useInfiniteQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
 import { fetchPosts } from "@/services/posts-services"
 import Post from "@/components/post-card"
-import type { PostType } from "@/types/posts"
 
 type Props = {
   postType: string
@@ -31,8 +30,6 @@ const PostSection = ({ postType, username }: Props) => {
   )
 
   const { ref, inView } = useInView()
-
-  console.log(posts)
 
   useEffect(() => {
     if (inView && hasNextPage) {

@@ -48,7 +48,6 @@ export async function GET(req: NextRequest) {
   }
 
   if (!cursorObj) {
-    console.log("without cursor")
     posts = await withoutCursor(username || userId, skip, MAX_POSTS_PER_FETCH)
   } else {
     posts = await withCursor(

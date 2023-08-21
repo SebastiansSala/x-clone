@@ -8,12 +8,27 @@ import {
 } from "./Icons/PostActionsIcons"
 import { Button } from "@nextui-org/button"
 import { Image } from "@nextui-org/image"
+import { addLike } from "@/services/posts-services"
 
 type PostProps = {
   post: PostType
 }
 
 const Post = ({ post }: PostProps) => {
+  const handleLike = async () => {
+    try {
+      const res = await addLike(post.id)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleComment = () => {
+    console.log("comment")
+  }
+
+  const handleRetweet = () => {}
+
   return (
     <li className='grid grid-cols-12 border-t-1 border-[#2f3336] p-4'>
       <Avatar className='col-span-1' src={post.author.avatar_url} />
@@ -75,6 +90,7 @@ const Post = ({ post }: PostProps) => {
             color='danger'
             variant='light'
             className='text-gray-500 hover:text-red-500'
+            onPress={handleLike}
           >
             <LikeIcon className='w-6 h-6 ' />
             {post.likes.length}
