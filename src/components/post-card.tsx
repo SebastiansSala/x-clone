@@ -1,5 +1,5 @@
 import { Avatar } from "@nextui-org/avatar"
-import type { Post } from "@/types/posts"
+import type { PostType } from "@/types/posts"
 import {
   CommentIcon,
   LikeIcon,
@@ -10,7 +10,7 @@ import { Button } from "@nextui-org/button"
 import { Image } from "@nextui-org/image"
 
 type PostProps = {
-  post: Post
+  post: PostType
 }
 
 const Post = ({ post }: PostProps) => {

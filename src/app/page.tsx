@@ -1,14 +1,14 @@
-import { getServerSession } from "@/utils/supabase-server"
-import LoginModal from "@/components/LoginModal"
+import { serverSession } from "@/utils/supabase-server"
+import LoginModal from "@/components/login-modal"
 import Logo from "@/components/Icons/Logo"
 import { redirect } from "next/navigation"
 import AuthClientButton from "@/components/Buttons/auth-client-button"
 
 export default async function Page() {
-  const session = await getServerSession()
+  const session = await serverSession()
 
   if (session) {
-    redirect("/home")
+    redirect("/home/fyp")
   }
 
   return (
@@ -18,21 +18,21 @@ export default async function Page() {
           <Logo className='lg:max-h-unit-7xl fill-white' fill='currentColor' />
         </section>
         <section>
-          <div>
+          <header>
             <h1 className='text-white text-6xl font-black'>Happening now</h1>
-          </div>
+          </header>
           <div className='mt-6'>
             <p className='text-white text-3xl font-black'>Join today</p>
           </div>
           <div className='mt-4 grid gap-y-3 w-72'>
             <AuthClientButton />
           </div>
-          <div className='mt-20 w-72'>
+          <footer className='mt-20 w-72'>
             <p className='text-white text font-bold'>
               Already have an account?
             </p>
             <LoginModal />
-          </div>
+          </footer>
         </section>
       </main>
     </div>

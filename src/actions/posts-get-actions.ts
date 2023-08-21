@@ -17,6 +17,31 @@ export const getPublicPosts = async (skip: number, take: number) => {
   })
 }
 
+export const getPublicPosts_withCursor = async (
+  skip: number,
+  take: number,
+  cursorObj: { id: string }
+) => {
+  return await prisma.posts.findMany({
+    where: {
+      publicVisible: true,
+    },
+    include: {
+      author: true,
+      likes: true,
+      retweets: true,
+      comments: true,
+      images: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take,
+    skip,
+    cursor: cursorObj,
+  })
+}
+
 export const getFollowingPosts = async (
   userId: string,
   skip: number,
@@ -44,31 +69,6 @@ export const getFollowingPosts = async (
     },
     take,
     skip,
-  })
-}
-
-export const getPublicPosts_withCursor = async (
-  skip: number,
-  take: number,
-  cursorObj: { id: string }
-) => {
-  return await prisma.posts.findMany({
-    where: {
-      publicVisible: true,
-    },
-    include: {
-      author: true,
-      likes: true,
-      retweets: true,
-      comments: true,
-      images: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take,
-    skip,
-    cursor: cursorObj,
   })
 }
 
@@ -105,7 +105,11 @@ export const getFollowingPosts_withCursor = (
   })
 }
 
-export const getRetweetedPostsByUsername = async (username: string) => {
+export const getRetweetedPostsByUsername = async (
+  username: string,
+  skip: number,
+  take: number
+) => {
   return await prisma.posts.findMany({
     where: {
       retweets: {
@@ -123,16 +127,23 @@ export const getRetweetedPostsByUsername = async (username: string) => {
       comments: true,
       images: true,
     },
+    take,
+    skip,
   })
 }
 
-export const getFollowedPosts = async (userId: string) => {
+export const getRetweetedPostsByUsername_WithCursor = async (
+  username: string,
+  skip: number,
+  take: number,
+  cursor: { id: string }
+) => {
   return await prisma.posts.findMany({
     where: {
-      author: {
-        followers: {
-          some: {
-            id: userId,
+      retweets: {
+        some: {
+          author: {
+            user_name: username,
           },
         },
       },
@@ -144,25 +155,17 @@ export const getFollowedPosts = async (userId: string) => {
       comments: true,
       images: true,
     },
+    take,
+    skip,
+    cursor,
   })
 }
 
-export const getPostById = async (id: string) => {
-  return await prisma.posts.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      author: true,
-      likes: true,
-      retweets: true,
-      comments: true,
-      images: true,
-    },
-  })
-}
-
-export const getLikedPostsByUsername = async (username: string) => {
+export const getLikedPostsByUsername = async (
+  username: string,
+  skip: number,
+  take: number
+) => {
   return await prisma.posts.findMany({
     where: {
       likes: {
@@ -178,10 +181,49 @@ export const getLikedPostsByUsername = async (username: string) => {
       comments: true,
       images: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take,
+    skip,
   })
 }
 
-export const getPostsByUsername = async (username: string) => {
+export const getLikedPostsByUsername_WithCursor = async (
+  username: string,
+  skip: number,
+  take: number,
+  cursor: { id: string }
+) => {
+  return await prisma.posts.findMany({
+    where: {
+      likes: {
+        some: {
+          user_name: username,
+        },
+      },
+    },
+    include: {
+      author: true,
+      likes: true,
+      retweets: true,
+      comments: true,
+      images: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take,
+    skip,
+    cursor,
+  })
+}
+
+export const getPostsByUsername = async (
+  username: string,
+  skip: number,
+  take: number
+) => {
   return await prisma.posts.findMany({
     where: {
       authorId: username,
@@ -193,11 +235,21 @@ export const getPostsByUsername = async (username: string) => {
       comments: true,
       images: true,
     },
+    skip,
+    take,
   })
 }
 
-export const getPostsSortedByDate = async () => {
+export const getPostsByUsername_WithCursor = async (
+  username: string,
+  skip: number,
+  take: number,
+  cursor: { id: string }
+) => {
   return await prisma.posts.findMany({
+    where: {
+      authorId: username,
+    },
     include: {
       author: true,
       likes: true,
@@ -205,41 +257,8 @@ export const getPostsSortedByDate = async () => {
       comments: true,
       images: true,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    skip,
+    take,
+    cursor,
   })
-}
-
-export const createPost = async (
-  id: string,
-  text: string,
-  publicVisible: boolean
-) => {
-  return await prisma.posts.create({
-    data: {
-      authorId: id,
-      text,
-      publicVisible,
-    },
-  })
-}
-
-export const updatePostImages = async (postId: string, url: string) => {
-  try {
-    return await prisma.posts.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        images: {
-          create: {
-            url,
-          },
-        },
-      },
-    })
-  } catch (e) {
-    console.error(e)
-  }
 }

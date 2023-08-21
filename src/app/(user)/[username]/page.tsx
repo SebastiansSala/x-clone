@@ -1,39 +1,32 @@
-import {
-  getPostsByUsername,
-  getRetweetedPostsByUsername,
-  getLikedPostsByUsername,
-} from "@/actions/posts"
-import TabPosts from "@/components/Tabs/tabs-username"
+import TabsUsername from "@/components/Tabs/tabs-username"
+import PostSection from "@/components/post-section"
+import { profileTabs } from "@/data/tabs"
+import { serverSession } from "@/utils/supabase-server"
 
 type ProfilePageProps = {
   params: {
     username: string
   }
+  searchParams: {
+    postType: string
+  }
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
-  const posts = await getPostsByUsername(params.username)
-  const retweetedPosts = await getRetweetedPostsByUsername(params.username)
-  const likedPosts = await getLikedPostsByUsername(params.username)
-
+export default async function ProfilePage({
+  params,
+  searchParams,
+}: ProfilePageProps) {
   return (
-    <div className='text-white relative'>
-      <header className='p-4 backdrop-blur-sm sticky inset-0 z-50'>
-        <h3>Home</h3>
-        <nav className='p-4'>
-          <ul className='grid grid-cols-2 text-center'></ul>
-        </nav>
-      </header>
-      <nav>
-        <li></li>
-      </nav>
-      <section>
-        <TabPosts
-          posts={posts}
-          likedPosts={likedPosts}
-          retweetedPosts={retweetedPosts}
-        />
-      </section>
-    </div>
+    <main className='text-white relative'>
+      <TabsUsername
+        tabs={profileTabs}
+        postType={searchParams.postType}
+        username={params.username}
+      />
+      <PostSection
+        username={params.username}
+        postType={searchParams.postType}
+      />
+    </main>
   )
 }

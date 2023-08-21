@@ -4,21 +4,12 @@ import clsx from "clsx"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 
-export default function Tabs() {
+export default function TabsHome({
+  tabs,
+}: {
+  tabs: { id: string; label: string }[]
+}) {
   const params = useParams()
-
-  let tabs = [
-    {
-      id: "fyp",
-      label: "Posts",
-    },
-    {
-      id: "following",
-      label: "Following",
-    },
-  ]
-
-  console.log(params)
 
   return (
     <>

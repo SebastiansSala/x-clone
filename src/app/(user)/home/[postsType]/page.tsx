@@ -1,20 +1,19 @@
 import { redirect } from "next/navigation"
-import { getServerSession } from "@/utils/supabase-server"
-import Tabs from "@/components/Tabs/tabs-home"
-import PostSection from "@/components/PostSection"
+import { serverSession } from "@/utils/supabase-server"
+import PostSection from "@/components/post-section"
 
 export default async function Home({
   params,
 }: {
   params: { postsType: string }
 }) {
-  const session = await getServerSession()
+  const session = await serverSession()
 
   if (!session) {
     redirect("/")
   }
 
-  const userId = session.user.id
+  console.log(params)
 
-  return <PostSection userId={userId} postType={params.postsType} />
+  return <PostSection postType={params.postsType} />
 }

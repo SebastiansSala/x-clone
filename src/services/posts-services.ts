@@ -1,3 +1,4 @@
+import { PostType } from "@/types/posts"
 import type { ImageListType } from "react-images-uploading"
 
 export const createPost = async (
@@ -28,11 +29,16 @@ export const createPost = async (
   }
 }
 
-export const fetchPosts = async (postType: string, pageParam: string) => {
+export const fetchPosts = async (
+  postType: string,
+  pageParam: string,
+  username?: string
+) => {
   try {
-    console.log(pageParam)
     const res = await fetch(
-      `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}`
+      `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}&username=${
+        username ?? ""
+      }`
     )
     if (!res.ok) {
       throw new Error(res.statusText)

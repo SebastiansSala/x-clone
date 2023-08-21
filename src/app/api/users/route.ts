@@ -1,4 +1,5 @@
-import prisma from "@/utils/prisma"
+import { createUser } from "@/actions/users-create-actions"
+import { getUniqueUser } from "@/actions/users-get-actions"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -8,24 +9,13 @@ export async function POST(req: NextRequest) {
     return new Response("Invalid data", { status: 400 })
   }
 
-  const findUser = await prisma.users.findUnique({
-    where: {
-      id,
-    },
-  })
+  const findUser = await getUniqueUser(id)
 
   if (findUser) {
     return NextResponse.json("User already exists", { status: 400 })
   }
 
-  const userCreated = await prisma.users.create({
-    data: {
-      id,
-      name,
-      user_name,
-      avatar_url,
-    },
-  })
+  const userCreated = await createUser(id, name, user_name, avatar_url)
 
   return NextResponse.json(userCreated)
 }

@@ -1,8 +1,8 @@
-import AsideNav from "@/components/AsideNav"
+import NavigationAside from "@/components/navigation-aside"
 import { SearchIcon } from "@/components/Icons/NavbarIcons"
-import FollowingCard from "@/components/FollowingCard"
+import FollowingCard from "@/components/following-card"
 import { Input } from "@nextui-org/input"
-import { getUsers } from "@/actions/users"
+import { getUsers } from "@/actions/users-get-actions"
 
 const UserLayout = async ({ children }: { children: React.ReactNode }) => {
   const users = await getUsers()
@@ -11,7 +11,7 @@ const UserLayout = async ({ children }: { children: React.ReactNode }) => {
     <div className='bg-black'>
       <div className='grid grid-cols-10 container mx-auto relative h-auto'>
         <aside className='px-10 col-span-2'>
-          <AsideNav />
+          <NavigationAside />
         </aside>
         <section className='col-span-5 border-x-1 border-[#2f3336] min-h-screen'>
           {children}

@@ -6,7 +6,7 @@ export type User = {
   description?: string | null
 }
 
-export type Post = {
+export type PostType = {
   id: string
   text: string
   authorId: string

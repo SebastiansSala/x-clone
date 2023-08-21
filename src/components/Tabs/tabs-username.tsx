@@ -1,59 +1,37 @@
-"use client"
+import Link from "next/link"
+import clsx from "clsx"
 
-import { Tabs, Tab } from "@nextui-org/tabs"
-import Post from "@/components/Post"
-import type { Post as PostType } from "@/types/posts"
-
-type TabPostsProps = {
-  posts: PostType[]
-  likedPosts: PostType[]
-  retweetedPosts: PostType[]
+type TabsUsernameProps = {
+  tabs: { id: string; label: string }[]
+  postType: string
+  username: string
 }
 
-export default function TabPosts({
-  posts,
-  likedPosts,
-  retweetedPosts,
-}: TabPostsProps) {
-  let tabs = [
-    {
-      id: "posts",
-      label: "Posts",
-      content: posts,
-    },
-    {
-      id: "retweets",
-      label: "Retweets",
-      content: likedPosts,
-    },
-    {
-      id: "likes",
-      label: "Likes",
-      content: retweetedPosts,
-    },
-  ]
-
+export default function TabsUsername({
+  tabs,
+  postType,
+  username,
+}: TabsUsernameProps) {
   return (
-    <Tabs
-      aria-label='Dynamic tabs'
-      variant='underlined'
-      items={tabs}
-      classNames={{
-        tabList: "",
-        tab: "w-full",
-        cursor: "w-full bg-[#22d3ee]",
-        tabContent: "group-data-[selected=true]:text-[#06b6d4]",
-      }}
-    >
-      {(item) => (
-        <Tab key={item.id} title={item.label}>
-          <ul>
-            {item.content.map((post) => (
-              <Post key={post.id} post={post} />
-            ))}
-          </ul>
-        </Tab>
-      )}
-    </Tabs>
+    <>
+      <header className='grid grid-cols-3 sticky inset-0 z-50 backdrop-blur-sm'>
+        {tabs.map((tab) => (
+          <nav
+            key={tab.id}
+            className='hover:bg-[#1d1f23] hover:backdrop-blur-sm text-center py-6'
+          >
+            <Link
+              href={"?postType=" + tab.id}
+              className={clsx(
+                "text-white h-full",
+                postType === tab.id && "border-b-blue-400 border-b-1"
+              )}
+            >
+              {tab.label}
+            </Link>
+          </nav>
+        ))}
+      </header>
+    </>
   )
 }

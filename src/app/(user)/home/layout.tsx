@@ -1,4 +1,5 @@
-import Tabs from "@/components/Tabs/tabs-home"
+import TabsHome from "@/components/Tabs/tabs-home"
+import { postTabs } from "@/data/tabs"
 
 export default function HomeLayout({
   children,
@@ -7,8 +8,7 @@ export default function HomeLayout({
 }) {
   return (
     <div className='text-white relative'>
-      <Tabs />
-
+      <TabsHome tabs={postTabs} />
       <main>{children}</main>
     </div>
   )

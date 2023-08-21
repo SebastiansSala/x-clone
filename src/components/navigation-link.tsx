@@ -4,13 +4,18 @@ import clsx from "clsx"
 import { Link } from "@nextui-org/link"
 import { usePathname } from "next/navigation"
 
-type NavbarLinkProps = {
+type NavigationLinkProps = {
   text?: string
   href: string
   icon: React.ReactNode
   filledIcon?: React.ReactNode
 }
-const NavbarLink = ({ text, href, icon, filledIcon }: NavbarLinkProps) => {
+const NavigationLink = ({
+  text,
+  href,
+  icon,
+  filledIcon,
+}: NavigationLinkProps) => {
   const pathname = usePathname()
   const selectedLink = pathname.split("/").includes(href)
 
@@ -31,4 +36,4 @@ const NavbarLink = ({ text, href, icon, filledIcon }: NavbarLinkProps) => {
   )
 }
 
-export default NavbarLink
+export default NavigationLink

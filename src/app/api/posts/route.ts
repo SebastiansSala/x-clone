@@ -1,71 +1,70 @@
 import { type NextRequest, NextResponse } from "next/server"
-import {
-  createPost,
-  getPublicPosts,
-  getFollowingPosts,
-  getPublicPosts_withCursor,
-  updatePostImages,
-  getFollowingPosts_withCursor,
-} from "@/actions/posts"
-import { getServerSession } from "@/utils/supabase-server"
-import supabase from "@/utils/supabase-server"
 import { decode } from "base64-arraybuffer"
+
+import { serverSession } from "@/utils/supabase-server"
+import supabase from "@/utils/supabase-server"
+
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
+import { PostType } from "@/types/posts"
+import { createPost } from "@/actions/posts-create-actions"
+import { updatePostImages } from "@/actions/posts-update-actions"
+import { postTypeFunctions } from "./postTypeFunctions"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 
-  const take = MAX_POSTS_PER_FETCH
-
   const cursor = searchParams.get("cursor")
+  const username = searchParams.get("username")
+
   const skip = cursor === "0" ? 0 : 1
   const cursorObj = cursor === "1" ? { id: cursor } : undefined
   const postType = searchParams.get("postType") ?? undefined
 
-  if (!cursorObj) {
-    if (postType !== "following") {
-      const posts = await getPublicPosts(skip, take)
-      return NextResponse.json({
-        posts,
-        nextId: posts.length < take ? undefined : posts[take - 1].id,
-      })
-    }
-    const session = await getServerSession()
-    const userId = session?.user.id
-    if (!userId) {
-      return NextResponse.json("Unauthorized", { status: 401 })
-    }
-    const posts = await getFollowingPosts(userId, skip, take)
-    return NextResponse.json({
-      posts,
-      nextId: posts.length < take ? undefined : posts[take - 1].id,
-    })
-  }
-
-  if (postType !== "following") {
-    const posts = await getPublicPosts_withCursor(skip, take, cursorObj)
-    return NextResponse.json({
-      posts,
-      nextId: posts.length < take ? undefined : posts[take - 1].id,
-    })
-  }
-
-  const session = await getServerSession()
+  const session = await serverSession()
   const userId = session?.user.id
+
   if (!userId) {
     return NextResponse.json("Unauthorized", { status: 401 })
   }
 
-  const posts = await getFollowingPosts_withCursor(
-    userId,
-    skip,
-    take,
-    cursorObj
-  )
+  if (!postType && typeof postType !== "string") {
+    return NextResponse.json("Invalid data", { status: 400 })
+  }
+
+  if (!postTypeFunctions.hasOwnProperty(postType)) {
+    return NextResponse.json("Invalid data", { status: 400 })
+  }
+
+  let posts = [] as PostType[]
+
+  const { withoutCursor, withCursor } = postTypeFunctions[postType]
+
+  if (
+    !username &&
+    username === "" &&
+    (postType === "posts" || postType === "retweets" || postType === "likes")
+  ) {
+    return NextResponse.json("Invalid data", { status: 400 })
+  }
+
+  if (!cursorObj) {
+    console.log("without cursor")
+    posts = await withoutCursor(username || userId, skip, MAX_POSTS_PER_FETCH)
+  } else {
+    posts = await withCursor(
+      username || userId,
+      skip,
+      MAX_POSTS_PER_FETCH,
+      cursorObj
+    )
+  }
 
   return NextResponse.json({
     posts,
-    nextId: posts.length < take ? undefined : posts[take - 1].id,
+    nextId:
+      posts.length < MAX_POSTS_PER_FETCH
+        ? undefined
+        : posts[MAX_POSTS_PER_FETCH - 1].id,
   })
 }
 
@@ -87,7 +86,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json("Invalid data", { status: 400 })
     }
 
-    const session = await getServerSession()
+    const session = await serverSession()
 
     if (!session?.user) {
       return NextResponse.json("Unauthorized", { status: 401 })

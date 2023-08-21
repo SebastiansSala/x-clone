@@ -11,7 +11,7 @@ import {
 import { useState } from "react"
 import PostModalBody from "./PostModalBody"
 import PostModalFooter from "./PostModalFooter"
-import { createPost } from "@/services/posts"
+import { createPost } from "@/services/posts-services"
 import type { ImageListType } from "react-images-uploading"
 
 const PostModal = () => {

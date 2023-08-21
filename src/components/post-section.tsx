@@ -3,15 +3,16 @@
 import { useEffect } from "react"
 import { useInfiniteQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
-import { fetchPosts } from "@/services/posts"
-import Post from "@/components/Post"
+import { fetchPosts } from "@/services/posts-services"
+import Post from "@/components/post-card"
+import type { PostType } from "@/types/posts"
 
 type Props = {
-  userId: string
   postType: string
+  username?: string
 }
 
-const PostSection = ({ postType }: Props) => {
+const PostSection = ({ postType, username }: Props) => {
   const {
     data: posts,
     isError,
@@ -23,13 +24,15 @@ const PostSection = ({ postType }: Props) => {
   } = useInfiniteQuery(
     ["posts", postType],
     ({ pageParam }: { pageParam?: string }) =>
-      fetchPosts(postType, pageParam ?? "0"),
+      fetchPosts(postType, pageParam ?? "0", username),
     {
-      getNextPageParam: (lastPage) => lastPage.nextId ?? false,
+      getNextPageParam: (lastPage) => lastPage?.nextId ?? false,
     }
   )
 
   const { ref, inView } = useInView()
+
+  console.log(posts)
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -42,12 +45,10 @@ const PostSection = ({ postType }: Props) => {
 
   return (
     <>
-      <ul>
-        {posts &&
-          posts.pages
-            ?.flatMap((page) => page.posts)
-            .map((post) => <Post key={post.id} post={post} />)}
-      </ul>
+      {posts &&
+        posts.pages
+          ?.flatMap((page) => page.posts)
+          .map((post) => <Post key={post.id} post={post} />)}
 
       {isFetchingNextPage ? <div className='loading'>Loading...</div> : null}
 

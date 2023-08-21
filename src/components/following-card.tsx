@@ -8,7 +8,7 @@ const FollowingCard = ({ name, user_name, avatar_url }: FollowingCardProps) => {
   return (
     <li>
       <Link
-        href={"/" + user_name}
+        href={"/" + user_name + "?postType=posts"}
         className='flex justify-between items-center cursor-pointer hover:bg-[#1d1f23] p-4 transition duration-250'
       >
         <div className='flex gap-4 items-center'>
