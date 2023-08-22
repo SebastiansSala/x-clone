@@ -1,8 +1,10 @@
 "use client"
 
-import { ImageIcon } from "../Icons/PostActionsIcons"
 import ImageUploading, { ImageListType } from "react-images-uploading"
 import { Button } from "@nextui-org/button"
+
+import { ImageIcon } from "../Icons/utility/image-icon"
+
 import { MAX_NUMBER_OF_IMAGES_ON_POSTS } from "@/const/posts"
 import { PostImage } from "@/types/posts"
 
@@ -15,11 +17,11 @@ type PostModalFooterProps = {
   handleSubmit: () => void
 }
 
-const PostModalFooter = ({
+export default function CreatePostModalFooter({
   images,
   handleImageUpload,
   handleSubmit,
-}: PostModalFooterProps) => {
+}: PostModalFooterProps) {
   return (
     <div className='flex justify-between w-full border-t-1 border-[#2f3336] pt-4'>
       <div className='flex flex-1 gap-2 items-center'>
@@ -46,5 +48,3 @@ const PostModalFooter = ({
     </div>
   )
 }
-
-export default PostModalFooter

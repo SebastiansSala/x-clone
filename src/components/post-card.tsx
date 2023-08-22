@@ -1,14 +1,15 @@
 import { Avatar } from "@nextui-org/avatar"
-import type { PostType } from "@/types/posts"
-import {
-  CommentIcon,
-  LikeIcon,
-  OptionsIcon,
-  RetweetIcon,
-} from "./Icons/PostActionsIcons"
-import { Button } from "@nextui-org/button"
 import { Image } from "@nextui-org/image"
+import { Button } from "@nextui-org/button"
+
+import { CommentIcon } from "./Icons/utility/comment-icon"
+import { LikeIcon } from "./Icons/utility/like-icon"
+import { OptionsIcon } from "./Icons/utility/option-icon"
+import { RetweetIcon } from "./Icons/utility/retweet-icon"
+
 import { addLike } from "@/services/posts-services"
+
+import type { PostType } from "@/types/posts"
 
 type PostProps = {
   post: PostType

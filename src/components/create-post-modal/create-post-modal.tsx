@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import {
   useDisclosure,
   Modal,
@@ -8,13 +9,14 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal"
-import { useState } from "react"
-import PostModalBody from "./PostModalBody"
-import PostModalFooter from "./PostModalFooter"
-import { createPost } from "@/services/posts-services"
 import type { ImageListType } from "react-images-uploading"
 
-const PostModal = () => {
+import PostModalBody from "./create-post-modal-body"
+import PostModalFooter from "./create-post-modal-footer"
+
+import { createPost } from "@/services/posts-services"
+
+export default function CreatePostModal() {
   const [images, setImages] = useState([])
   const [textarea, setTextarea] = useState("")
   const [selectedOption, setSelectedOption] = useState("Everyone")
@@ -35,6 +37,10 @@ const PostModal = () => {
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (textarea.length > 280) return
     setTextarea(e.target.value)
+  }
+
+  const handleSelectedOption = (option: string) => {
+    setSelectedOption(option)
   }
 
   const handleSubmit = async () => {
@@ -63,12 +69,12 @@ const PostModal = () => {
           <ModalHeader></ModalHeader>
           <ModalBody>
             <PostModalBody
-              selectedOption={selectedOption}
-              setSelectedOption={setSelectedOption}
               images={images}
               removeImage={removeImage}
-              handleTextAreaChange={handleTextAreaChange}
               textarea={textarea}
+              handleTextAreaChange={handleTextAreaChange}
+              selectedOption={selectedOption}
+              handleSelectedOption={handleSelectedOption}
             />
           </ModalBody>
           <ModalFooter>
@@ -83,5 +89,3 @@ const PostModal = () => {
     </>
   )
 }
-
-export default PostModal

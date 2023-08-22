@@ -3,8 +3,10 @@
 import { useEffect } from "react"
 import { useInfiniteQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
-import { fetchPosts } from "@/services/posts-services"
+
 import Post from "@/components/post-card"
+
+import { fetchPosts } from "@/services/posts-services"
 
 type Props = {
   postType: string

@@ -7,7 +7,7 @@ import {
   MessagesFilledIcon,
   ProfileIcon,
   ProfileFilledIcon,
-} from "./../components/Icons/NavbarIcons"
+} from "../components/Icons/navigation-icons"
 
 export const navigationLinks = [
   {

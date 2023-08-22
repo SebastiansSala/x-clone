@@ -1,11 +1,25 @@
-import NavigationAside from "@/components/navigation-aside"
-import { SearchIcon } from "@/components/Icons/NavbarIcons"
-import FollowingCard from "@/components/following-card"
+import { cookies } from "next/headers"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Input } from "@nextui-org/input"
-import { getUsers } from "@/actions/users-get-actions"
 
-const UserLayout = async ({ children }: { children: React.ReactNode }) => {
-  const users = await getUsers()
+import NavigationAside from "@/components/navigation-aside"
+import FollowingCard from "@/components/following-card"
+import { SearchIcon } from "@/components/Icons/utility/search-icon"
+
+import { getUsersNotFollowing } from "@/actions/users-get-actions"
+
+export default async function UserLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const supabase = createServerComponentClient({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  const users = session?.user ? await getUsersNotFollowing(session.user.id) : []
 
   return (
     <div className='bg-black'>
@@ -50,5 +64,3 @@ const UserLayout = async ({ children }: { children: React.ReactNode }) => {
     </div>
   )
 }
-
-export default UserLayout

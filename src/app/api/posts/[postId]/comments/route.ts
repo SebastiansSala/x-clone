@@ -1,8 +1,8 @@
-import { updatePostLikes } from "@/actions/posts-update-actions"
-import { serverSession, serverUser } from "@/utils/supabase-server"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { type NextRequest, NextResponse } from "next/server"
 import { cookies } from "next/headers"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+
+const supabase = createServerComponentClient({ cookies })
 
 export async function PUT(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -12,15 +12,16 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json("Invalid data", { status: 400 })
   }
 
-  const user = await serverUser()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  if (!user) {
+  if (!session) {
     return NextResponse.json("Unauthorized", { status: 401 })
   }
 
-  const { id, user_metadata } = user
-  console.log("user", user)
-  console.log("user_metadata", user_metadata)
+  const { id, user_metadata } = session.user
+
   const { x } = user_metadata
 
   // const updatedPost = await updatePostLikes(postId, user.id)

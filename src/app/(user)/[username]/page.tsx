@@ -1,7 +1,10 @@
-import TabsUsername from "@/components/Tabs/tabs-username"
+import { cookies } from "next/headers"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+
 import PostSection from "@/components/post-section"
+import Tabs from "@/components/tabs"
+
 import { profileTabs } from "@/data/tabs"
-import { serverSession } from "@/utils/supabase-server"
 
 type ProfilePageProps = {
   params: {
@@ -16,13 +19,15 @@ export default async function ProfilePage({
   params,
   searchParams,
 }: ProfilePageProps) {
+  const supabase = createServerComponentClient({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
   return (
     <main className='text-white relative'>
-      <TabsUsername
-        tabs={profileTabs}
-        postType={searchParams.postType}
-        username={params.username}
-      />
+      <Tabs tabs={profileTabs} postType={searchParams.postType} />
       <PostSection
         username={params.username}
         postType={searchParams.postType}

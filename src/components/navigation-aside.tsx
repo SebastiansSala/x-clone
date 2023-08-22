@@ -1,10 +1,9 @@
 import Link from "next/link"
-import NavbarLink from "./navigation-link"
-import { navigationLinks } from "@/data/links"
 
-import Logo from "@/components/Icons/Logo"
-import PostModal from "./PostModal/PostModal"
-import SignOutClientButton from "./Buttons/signOut-client-button"
+import PostModal from "./create-post-modal/create-post-modal"
+import NavigationList from "./navigation-list"
+import SignOutClientButton from "./signOut-client-button"
+import Logo from "@/components/Icons/social/logo-icon"
 
 const NavigationAside = () => {
   return (
@@ -12,15 +11,7 @@ const NavigationAside = () => {
       <Link href='home'>
         <Logo className='h-8 fill-white font-black' />
       </Link>
-      {navigationLinks.map(({ text, href, icon, filledIcon }) => (
-        <NavbarLink
-          key={href}
-          text={text}
-          href={href}
-          icon={icon}
-          filledIcon={filledIcon}
-        />
-      ))}
+      <NavigationList />
       <PostModal />
       <div className='absolute bottom-0 color-white'>
         <SignOutClientButton />

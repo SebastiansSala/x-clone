@@ -1,8 +1,8 @@
 "use client"
 
 import clsx from "clsx"
-import { Link } from "@nextui-org/link"
 import { usePathname } from "next/navigation"
+import { Link } from "@nextui-org/link"
 
 type NavigationLinkProps = {
   text?: string

@@ -1,11 +1,17 @@
-import { serverSession } from "@/utils/supabase-server"
-import LoginModal from "@/components/login-modal"
-import Logo from "@/components/Icons/Logo"
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import AuthClientButton from "@/components/Buttons/auth-client-button"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+
+import Logo from "@/components/Icons/social/logo-icon"
+import LoginModal from "@/components/login-modal"
+import AuthClientButton from "@/components/auth-client-button"
 
 export default async function Page() {
-  const session = await serverSession()
+  const supabase = createServerComponentClient({ cookies })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   if (session) {
     redirect("/home/fyp")

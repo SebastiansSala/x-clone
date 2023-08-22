@@ -1,14 +1,16 @@
+import { cookies } from "next/headers"
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { type NextRequest, NextResponse } from "next/server"
 import { decode } from "base64-arraybuffer"
 
-import { serverSession } from "@/utils/supabase-server"
-import supabase from "@/utils/supabase-server"
+import { updatePostImages } from "@/actions/posts-update-actions"
+import { createPost } from "@/actions/posts-create-actions"
+import { postTypeFunctions } from "./postTypeFunctions"
 
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
 import { PostType } from "@/types/posts"
-import { createPost } from "@/actions/posts-create-actions"
-import { updatePostImages } from "@/actions/posts-update-actions"
-import { postTypeFunctions } from "./postTypeFunctions"
+
+const supabase = createServerComponentClient({ cookies })
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -20,12 +22,11 @@ export async function GET(req: NextRequest) {
   const cursorObj = cursor === "1" ? { id: cursor } : undefined
   const postType = searchParams.get("postType") ?? undefined
 
-  const session = await serverSession()
-  const userId = session?.user.id
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  if (!userId) {
-    return NextResponse.json("Unauthorized", { status: 401 })
-  }
+  const userId = session?.user.id
 
   if (!postType && typeof postType !== "string") {
     return NextResponse.json("Invalid data", { status: 400 })
@@ -85,13 +86,15 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json("Invalid data", { status: 400 })
     }
 
-    const session = await serverSession()
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-    if (!session?.user) {
+    if (!session) {
       return NextResponse.json("Unauthorized", { status: 401 })
     }
 
-    const userId = session?.user.id
+    const userId = session.user.id
 
     const publicVisible = selectedOption === "Everyone" ? true : false
 

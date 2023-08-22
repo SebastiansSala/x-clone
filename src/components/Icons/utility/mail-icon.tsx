@@ -1,4 +1,4 @@
-const MailFilledIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const MailFilledIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     aria-hidden='true'
     fill='none'
@@ -15,5 +15,3 @@ const MailFilledIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 )
-
-export default MailFilledIcon

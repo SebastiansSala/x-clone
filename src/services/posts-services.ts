@@ -1,4 +1,3 @@
-import { PostType } from "@/types/posts"
 import type { ImageListType } from "react-images-uploading"
 
 export const createPost = async (
