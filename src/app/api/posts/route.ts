@@ -10,8 +10,6 @@ import { postTypeFunctions } from "./postTypeFunctions"
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
 import { PostType } from "@/types/posts"
 
-const supabase = createServerComponentClient({ cookies })
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 
@@ -21,6 +19,8 @@ export async function GET(req: NextRequest) {
   const skip = cursor === "0" ? 0 : 1
   const cursorObj = cursor === "1" ? { id: cursor } : undefined
   const postType = searchParams.get("postType") ?? undefined
+
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },
@@ -85,6 +85,8 @@ export const POST = async (req: NextRequest) => {
     if (!text) {
       return NextResponse.json("Invalid data", { status: 400 })
     }
+
+    const supabase = createServerComponentClient({ cookies })
 
     const {
       data: { session },

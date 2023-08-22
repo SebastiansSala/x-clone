@@ -4,14 +4,14 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 
 import { updatePostLikes } from "@/actions/posts-update-actions"
 
-const supabase = createServerComponentClient({ cookies })
-
 export async function PUT(req: NextRequest) {
   const postId = req.cookies.get("postId")
 
   if (!postId) {
     return NextResponse.json("Invalid data", { status: 400 })
   }
+
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },

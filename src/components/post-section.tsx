@@ -1,61 +1,27 @@
 "use client"
 
-import { useEffect } from "react"
-import { useInfiniteQuery } from "react-query"
-import { useInView } from "react-intersection-observer"
+import { useState } from "react"
 
-import Post from "@/components/post-card"
+import PostList from "./post-list"
+import Tabs from "@/components/tabs"
 
-import { fetchPosts } from "@/services/posts-services"
+import { postTabs } from "@/data/tabs"
 
-type Props = {
-  postType: string
+type PostSectionProps = {
   username?: string
 }
 
-const PostSection = ({ postType, username }: Props) => {
-  const {
-    data: posts,
-    isError,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    ["posts", postType],
-    ({ pageParam }: { pageParam?: string }) =>
-      fetchPosts(postType, pageParam ?? "0", username),
-    {
-      getNextPageParam: (lastPage) => lastPage?.nextId ?? false,
-    }
-  )
+export default function PostSection({ username }: PostSectionProps) {
+  const [tab, setTab] = useState("fyp")
 
-  const { ref, inView } = useInView()
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage()
-    }
-  }, [inView, fetchNextPage, hasNextPage])
-
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <div>Error! {JSON.stringify(error)}</div>
+  const handleTabChange = (tab: string) => {
+    setTab(tab)
+  }
 
   return (
     <>
-      {posts &&
-        posts.pages
-          ?.flatMap((page) => page.posts)
-          .map((post) => <Post key={post.id} post={post} />)}
-
-      {isFetchingNextPage ? <div className='loading'>Loading...</div> : null}
-
-      <span style={{ visibility: "hidden" }} ref={ref}>
-        intersection observer marker
-      </span>
+      <Tabs tabs={postTabs} postType={tab} handleTabChange={handleTabChange} />
+      <PostList postType={tab} username={username} />
     </>
   )
 }
-
-export default PostSection

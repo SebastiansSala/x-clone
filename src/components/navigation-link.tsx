@@ -17,6 +17,7 @@ const NavigationLink = ({
   filledIcon,
 }: NavigationLinkProps) => {
   const pathname = usePathname()
+
   const selectedLink = pathname.split("/").includes(href)
 
   return (
