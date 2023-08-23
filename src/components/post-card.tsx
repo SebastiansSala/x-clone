@@ -1,26 +1,42 @@
+import { useState } from "react"
 import { Avatar } from "@nextui-org/avatar"
 import { Image } from "@nextui-org/image"
 import { Button } from "@nextui-org/button"
+import type { User } from "@supabase/supabase-js"
 
-import { CommentIcon } from "./Icons/utility/comment-icon"
-import { LikeIcon } from "./Icons/utility/like-icon"
+import LikeButton from "./like-button"
+import CommentButton from "./comment-button"
+import RetweetButton from "./retweet-button"
 import { OptionsIcon } from "./Icons/utility/option-icon"
-import { RetweetIcon } from "./Icons/utility/retweet-icon"
-
-import { addLike } from "@/services/posts-services"
 
 import type { PostType } from "@/types/posts"
 
 type PostProps = {
   post: PostType
+  user?: User
+  likeMutation: any
 }
 
-const Post = ({ post }: PostProps) => {
+const PostCard = ({ post, user, likeMutation }: PostProps) => {
+  const isLikedInitially = post.likes.some((like) => like.id === user?.id)
+  const [isLiked, setIsLiked] = useState(isLikedInitially)
+  const likesCount = post.likes.length
+  const [likes, setLikes] = useState(likesCount)
+
   const handleLike = async () => {
+    setIsLiked(!isLiked)
+    setLikes(isLiked ? likes - 1 : likes + 1)
     try {
-      const res = await addLike(post.id)
+      const res = await likeMutation.mutateAsync(post.id)
+      console.log(res)
+      if (!res) {
+        setIsLiked(isLikedInitially)
+        setLikes(likesCount)
+      }
     } catch (err) {
       console.log(err)
+      setIsLiked(isLikedInitially)
+      setLikes(likesCount)
     }
   }
 
@@ -65,41 +81,23 @@ const Post = ({ post }: PostProps) => {
           ))}
         </div>
         <div className='flex justify-evenly py-2'>
-          <Button
-            radius='full'
-            isIconOnly
-            color='primary'
-            variant='light'
-            className='text-gray-500 hover:text-blue-500'
-          >
-            <CommentIcon className='w-6 h-6 ' />
-            {post.comments.length}
-          </Button>
-          <Button
-            radius='full'
-            isIconOnly
-            color='success'
-            variant='light'
-            className='text-gray-500 hover:text-green-500'
-          >
-            <RetweetIcon className='w-6 h-6 ' />
-            {post.retweets.length}
-          </Button>
-          <Button
-            radius='full'
-            isIconOnly
-            color='danger'
-            variant='light'
-            className='text-gray-500 hover:text-red-500'
-            onPress={handleLike}
-          >
-            <LikeIcon className='w-6 h-6 ' />
-            {post.likes.length}
-          </Button>
+          <CommentButton
+            onClick={handleComment}
+            commentsCount={post.comments.length}
+          />
+          <RetweetButton
+            onClick={handleRetweet}
+            retweetsCount={post.retweets.length}
+          />
+          <LikeButton
+            onClick={handleLike}
+            likesCount={likes}
+            isLiked={isLiked}
+          />
         </div>
       </div>
     </li>
   )
 }
 
-export default Post
+export default PostCard

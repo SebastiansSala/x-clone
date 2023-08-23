@@ -5,67 +5,39 @@ import { decode } from "base64-arraybuffer"
 
 import { updatePostImages } from "@/actions/posts-update-actions"
 import { createPost } from "@/actions/posts-create-actions"
-import { postTypeFunctions } from "./postTypeFunctions"
 
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
-import { PostType } from "@/types/posts"
+import {
+  getPublicPosts,
+  getPublicPosts_withCursor,
+} from "@/actions/posts-get-actions"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 
-  const cursor = searchParams.get("cursor")
+  const cursor = searchParams.get("cursor") ?? undefined
+
+  const skip = cursor ? 1 : 0
+  const cursorObj = cursor ? { id: cursor } : undefined
+
   const username = searchParams.get("username")
 
-  const skip = cursor === "0" ? 0 : 1
-  const cursorObj = cursor === "1" ? { id: cursor } : undefined
-  const postType = searchParams.get("postType") ?? undefined
+  // const postType = searchParams.get("postType") ?? undefined
+
+  console.log(cursor, skip, cursorObj)
 
   const supabase = createServerComponentClient({ cookies })
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const posts = await getPublicPosts_withCursor(
+    skip,
+    MAX_POSTS_PER_FETCH,
+    cursorObj
+  )
 
-  const userId = session?.user.id
+  const nextId =
+    posts.length < MAX_POSTS_PER_FETCH ? undefined : posts[posts.length - 1].id
 
-  if (!postType && typeof postType !== "string") {
-    return NextResponse.json("Invalid data", { status: 400 })
-  }
-
-  if (!postTypeFunctions.hasOwnProperty(postType)) {
-    return NextResponse.json("Invalid data", { status: 400 })
-  }
-
-  let posts = [] as PostType[]
-
-  const { withoutCursor, withCursor } = postTypeFunctions[postType]
-
-  if (
-    !username &&
-    username === "" &&
-    (postType === "posts" || postType === "retweets" || postType === "likes")
-  ) {
-    return NextResponse.json("Invalid data", { status: 400 })
-  }
-
-  if (!cursorObj) {
-    posts = await withoutCursor(username || userId, skip, MAX_POSTS_PER_FETCH)
-  } else {
-    posts = await withCursor(
-      username || userId,
-      skip,
-      MAX_POSTS_PER_FETCH,
-      cursorObj
-    )
-  }
-
-  return NextResponse.json({
-    posts,
-    nextId:
-      posts.length < MAX_POSTS_PER_FETCH
-        ? undefined
-        : posts[MAX_POSTS_PER_FETCH - 1].id,
-  })
+  return NextResponse.json({ posts, nextId })
 }
 
 type imagesPost = {

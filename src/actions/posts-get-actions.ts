@@ -1,6 +1,6 @@
 import prisma from "@/utils/prisma"
 
-export const getPublicPosts = async (skip: number, take: number) => {
+export const getPublicPosts = async (take: number) => {
   return await prisma.posts.findMany({
     include: {
       author: true,
@@ -13,14 +13,13 @@ export const getPublicPosts = async (skip: number, take: number) => {
       createdAt: "desc",
     },
     take,
-    skip,
   })
 }
 
 export const getPublicPosts_withCursor = async (
   skip: number,
   take: number,
-  cursorObj: { id: string }
+  cursorObj: { id: string } | undefined
 ) => {
   return await prisma.posts.findMany({
     where: {
@@ -260,5 +259,33 @@ export const getPostsByUsername_WithCursor = async (
     skip,
     take,
     cursor,
+  })
+}
+
+export const getPostById = async (postId: string) => {
+  return await prisma.posts.findFirst({
+    where: {
+      id: postId,
+    },
+    include: {
+      author: true,
+      likes: true,
+      retweets: true,
+      comments: true,
+      images: true,
+    },
+  })
+}
+
+export const getUserLikedPost = async (postId: string, userId: string) => {
+  return await prisma.posts.findFirst({
+    where: {
+      id: postId,
+      likes: {
+        some: {
+          id: userId,
+        },
+      },
+    },
   })
 }

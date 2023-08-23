@@ -1,5 +1,7 @@
 import type { ImageListType } from "react-images-uploading"
 
+import { PostType } from "@/types/posts"
+
 export const createPost = async (
   text: string,
   selectedOption: string,
@@ -30,32 +32,28 @@ export const createPost = async (
 
 export const fetchPosts = async (
   postType: string,
-  pageParam: string,
+  pageParam: number,
   username?: string
-) => {
-  try {
-    const res = await fetch(
-      `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}&username=${
-        username ?? ""
-      }`
-    )
-    if (!res.ok) {
-      throw new Error(res.statusText)
-    }
-
-    return res.json()
-  } catch (e) {
-    console.error(e)
+): Promise<{ posts: PostType[]; nextId: string }> => {
+  const res = await fetch(
+    `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}&username=${
+      username ?? ""
+    }`
+  )
+  if (!res.ok) {
+    throw new Error(res.statusText)
   }
+
+  const data = await res.json()
+
+  return data
 }
 
 export const addLike = async (postId: string) => {
   try {
-    console.log(postId)
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "PUT",
     })
-    console.log(res)
 
     if (!res.ok) {
       throw new Error(res.statusText)
