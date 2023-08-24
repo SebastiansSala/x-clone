@@ -1,13 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
-import { QueryClient, useInfiniteQuery, useMutation } from "react-query"
 import type { User } from "@supabase/supabase-js"
-import { useInView } from "react-intersection-observer"
 
 import PostCard from "@/components/post-card"
 
-import { addLike, fetchPosts } from "@/services/posts-services"
+import usePosts from "@/hooks/usePosts"
+import useLike from "@/hooks/useLike"
 
 type Props = {
   postType: string
@@ -16,46 +14,13 @@ type Props = {
 }
 
 export default function PostList({ postType, username, user }: Props) {
-  const queryClient = new QueryClient()
+  const { posts, isLoading, isError, ref, isFetchingNextPage, error } =
+    usePosts(postType, username)
 
-  const {
-    data,
-    isError,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    ["posts", postType],
-    ({ pageParam = 0 }) => {
-      console.log(pageParam)
-      return fetchPosts(postType, pageParam, username)
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextId,
-    }
-  )
-
-  const likeMutation = useMutation(addLike, {
-    onSuccess: (data, variables, context) => {
-      const postId = context
-      queryClient.refetchQueries(["posts", postType, postId])
-    },
-  })
-
-  const { ref, inView } = useInView()
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage()
-    }
-  }, [inView, fetchNextPage, hasNextPage])
+  const { likeMutation } = useLike(postType)
 
   if (isLoading) return <p>Loading...</p>
   if (isError) return <div>Error! {JSON.stringify(error)}</div>
-
-  const posts = data?.pages.flatMap((page) => page.posts)
 
   return (
     <>

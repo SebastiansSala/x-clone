@@ -28,7 +28,7 @@ const PostCard = ({ post, user, likeMutation }: PostProps) => {
     setLikes(isLiked ? likes - 1 : likes + 1)
     try {
       const res = await likeMutation.mutateAsync(post.id)
-      console.log(res)
+
       if (!res) {
         setIsLiked(isLikedInitially)
         setLikes(likesCount)
