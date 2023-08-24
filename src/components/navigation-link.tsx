@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { Link } from "@nextui-org/link"
 
 type NavigationLinkProps = {
-  text?: string
+  text: string
   href: string
   icon: React.ReactNode
   filledIcon?: React.ReactNode

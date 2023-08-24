@@ -7,37 +7,80 @@ import { updatePostImages } from "@/actions/posts-update-actions"
 import { createPost } from "@/actions/posts-create-actions"
 
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
-import {
-  getPublicPosts,
-  getPublicPosts_withCursor,
-} from "@/actions/posts-get-actions"
+import { fetchPostFunctions } from "./postTypeFunctions"
+import { getPublicPosts } from "@/actions/posts-get-actions"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 
-  const cursor = searchParams.get("cursor") ?? undefined
+  const postType = searchParams.get("postType")
 
-  const skip = cursor ? 1 : 0
-  const cursorObj = cursor ? { id: cursor } : undefined
+  if (!postType) {
+    return NextResponse.json("Invalid data", { status: 400 })
+  }
+
+  const cursor = searchParams.get("cursor")
+  const skip = cursor && Number(cursor) !== 0 ? 1 : 0
+  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined
+
+  if (postType === "fyp") {
+    try {
+      const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj)
+      const nextId =
+        posts.length < MAX_POSTS_PER_FETCH
+          ? undefined
+          : posts[posts.length - 1].id
+
+      return NextResponse.json({ posts, nextId })
+    } catch (e) {
+      console.error(e)
+      return NextResponse.error()
+    }
+  }
 
   const username = searchParams.get("username")
+  let usernameOrUserId = ""
 
-  // const postType = searchParams.get("postType") ?? undefined
+  if (username) {
+    usernameOrUserId = username
+  } else {
+    const supabase = createServerComponentClient({ cookies })
 
-  console.log(cursor, skip, cursorObj)
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
-  const supabase = createServerComponentClient({ cookies })
+      const userId = session?.user.id
 
-  const posts = await getPublicPosts_withCursor(
-    skip,
-    MAX_POSTS_PER_FETCH,
-    cursorObj
-  )
+      if (!userId) {
+        return NextResponse.json("Unauthorized", { status: 401 })
+      }
+      usernameOrUserId = userId
+    } catch (e) {
+      console.error(e)
+      return NextResponse.error()
+    }
+  }
 
-  const nextId =
-    posts.length < MAX_POSTS_PER_FETCH ? undefined : posts[posts.length - 1].id
+  try {
+    const posts = await fetchPostFunctions(
+      postType,
+      usernameOrUserId,
+      skip,
+      MAX_POSTS_PER_FETCH,
+      cursorObj
+    )
+    const nextId =
+      posts.length < MAX_POSTS_PER_FETCH
+        ? undefined
+        : posts[posts.length - 1].id
 
-  return NextResponse.json({ posts, nextId })
+    return NextResponse.json({ posts, nextId })
+  } catch (e) {
+    console.error(e)
+    return NextResponse.error()
+  }
 }
 
 type imagesPost = {

@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <main className='text-white relative'>
-      <PostSection user={user} />
+      <PostSection user={user} initialState='fyp' />
     </main>
   )
 }

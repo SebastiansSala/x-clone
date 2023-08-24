@@ -51,9 +51,11 @@ export const fetchPosts = async (
 
 export const addLike = async (postId: string) => {
   try {
+    console.log(postId)
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "PUT",
     })
+    console.log(res)
 
     if (!res.ok) {
       throw new Error(res.statusText)

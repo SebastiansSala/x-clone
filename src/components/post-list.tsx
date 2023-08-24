@@ -28,9 +28,12 @@ export default function PostList({ postType, username, user }: Props) {
     isFetchingNextPage,
   } = useInfiniteQuery(
     ["posts", postType],
-    ({ pageParam = 0 }) => fetchPosts(postType, pageParam, username),
+    ({ pageParam = 0 }) => {
+      console.log(pageParam)
+      return fetchPosts(postType, pageParam, username)
+    },
     {
-      getNextPageParam: (lastPage) => lastPage?.nextId ?? false,
+      getNextPageParam: (lastPage) => lastPage.nextId,
     }
   )
 

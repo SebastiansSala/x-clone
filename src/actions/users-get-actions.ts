@@ -25,9 +25,9 @@ export const getUsersNotFollowing = async (currentUserId: string) => {
   try {
     return await prisma.users.findMany({
       where: {
-        NOT: {
-          following: {
-            some: {
+        following: {
+          some: {
+            NOT: {
               id: currentUserId,
             },
           },

@@ -33,8 +33,8 @@ export const navigationLinks = [
   },
   {
     text: "Profile",
-    href: "profile",
     icon: <ProfileIcon className='h-8' />,
+    href: "",
     filledIcon: <ProfileFilledIcon className='h-8 fill-white' />,
   },
 ]

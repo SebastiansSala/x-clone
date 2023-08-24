@@ -7,11 +7,11 @@ type TabsProps = {
 }
 
 export default function Tabs({ tabs, postType, handleTabChange }: TabsProps) {
+  const gridCols = tabs.length > 2 ? "grid-cols-3" : "grid-cols-2"
+
   return (
     <nav>
-      <ul
-        className={`grid grid-cols-${tabs.length} sticky inset-0 z-50 backdrop-blur-sm`}
-      >
+      <ul className={`grid ${gridCols} sticky inset-0 z-50 backdrop-blur-sm`}>
         {tabs.map((tab) => (
           <li
             key={tab.id}

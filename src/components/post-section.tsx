@@ -11,10 +11,15 @@ import { postTabs } from "@/data/tabs"
 type PostSectionProps = {
   username?: string
   user?: User
+  initialState: string
 }
 
-export default function PostSection({ username, user }: PostSectionProps) {
-  const [tab, setTab] = useState("fyp")
+export default function PostSection({
+  username,
+  user,
+  initialState,
+}: PostSectionProps) {
+  const [tab, setTab] = useState(initialState)
 
   const handleTabChange = (tab: string) => {
     setTab(tab)
