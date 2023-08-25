@@ -16,7 +16,7 @@ type PostProps = {
   post: PostType
   user?: User
   likeMutation: any
-  isFollowing: boolean | undefined
+  isFollowing: boolean
   onFollowChange: (authorId: string) => void
 }
 
@@ -29,6 +29,7 @@ export default function PostCard({
 }: PostProps) {
   const isLikedInitially = post.likes.some((like) => like.id === user?.id)
   const [isLiked, setIsLiked] = useState(isLikedInitially)
+  const showPublicButtons = user?.id !== post.author.id
 
   const likesCount = post.likes.length
   const [likes, setLikes] = useState(likesCount)
@@ -70,6 +71,7 @@ export default function PostCard({
             author={post.author}
             isFollowing={isFollowing}
             onClick={onFollowChange}
+            showPublicButtons={showPublicButtons}
           />
         </div>
         <div className='w-full'>

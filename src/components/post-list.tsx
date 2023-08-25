@@ -2,14 +2,16 @@
 
 import { useState } from "react"
 import type { User } from "@supabase/supabase-js"
+import { Spinner } from "@nextui-org/spinner"
+import { toast } from "react-hot-toast"
 
 import PostCard from "@/components/post-card"
 
 import usePosts from "@/hooks/usePosts"
 import useLike from "@/hooks/useLike"
 import useFollowData from "@/hooks/useFollowData"
+
 import { followUser, unfollowUser } from "@/services/users-services"
-import { toast } from "react-hot-toast"
 
 type Props = {
   postType: string
@@ -52,7 +54,12 @@ export default function PostList({ postType, username, user }: Props) {
 
   const { likeMutation } = useLike(postType)
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading)
+    return (
+      <div className='h-full w-full grid place-content-center min-h-screen'>
+        <Spinner color='default' size='lg' className='text-center mx-auto' />
+      </div>
+    )
   if (isError) return <div>Error! {JSON.stringify(error)}</div>
 
   return (
@@ -63,12 +70,16 @@ export default function PostList({ postType, username, user }: Props) {
           post={post}
           user={user}
           likeMutation={likeMutation}
-          isFollowing={followingMap?.includes(post.author.id)}
+          isFollowing={followingMap.includes(post.author.id)}
           onFollowChange={onFollowChange}
         />
       ))}
 
-      {isFetchingNextPage ? <div className='loading'>Loading...</div> : null}
+      {isFetchingNextPage ? (
+        <div className='py-14 grid place-content-center'>
+          <Spinner color='default' size='lg' />
+        </div>
+      ) : null}
 
       <span style={{ visibility: "hidden" }} ref={ref}>
         intersection observer marker

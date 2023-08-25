@@ -12,10 +12,9 @@ type FollowDataContextType = {
   followers: UserType[]
 }
 
-export const FollowDataContext = createContext<FollowDataContextType>({
-  following: [],
-  followers: [],
-})
+export const FollowDataContext = createContext<FollowDataContextType | null>(
+  null
+)
 
 export default function FollowDataProvider({
   children,

@@ -1,3 +1,4 @@
+import type { User } from "@supabase/supabase-js"
 import {
   Dropdown,
   DropdownTrigger,
@@ -12,14 +13,16 @@ import type { UserType } from "@/types/posts"
 
 type OptionsDropdownProps = {
   author: UserType
-  isFollowing: boolean | undefined
+  isFollowing: boolean
   onClick: (authorId: string) => void
+  showPublicButtons: boolean
 }
 
 export default function OptionsDropdown({
   author,
   isFollowing,
   onClick,
+  showPublicButtons,
 }: OptionsDropdownProps) {
   return (
     <Dropdown>
@@ -35,10 +38,14 @@ export default function OptionsDropdown({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label='Static Actions' className='text-white'>
-        <DropdownItem key='unfollow' onPress={() => onClick(author.id)}>
-          {isFollowing ? "UnFollow" : "Follow"} @{author.user_name}
-        </DropdownItem>
-        <DropdownItem key='block'>Block @{author.user_name}</DropdownItem>
+        {showPublicButtons && (
+          <>
+            <DropdownItem key='unfollow' onPress={() => onClick(author.id)}>
+              {isFollowing ? "UnFollow" : "Follow"} @{author.user_name}
+            </DropdownItem>
+            <DropdownItem key='block'>Block @{author.user_name}</DropdownItem>
+          </>
+        )}
         <DropdownItem key='bookmark'>Bookmark Post</DropdownItem>
       </DropdownMenu>
     </Dropdown>
