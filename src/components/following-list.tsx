@@ -2,7 +2,7 @@ import FollowingCard from "./following-card"
 
 import type { UserType } from "@/types/posts"
 
-export default function FollowingList({ users }: { users: UserType[] }) {
+export default function FollowingList({ users }: { users?: UserType[] }) {
   return (
     <ul className='bg-[#16181c] text-[#676b70] rounded-xl'>
       <li className='text-xl text-white pt-4 px-4 font-black'>

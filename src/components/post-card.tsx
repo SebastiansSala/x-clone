@@ -29,7 +29,7 @@ export default function PostCard({
 }: PostProps) {
   const isLikedInitially = post.likes.some((like) => like.id === user?.id)
   const [isLiked, setIsLiked] = useState(isLikedInitially)
-  const showPublicButtons = user?.id !== post.author.id
+  const showPublicButtons = user?.id !== post.author.id && user ? true : false
 
   const likesCount = post.likes.length
   const [likes, setLikes] = useState(likesCount)

@@ -1,9 +1,10 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { Button } from "@nextui-org/button"
+import NextLink from "next/link"
 
 import Logo from "@/components/Icons/social/logo-icon"
-import LoginModal from "@/components/login-modal"
 import AuthClientButton from "@/components/auth-client-button"
 
 export default async function Page() {
@@ -34,10 +35,16 @@ export default async function Page() {
             <AuthClientButton />
           </div>
           <footer className='mt-20 w-72'>
-            <p className='text-white text font-bold'>
-              Already have an account?
-            </p>
-            <LoginModal />
+            <p className='text-white text font-bold'>Just looking around?</p>
+            <Button
+              href='/home'
+              as={NextLink}
+              color='primary'
+              variant='solid'
+              className='text-[#1d9bf0] text-center mt-4 w-full bg-transparent border'
+            >
+              Have an insight without an account
+            </Button>
           </footer>
         </section>
       </main>

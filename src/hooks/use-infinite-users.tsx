@@ -1,12 +1,13 @@
 "use client"
 
 import { useEffect } from "react"
-import { useInfiniteQuery } from "react-query"
 import { useInView } from "react-intersection-observer"
 
-import { fetchPosts } from "@/services/posts-services"
+import useInfinite from "./use-infinite"
 
-export default function usePosts(postType: string, username?: string) {
+import { fetchUsers } from "@/services/users-services"
+
+export default function useInfiniteUsers() {
   const { ref, inView } = useInView()
 
   const {
@@ -17,15 +18,7 @@ export default function usePosts(postType: string, username?: string) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery(
-    ["posts", postType],
-    ({ pageParam = 0 }) => {
-      return fetchPosts(postType, pageParam, username)
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextId,
-    }
-  )
+  } = useInfinite("users", (pageParam) => fetchUsers(pageParam))
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -33,10 +26,10 @@ export default function usePosts(postType: string, username?: string) {
     }
   }, [inView, fetchNextPage, hasNextPage])
 
-  const posts = data?.pages.flatMap((page) => page.posts)
+  const users = data?.pages.flatMap((page) => page.users)
 
   return {
-    posts,
+    users,
     isError,
     isLoading,
     isFetchingNextPage,

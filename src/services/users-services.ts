@@ -76,3 +76,16 @@ export const fetchUserFollowData = async (userId: string) => {
     console.error(e)
   }
 }
+
+export const fetchUsers = async (pageParam: number) => {
+  try {
+    const res = await fetch(`http://localhost:3000/api/users?page=${pageParam}`)
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}

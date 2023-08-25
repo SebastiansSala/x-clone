@@ -6,7 +6,7 @@ import NavigationAside from "@/components/navigation-aside"
 import FollowingList from "@/components/following-list"
 import { SearchIcon } from "@/components/Icons/utility/search-icon"
 
-import { getUsersNotFollowing } from "@/actions/users-get-actions"
+import { getUsers, getUsersNotFollowing } from "@/actions/users-get-actions"
 import FollowDataProvider from "@/contexts/follow-data-context"
 
 export default async function UserLayout({
@@ -20,7 +20,9 @@ export default async function UserLayout({
     data: { session },
   } = await supabase.auth.getSession()
 
-  const users = session?.user ? await getUsersNotFollowing(session.user.id) : []
+  const users = session?.user
+    ? await getUsersNotFollowing(session.user.id)
+    : await getUsers()
 
   return (
     <FollowDataProvider>

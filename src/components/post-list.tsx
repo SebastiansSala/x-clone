@@ -7,9 +7,9 @@ import { toast } from "react-hot-toast"
 
 import PostCard from "@/components/post-card"
 
-import usePosts from "@/hooks/usePosts"
-import useLike from "@/hooks/useLike"
-import useFollowData from "@/hooks/useFollowData"
+import useInfinitePosts from "@/hooks/use-infinite-posts"
+import useLike from "@/hooks/use-like"
+import useFollowData from "@/hooks/use-follow-data"
 
 import { followUser, unfollowUser } from "@/services/users-services"
 
@@ -21,7 +21,7 @@ type Props = {
 
 export default function PostList({ postType, username, user }: Props) {
   const { posts, isLoading, isError, ref, isFetchingNextPage, error } =
-    usePosts(postType, username)
+    useInfinitePosts(postType, username)
 
   const { following } = useFollowData()
 
