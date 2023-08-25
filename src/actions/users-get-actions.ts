@@ -19,8 +19,6 @@ export const getUsers = async () => {
   }
 }
 
-//function that returns users taht the current user is not following
-
 export const getUsersNotFollowing = async (currentUserId: string) => {
   try {
     return await prisma.users.findMany({
@@ -39,4 +37,16 @@ export const getUsersNotFollowing = async (currentUserId: string) => {
     console.error(e)
     return []
   }
+}
+
+export const getUserFollowData = async (currentUserId: string) => {
+  return await prisma.users.findUnique({
+    where: {
+      id: currentUserId,
+    },
+    include: {
+      followers: true,
+      following: true,
+    },
+  })
 }

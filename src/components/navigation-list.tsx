@@ -1,10 +1,11 @@
 import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+
 import NavbarLink from "./navigation-link"
 
 import { navigationLinks } from "@/data/links"
 
-const NavigationList = async () => {
+export default async function NavigationList() {
   const supabase = createServerComponentClient({ cookies })
 
   const {
@@ -35,5 +36,3 @@ const NavigationList = async () => {
     </>
   )
 }
-
-export default NavigationList

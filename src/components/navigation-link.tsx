@@ -10,12 +10,12 @@ type NavigationLinkProps = {
   icon: React.ReactNode
   filledIcon?: React.ReactNode
 }
-const NavigationLink = ({
+export default function NavigationLink({
   text,
   href,
   icon,
   filledIcon,
-}: NavigationLinkProps) => {
+}: NavigationLinkProps) {
   const pathname = usePathname()
 
   const selectedLink = pathname.split("/").includes(href)
@@ -36,5 +36,3 @@ const NavigationLink = ({
     </Link>
   )
 }
-
-export default NavigationLink

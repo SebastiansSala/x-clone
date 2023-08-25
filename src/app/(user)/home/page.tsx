@@ -3,6 +3,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 
 import PostSection from "@/components/post-section"
 
+import { postTabs } from "@/data/tabs"
+
 export default async function Home() {
   const supabase = createServerComponentClient({ cookies })
 
@@ -14,7 +16,7 @@ export default async function Home() {
 
   return (
     <main className='text-white relative'>
-      <PostSection user={user} initialState='fyp' />
+      <PostSection user={user} initialState='fyp' tabs={postTabs} />
     </main>
   )
 }

@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/button"
-import React from "react"
+
 import { RetweetIcon } from "./Icons/utility/retweet-icon"
 
 type RetweetButtonProps = {

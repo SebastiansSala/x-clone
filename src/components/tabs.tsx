@@ -1,7 +1,8 @@
+import { TabsType } from "@/types"
 import clsx from "clsx"
 
 type TabsProps = {
-  tabs: { id: string; label: string }[]
+  tabs: TabsType[]
   postType: string
   handleTabChange: (tab: string) => void
 }

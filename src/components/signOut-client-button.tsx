@@ -1,6 +1,6 @@
 "use client"
 
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 
 const SignOutClientButton = () => {

@@ -36,9 +36,9 @@ export default function usePosts(postType: string, username?: string) {
   const posts = data?.pages.flatMap((page) => page.posts)
 
   return {
+    posts,
     isError,
     isLoading,
-    posts,
     isFetchingNextPage,
     error,
     ref,

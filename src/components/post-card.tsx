@@ -1,13 +1,14 @@
+"use client"
+
 import { useState } from "react"
+import type { User } from "@supabase/supabase-js"
 import { Avatar } from "@nextui-org/avatar"
 import { Image } from "@nextui-org/image"
-import { Button } from "@nextui-org/button"
-import type { User } from "@supabase/supabase-js"
 
 import LikeButton from "./like-button"
 import CommentButton from "./comment-button"
 import RetweetButton from "./retweet-button"
-import { OptionsIcon } from "./Icons/utility/option-icon"
+import OptionsDropdown from "./options-dropdown"
 
 import type { PostType } from "@/types/posts"
 
@@ -15,17 +16,27 @@ type PostProps = {
   post: PostType
   user?: User
   likeMutation: any
+  isFollowing: boolean | undefined
+  onFollowChange: (authorId: string) => void
 }
 
-const PostCard = ({ post, user, likeMutation }: PostProps) => {
+export default function PostCard({
+  post,
+  user,
+  likeMutation,
+  isFollowing,
+  onFollowChange,
+}: PostProps) {
   const isLikedInitially = post.likes.some((like) => like.id === user?.id)
   const [isLiked, setIsLiked] = useState(isLikedInitially)
+
   const likesCount = post.likes.length
   const [likes, setLikes] = useState(likesCount)
 
   const handleLike = async () => {
     setIsLiked(!isLiked)
     setLikes(isLiked ? likes - 1 : likes + 1)
+
     try {
       const res = await likeMutation.mutateAsync(post.id)
 
@@ -53,18 +64,13 @@ const PostCard = ({ post, user, likeMutation }: PostProps) => {
         <div className='flex justify-between items-center'>
           <div className='flex gap-4'>
             <h4>{post.author.name}</h4>
-            <p className='text-gray-500'>{post.author?.user_name}</p>
+            <p className='text-gray-500'>{post.author.user_name}</p>
           </div>
-
-          <Button
-            radius='full'
-            isIconOnly
-            color='primary'
-            variant='light'
-            className='text-gray-500 hover:text-blue-600'
-          >
-            <OptionsIcon className='w-6 h-6' />
-          </Button>
+          <OptionsDropdown
+            author={post.author}
+            isFollowing={isFollowing}
+            onClick={onFollowChange}
+          />
         </div>
         <div className='w-full'>
           <p className='truncate max-w-full'>{post.text}</p>
@@ -99,5 +105,3 @@ const PostCard = ({ post, user, likeMutation }: PostProps) => {
     </li>
   )
 }
-
-export default PostCard

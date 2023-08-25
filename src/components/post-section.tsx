@@ -6,18 +6,20 @@ import type { User } from "@supabase/supabase-js"
 import PostList from "./post-list"
 import Tabs from "@/components/tabs"
 
-import { postTabs } from "@/data/tabs"
+import { TabsType } from "@/types"
 
 type PostSectionProps = {
   username?: string
   user?: User
   initialState: string
+  tabs: TabsType[]
 }
 
 export default function PostSection({
-  username,
   user,
+  username,
   initialState,
+  tabs,
 }: PostSectionProps) {
   const [tab, setTab] = useState(initialState)
 
@@ -27,8 +29,8 @@ export default function PostSection({
 
   return (
     <>
-      <Tabs tabs={postTabs} postType={tab} handleTabChange={handleTabChange} />
-      <PostList postType={tab} username={username} user={user} />
+      <Tabs tabs={tabs} postType={tab} handleTabChange={handleTabChange} />
+      <PostList postType={tab} user={user} username={username} />
     </>
   )
 }

@@ -1,6 +1,6 @@
 import type { ImageListType } from "react-images-uploading"
 
-import { PostType } from "@/types/posts"
+import type { PostType } from "@/types/posts"
 
 export const createPost = async (
   text: string,
@@ -51,11 +51,9 @@ export const fetchPosts = async (
 
 export const addLike = async (postId: string) => {
   try {
-    console.log(postId)
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "PUT",
     })
-    console.log(res)
 
     if (!res.ok) {
       throw new Error(res.statusText)

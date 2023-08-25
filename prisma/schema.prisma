@@ -19,10 +19,13 @@ model Users {
   description      String?
   followers        Users[]    @relation("UserFollow")
   following        Users[]    @relation("UserFollow")
+  blockedUsers     Users[]    @relation("UserBlockedBy")
+  blockedBy        Users[]    @relation("UserBlockedBy")
   likedPosts       Posts[]    @relation("PostLikeBy")
   posts            Posts[]
   retweets         Retweets[] @relation("PostRetweetedBy")
   likedComments    Comments[] @relation("CommentsLikedBy")
+  bookmarks        Posts[]    @relation("PostBookmarkedBy")
   comments         Comments[]
   recievedMessages Messages[] @relation("RecievedMessage")
   sentMessages     Messages[] @relation("SentMessage")
@@ -54,6 +57,7 @@ model Posts {
   updatedAt     DateTime?
   likes         Users[]    @relation("PostLikeBy")
   comments      Comments[] @relation("PostComment")
+  bookmarks     Users[]    @relation("PostBookmarkedBy")
   publicVisible Boolean    @default(true)
 
   @@map("posts")

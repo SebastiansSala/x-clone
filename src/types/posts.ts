@@ -1,9 +1,14 @@
 export type UserType = {
-  id?: string
+  id: string
   user_name: string
   name: string
   avatar_url: string
   description?: string | null
+}
+
+export type UserFollowDataType = UserType & {
+  followers: UserType[]
+  following: UserType[]
 }
 
 export type PostType = {
