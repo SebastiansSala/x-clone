@@ -125,7 +125,9 @@ export const getPostsByUsername = async (
 ) => {
   return await prisma.posts.findMany({
     where: {
-      authorId: username,
+      author: {
+        user_name: username,
+      },
     },
     include: {
       author: true,

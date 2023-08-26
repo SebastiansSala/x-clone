@@ -7,7 +7,7 @@ import {
 } from "@nextui-org/dropdown"
 import { Button } from "@nextui-org/button"
 
-import { OptionsIcon } from "./Icons/utility/option-icon"
+import { OptionsIcon } from "../Icons/utility/option-icon"
 
 import type { UserType } from "@/types/posts"
 

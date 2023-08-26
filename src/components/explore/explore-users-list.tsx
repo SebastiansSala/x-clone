@@ -1,6 +1,6 @@
 "use client"
 
-import FollowingCard from "./following-card"
+import FollowingCard from "../following-card"
 
 import useInfiniteUsers from "@/hooks/use-infinite-users"
 

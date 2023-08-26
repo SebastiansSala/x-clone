@@ -1,8 +1,6 @@
-import Link from "next/link"
-
-import PostModal from "./create-post-modal/create-post-modal"
+import PostModal from "../create-post-modal/create-post-modal"
 import NavigationList from "./navigation-list"
-import SignOutClientButton from "./signOut-client-button"
+import SignOutClientButton from "../auth/auth-signout-client-button"
 import Logo from "@/components/Icons/social/logo-icon"
 import NavigationLinkIcon from "./navigation-link-icon"
 

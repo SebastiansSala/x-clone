@@ -4,9 +4,10 @@ import { useState } from "react"
 import type { User } from "@supabase/supabase-js"
 
 import PostList from "./post-list"
-import Tabs from "@/components/tabs"
+import Tabs from "@/components/post/post-tabs"
 
 import { TabsType } from "@/types"
+import { redirect } from "next/navigation"
 
 type PostSectionProps = {
   username?: string
@@ -25,6 +26,10 @@ export default function PostSection({
 
   const handleTabChange = (tab: string) => {
     setTab(tab)
+  }
+
+  if (!user && tab === "following") {
+    return redirect("/")
   }
 
   return (

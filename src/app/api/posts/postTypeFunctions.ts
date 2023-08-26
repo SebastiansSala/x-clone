@@ -20,9 +20,9 @@ type PostTypeFunctions = {
 
 const postTypeFunctions: PostTypeFunctions = {
   following: getFollowingPosts,
-  liked: getLikedPostsByUsername,
-  retweeted: getRetweetedPostsByUsername,
-  user: getPostsByUsername,
+  posts: getPostsByUsername,
+  retweets: getRetweetedPostsByUsername,
+  likes: getLikedPostsByUsername,
 }
 
 export const fetchPostFunctions = async (

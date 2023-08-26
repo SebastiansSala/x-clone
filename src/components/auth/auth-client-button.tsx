@@ -3,7 +3,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Button } from "@nextui-org/button"
 
-import GithubIcon from "./Icons/social/github-icon"
+import GithubIcon from "../Icons/social/github-icon"
 
 const AuthClientButton = () => {
   const supabase = createClientComponentClient()

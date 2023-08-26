@@ -3,9 +3,8 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Divider } from "@nextui-org/divider"
 import { Input } from "@nextui-org/input"
 
-import UsersList from "@/components/users-list"
+import UsersList from "@/components/explore/explore-users-list"
 import { SearchIcon } from "@/components/Icons/utility/search-icon"
-import { getUsers, getUsersNotFollowing } from "@/actions/users-get-actions"
 
 export default async function ExplorePage() {
   const supabase = createServerComponentClient({ cookies })
@@ -13,10 +12,6 @@ export default async function ExplorePage() {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-
-  const users = session?.user
-    ? await getUsersNotFollowing(session.user.id)
-    : await getUsers()
 
   return (
     <main>
@@ -32,7 +27,7 @@ export default async function ExplorePage() {
         </div>
         <Divider />
       </div>
-      <UsersList users={users} />
+      <UsersList />
     </main>
   )
 }

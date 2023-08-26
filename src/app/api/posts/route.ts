@@ -9,6 +9,7 @@ import { createPost } from "@/actions/posts-create-actions"
 import { MAX_POSTS_PER_FETCH } from "@/const/posts"
 import { fetchPostFunctions } from "./postTypeFunctions"
 import { getPublicPosts } from "@/actions/posts-get-actions"
+import getNextId from "@/utils/getNextId"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -26,10 +27,7 @@ export async function GET(req: NextRequest) {
   if (postType === "fyp") {
     try {
       const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj)
-      const nextId =
-        posts.length < MAX_POSTS_PER_FETCH
-          ? undefined
-          : posts[posts.length - 1].id
+      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
 
       return NextResponse.json({ posts, nextId })
     } catch (e) {
@@ -71,10 +69,7 @@ export async function GET(req: NextRequest) {
       MAX_POSTS_PER_FETCH,
       cursorObj
     )
-    const nextId =
-      posts.length < MAX_POSTS_PER_FETCH
-        ? undefined
-        : posts[posts.length - 1].id
+    const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
 
     return NextResponse.json({ posts, nextId })
   } catch (e) {

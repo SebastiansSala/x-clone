@@ -2,11 +2,12 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 
-import PostSection from "@/components/post-section"
-import ArrowBackButton from "@/components/arrow-back-button"
+import PostSection from "@/components/post/post-section"
+import ArrowBackButton from "@/components/navigation/navigation-back-button"
 
 import prisma from "@/utils/prisma"
 import { profileTabs } from "@/data/tabs"
+import { Avatar } from "@nextui-org/avatar"
 
 type ProfilePageProps = {
   params: {
@@ -20,10 +21,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const {
     data: { session },
   } = await supabase.auth.getSession()
-
-  if (!session) {
-    redirect("/")
-  }
 
   const user = await prisma.users.findFirst({
     where: {
@@ -46,10 +43,19 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <p className='text-gray-'>{user?._count.posts}</p>
         </div>
       </div>
+      <section className='relative p-4'>
+        <div className='w-full h-40 bg-[#333639] z-0' />
+        <Avatar className='absolute z-0' />
+        <div className='p-4'>
+          {user?.name}
+          {user?.name}
+          {user?.description}
+        </div>
+      </section>
       <PostSection
         username={params.username}
         user={session?.user}
-        initialState='fyp'
+        initialState='posts'
         tabs={profileTabs}
       />
     </main>

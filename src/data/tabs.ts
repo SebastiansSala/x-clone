@@ -1,7 +1,7 @@
 export const postTabs = [
   {
     id: "fyp",
-    label: "Posts",
+    label: "For you",
   },
   {
     id: "following",

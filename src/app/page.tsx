@@ -5,7 +5,7 @@ import { Button } from "@nextui-org/button"
 import NextLink from "next/link"
 
 import Logo from "@/components/Icons/social/logo-icon"
-import AuthClientButton from "@/components/auth-client-button"
+import AuthClientButton from "@/components/auth/auth-client-button"
 
 export default async function Page() {
   const supabase = createServerComponentClient({ cookies })

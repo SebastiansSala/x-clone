@@ -5,10 +5,10 @@ import type { User } from "@supabase/supabase-js"
 import { Avatar } from "@nextui-org/avatar"
 import { Image } from "@nextui-org/image"
 
-import LikeButton from "./like-button"
-import CommentButton from "./comment-button"
-import RetweetButton from "./retweet-button"
-import OptionsDropdown from "./options-dropdown"
+import LikeButton from "./post-like-button"
+import CommentButton from "./post-comment-button"
+import RetweetButton from "./post-retweet-button"
+import OptionsDropdown from "./post-options-dropdown"
 
 import type { PostType } from "@/types/posts"
 

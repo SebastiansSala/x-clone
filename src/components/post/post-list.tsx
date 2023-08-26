@@ -5,7 +5,7 @@ import type { User } from "@supabase/supabase-js"
 import { Spinner } from "@nextui-org/spinner"
 import { toast } from "react-hot-toast"
 
-import PostCard from "@/components/post-card"
+import PostCard from "@/components/post/post-card"
 
 import useInfinitePosts from "@/hooks/use-infinite-posts"
 import useLike from "@/hooks/use-like"

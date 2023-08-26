@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { Button } from "@nextui-org/button"
 
-import ArrowBackIcon from "./Icons/utility/arrow-back-icon"
+import ArrowBackIcon from "../Icons/utility/arrow-back-icon"
 
 export default function ArrowBackButton() {
   const router = useRouter()

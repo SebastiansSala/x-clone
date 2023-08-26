@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button"
 
-import { CommentIcon } from "./Icons/utility/comment-icon"
+import { CommentIcon } from "../Icons/utility/comment-icon"
 
 type CommentButtonProps = {
   onClick: () => void

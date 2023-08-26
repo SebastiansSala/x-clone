@@ -7,16 +7,14 @@ import type { UserType } from "../types/posts"
 type FollowingCardProps = UserType & {}
 const FollowingCard = ({ name, user_name, avatar_url }: FollowingCardProps) => {
   return (
-    <li>
-      <Link
-        href={"/" + user_name}
-        className='flex justify-between items-center cursor-pointer hover:bg-[#1d1f23] p-4 transition duration-250'
-      >
+    <li className='relative cursor-pointer hover:bg-[#1d1f23] transition duration-250'>
+      <Link href={"/" + user_name} className='absolute z-0 h-full w-full' />
+      <div className='z-50 flex justify-between items-center p-4'>
         <div className='flex gap-4 items-center'>
           <Avatar src={avatar_url} />
           <div>
             <p className='text-white font-semibold'>{name}</p>
-            <span>{user_name}</span>
+            <span className='text-white'>{user_name}</span>
           </div>
         </div>
         <Button
@@ -25,7 +23,7 @@ const FollowingCard = ({ name, user_name, avatar_url }: FollowingCardProps) => {
         >
           Follow
         </Button>
-      </Link>
+      </div>
     </li>
   )
 }

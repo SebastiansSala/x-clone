@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 
-import PostSection from "@/components/post-section"
+import PostSection from "@/components/post/post-section"
 
 import { postTabs } from "@/data/tabs"
 

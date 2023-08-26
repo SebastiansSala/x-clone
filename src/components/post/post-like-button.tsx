@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/button"
 
-import { LikeIcon } from "./Icons/utility/like-icon"
+import { LikeIcon } from "../Icons/utility/like-icon"
 
 type LikeButtonProps = {
   onClick: () => void

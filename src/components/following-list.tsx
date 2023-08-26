@@ -1,3 +1,4 @@
+import Link from "next/link"
 import FollowingCard from "./following-card"
 
 import type { UserType } from "@/types/posts"
@@ -18,7 +19,7 @@ export default function FollowingList({ users }: { users?: UserType[] }) {
         />
       ))}
       <li className='hover:bg-[#1d1f23] cursor-pointer transition duration-250 text-xl text-white p-4 rounded-b-xl font-black'>
-        <a>Show More</a>
+        <Link href='/explore'>Show More</Link>
       </li>
     </ul>
   )
