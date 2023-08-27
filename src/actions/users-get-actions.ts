@@ -33,8 +33,6 @@ export const getAllUsers_sessionRequest = async (
     where: {
       NOT: {
         id: userId,
-      },
-      AND: {
         followers: {
           some: {
             NOT: {

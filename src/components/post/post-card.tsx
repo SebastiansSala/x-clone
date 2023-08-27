@@ -16,6 +16,7 @@ type PostProps = {
   post: PostType
   user?: User
   likeMutation: any
+  removeLikeMutation: any
   isFollowing: boolean
   onFollowChange: (authorId: string) => void
 }
@@ -26,29 +27,23 @@ export default function PostCard({
   likeMutation,
   isFollowing,
   onFollowChange,
+  removeLikeMutation,
 }: PostProps) {
-  const isLikedInitially = post.likes.some((like) => like.id === user?.id)
-  const [isLiked, setIsLiked] = useState(isLikedInitially)
+  const isLiked = post.likes.some((like) => like.id === user?.id)
+
   const showPublicButtons = user?.id !== post.author.id && user ? true : false
 
   const likesCount = post.likes.length
-  const [likes, setLikes] = useState(likesCount)
 
   const handleLike = async () => {
-    setIsLiked(!isLiked)
-    setLikes(isLiked ? likes - 1 : likes + 1)
-
     try {
-      const res = await likeMutation.mutateAsync(post.id)
-
-      if (!res) {
-        setIsLiked(isLikedInitially)
-        setLikes(likesCount)
+      if (isLiked) {
+        await removeLikeMutation.mutateAsync(post.id)
+        return
       }
+      await likeMutation.mutateAsync(post.id)
     } catch (err) {
       console.log(err)
-      setIsLiked(isLikedInitially)
-      setLikes(likesCount)
     }
   }
 
@@ -59,7 +54,7 @@ export default function PostCard({
   const handleRetweet = () => {}
 
   return (
-    <li className='grid grid-cols-12 border-t-1 border-[#2f3336] p-4'>
+    <div className='grid grid-cols-12 p-4'>
       <Avatar className='col-span-1' src={post.author.avatar_url} />
       <div className='col-span-11'>
         <div className='flex justify-between items-center'>
@@ -99,11 +94,11 @@ export default function PostCard({
           />
           <LikeButton
             onClick={handleLike}
-            likesCount={likes}
+            likesCount={likesCount}
             isLiked={isLiked}
           />
         </div>
       </div>
-    </li>
+    </div>
   )
 }

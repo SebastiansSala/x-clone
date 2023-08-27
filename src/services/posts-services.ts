@@ -49,10 +49,26 @@ export const fetchPosts = async (
   return data
 }
 
-export const addLike = async (postId: string) => {
+export const likePost = async (postId: string) => {
   try {
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "PUT",
+    })
+
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export const unlikePost = async (postId: string) => {
+  try {
+    const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
+      method: "DELETE",
     })
 
     if (!res.ok) {

@@ -8,6 +8,7 @@ import ArrowBackButton from "@/components/navigation/navigation-back-button"
 import prisma from "@/utils/prisma"
 import { profileTabs } from "@/data/tabs"
 import { Avatar } from "@nextui-org/avatar"
+import { Divider } from "@nextui-org/divider"
 
 type ProfilePageProps = {
   params: {
@@ -35,7 +36,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <main className='text-white relative'>
-      <div className='w-full flex items-center gap-4 sticky inset-0 px-2 py-1'>
+      <div className='w-full flex items-center gap-4 sticky inset-0 px-2 backdrop-blur-md py-6'>
         <ArrowBackButton />
 
         <div>
@@ -44,7 +45,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </div>
       </div>
       <section className='relative p-4'>
-        <div className='w-full h-40 bg-[#333639] z-0' />
         <Avatar className='absolute z-0' />
         <div className='p-4'>
           {user?.name}
@@ -52,7 +52,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           {user?.description}
         </div>
       </section>
+      <Divider />
       <PostSection
+        isSticky={false}
         username={params.username}
         user={session?.user}
         initialState='posts'

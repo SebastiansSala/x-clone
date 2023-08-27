@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "react-query"
 
 export default function useInfinite(
-  cacheKey: string,
+  cacheKey: string[],
   fetchFn: (pageParam: number) => any
 ) {
   const {

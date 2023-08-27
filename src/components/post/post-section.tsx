@@ -10,10 +10,11 @@ import { TabsType } from "@/types"
 import { redirect } from "next/navigation"
 
 type PostSectionProps = {
-  username?: string
-  user?: User
   initialState: string
   tabs: TabsType[]
+  isSticky: boolean
+  user?: User
+  username?: string
 }
 
 export default function PostSection({
@@ -21,6 +22,7 @@ export default function PostSection({
   username,
   initialState,
   tabs,
+  isSticky,
 }: PostSectionProps) {
   const [tab, setTab] = useState(initialState)
 
@@ -34,7 +36,12 @@ export default function PostSection({
 
   return (
     <>
-      <Tabs tabs={tabs} postType={tab} handleTabChange={handleTabChange} />
+      <Tabs
+        tabs={tabs}
+        isSticky={isSticky}
+        postType={tab}
+        handleTabChange={handleTabChange}
+      />
       <PostList postType={tab} user={user} username={username} />
     </>
   )

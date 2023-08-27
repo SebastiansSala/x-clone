@@ -18,7 +18,7 @@ export default function useInfinitePosts(postType: string, username?: string) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfinite(postType, (pageParam) =>
+  } = useInfinite(["posts", postType], (pageParam) =>
     fetchPosts(postType, pageParam, username)
   )
 
@@ -28,7 +28,7 @@ export default function useInfinitePosts(postType: string, username?: string) {
     }
   }, [inView, fetchNextPage, hasNextPage])
 
-  const posts = data?.pages.flatMap((page) => page.posts)
+  const posts = data?.pages?.flatMap((page) => page.posts)
 
   return {
     posts,

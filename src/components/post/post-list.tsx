@@ -1,17 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import type { User } from "@supabase/supabase-js"
 import { Spinner } from "@nextui-org/spinner"
-import { toast } from "react-hot-toast"
+import { Divider } from "@nextui-org/divider"
 
 import PostCard from "@/components/post/post-card"
 
 import useInfinitePosts from "@/hooks/use-infinite-posts"
-import useLike from "@/hooks/use-like"
 import useFollowData from "@/hooks/use-follow-data"
-
-import { followUser, unfollowUser } from "@/services/users-services"
+import usePostActions from "@/hooks/use-post-actions"
+import useFollow from "@/hooks/use-follow"
 
 type Props = {
   postType: string
@@ -25,34 +23,9 @@ export default function PostList({ postType, username, user }: Props) {
 
   const { following } = useFollowData()
 
-  const followingInitial = following?.map((follow) => follow.id)
+  const { followingMap, toggleFollow } = useFollow(following)
 
-  const [followingMap, setFollowingMap] = useState(followingInitial)
-
-  const onFollowChange = async (authorId: string) => {
-    setFollowingMap((prevMap) => {
-      if (prevMap?.includes(authorId)) {
-        return prevMap?.filter((id) => id !== authorId)
-      } else {
-        return [...prevMap, authorId]
-      }
-    })
-    if (following) {
-      toast.promise(unfollowUser(authorId), {
-        loading: "Unfollowing...",
-        success: "Unfollowed",
-        error: "Error unfollowing user",
-      })
-    } else {
-      toast.promise(followUser(authorId), {
-        loading: "Following...",
-        success: "Followed",
-        error: "Error following user",
-      })
-    }
-  }
-
-  const { likeMutation } = useLike(postType)
+  const { addLike, removeLike } = usePostActions(postType, user)
 
   if (isLoading)
     return (
@@ -63,16 +36,19 @@ export default function PostList({ postType, username, user }: Props) {
   if (isError) return <div>Error! {JSON.stringify(error)}</div>
 
   return (
-    <>
+    <ul>
       {posts?.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          user={user}
-          likeMutation={likeMutation}
-          isFollowing={followingMap.includes(post.author.id)}
-          onFollowChange={onFollowChange}
-        />
+        <li key={post.id}>
+          <PostCard
+            post={post}
+            user={user}
+            likeMutation={addLike}
+            removeLikeMutation={removeLike}
+            isFollowing={followingMap.includes(post.author.id)}
+            onFollowChange={toggleFollow}
+          />
+          <Divider />
+        </li>
       ))}
 
       {isFetchingNextPage ? (
@@ -84,6 +60,6 @@ export default function PostList({ postType, username, user }: Props) {
       <span style={{ visibility: "hidden" }} ref={ref}>
         intersection observer marker
       </span>
-    </>
+    </ul>
   )
 }

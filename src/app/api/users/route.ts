@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
   if (!session) {
     try {
       const users = await getAllUsers(skip, MAX_POSTS_PER_FETCH, cursorObj)
+
       const nextId = getNextId(users, MAX_POSTS_PER_FETCH)
 
       return NextResponse.json({ users, nextId })
@@ -35,12 +36,14 @@ export async function GET(req: NextRequest) {
 
   const userId = session.user.id
   try {
+    console.log(userId, skip, MAX_POSTS_PER_FETCH, cursorObj)
     const users = await getAllUsers_sessionRequest(
       skip,
       MAX_POSTS_PER_FETCH,
       userId,
       cursorObj
     )
+
     const nextId = getNextId(users, MAX_POSTS_PER_FETCH)
 
     return NextResponse.json({ users, nextId })

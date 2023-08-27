@@ -5,13 +5,19 @@ type TabsProps = {
   tabs: TabsType[]
   postType: string
   handleTabChange: (tab: string) => void
+  isSticky: boolean
 }
 
-export default function Tabs({ tabs, postType, handleTabChange }: TabsProps) {
+export default function Tabs({
+  tabs,
+  postType,
+  handleTabChange,
+  isSticky,
+}: TabsProps) {
   const gridCols = tabs.length > 2 ? "grid-cols-3" : "grid-cols-2"
 
   return (
-    <nav className='sticky inset-0 backdrop-blur-sm z-50'>
+    <nav className={clsx(isSticky && "sticky inset-0 backdrop-blur-sm z-50")}>
       <ul className={`grid ${gridCols} `}>
         {tabs.map((tab) => (
           <li

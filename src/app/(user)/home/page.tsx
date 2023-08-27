@@ -16,7 +16,12 @@ export default async function Home() {
 
   return (
     <main className='text-white relative'>
-      <PostSection user={user} initialState='fyp' tabs={postTabs} />
+      <PostSection
+        user={user}
+        initialState='fyp'
+        tabs={postTabs}
+        isSticky={true}
+      />
     </main>
   )
 }

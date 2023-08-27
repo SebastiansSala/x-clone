@@ -28,7 +28,6 @@ export async function POST(
   req: Request,
   { params }: { params: { userId: string } }
 ) {
-  console.log(params)
   const userId = params.userId
 
   if (!userId) return NextResponse.json("Missing userId")
