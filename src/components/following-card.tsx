@@ -8,6 +8,8 @@ import type { UserType } from "../types/posts"
 
 type FollowingCardProps = UserType & {
   toggleFollow: (authorId: string) => void
+  isLoading: boolean
+  isFollowing: boolean
 }
 
 const FollowingCard = ({
@@ -16,7 +18,14 @@ const FollowingCard = ({
   user_name,
   avatar_url,
   toggleFollow,
+  isLoading,
+  isFollowing
 }: FollowingCardProps) => {
+
+
+
+  console.log(id, isFollowing)
+
   return (
     <li className='relative cursor-pointer hover:bg-[#1d1f23] transition duration-250'>
       <Link href={"/" + user_name} className='absolute z-0 h-full w-full' />
@@ -30,10 +39,11 @@ const FollowingCard = ({
         </div>
         <Button
           color='default'
+          disabled={isLoading}
           onPress={() => toggleFollow(id)}
-          className='bg-white hover:bg-gray-300 text-black'
+          className={`bg-white hover:bg-gray-300 text-black ${isLoading && "bg-gray-300"}`}
         >
-          Follow
+          {isLoading ? "Loading" : isFollowing ? "Unfollow" : "Follow"}
         </Button>
       </div>
     </li>

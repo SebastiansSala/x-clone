@@ -5,12 +5,18 @@ import FollowingCard from "../following-card"
 
 import useInfiniteUsers from "@/hooks/use-infinite-users"
 import useFollow from "@/hooks/use-follow"
+import { type User } from "@supabase/supabase-js"
 
-export default function UsersList() {
+type UsersListProps = {
+  user?: User 
+}
+
+
+export default function UsersList({ user}: UsersListProps) {
   const { users } = useInfiniteUsers()
 
   const { following } = useFollowData()
-  const { toggleFollow } = useFollow(following)
+  const { toggleFollow, isLoading } = useFollow(following)
 
   return (
     <ul>
@@ -20,8 +26,10 @@ export default function UsersList() {
           id={id}
           avatar_url={avatar_url}
           name={name}
-          toggleFollow={toggleFollow}
           user_name={user_name}
+          toggleFollow={toggleFollow}
+          isLoading={isLoading}
+          isFollowing={following?.includes(id)}
         />
       ))}
     </ul>

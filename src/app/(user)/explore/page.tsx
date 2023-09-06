@@ -27,7 +27,7 @@ export default async function ExplorePage() {
         </div>
         <Divider />
       </div>
-      <UsersList />
+      <UsersList user={session?.user}/>
     </main>
   )
 }

@@ -29,6 +29,7 @@ export const createUser = async (
 
 export const followUser = async (authorId: string) => {
   try {
+    console.log("follow")
     const res = await fetch(
       `http://localhost:3000/api/users/${authorId}/follow`,
       {
@@ -38,6 +39,7 @@ export const followUser = async (authorId: string) => {
     if (!res.ok) {
       throw new Error(res.statusText)
     }
+
     return res.json()
   } catch (e) {
     console.error(e)
@@ -47,6 +49,7 @@ export const followUser = async (authorId: string) => {
 
 export const unfollowUser = async (authorId: string) => {
   try {
+
     const res = await fetch(
       `http://localhost:3000/api/users/${authorId}/follow`,
       {

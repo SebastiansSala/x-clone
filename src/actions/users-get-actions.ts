@@ -7,6 +7,7 @@ export const getUsers = async () => {
     })
   } catch (e) {
     console.error(e)
+    return []
   }
 }
 
@@ -33,14 +34,23 @@ export const getAllUsers_sessionRequest = async (
     where: {
       NOT: {
         id: userId,
-        followers: {
-          some: {
-            NOT: {
+      },
+      OR:[
+        {
+          followers: {
+            none: {
               id: userId,
             },
           },
         },
-      },
+        {
+          following: {
+            some: {
+              id: userId,
+            },
+          },
+        },
+      ]
     },
     skip,
     take,
@@ -52,18 +62,19 @@ export const getUsersNotFollowing = async (currentUserId: string) => {
   try {
     return await prisma.users.findMany({
       where: {
-        following: {
-          some: {
-            NOT: {
+        NOT: {
+          followers: {
+            some: {
               id: currentUserId,
             },
           },
-        },
+        }
       },
       take: 5,
     })
   } catch (e) {
     console.error(e)
+    return []
   }
 }
 

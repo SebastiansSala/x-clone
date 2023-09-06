@@ -6,44 +6,50 @@ import { followUser, unfollowUser } from "@/services/users-services"
 import { UserType } from "@/types/posts"
 
 export default function useFollow(following: UserType[]) {
+  
   const initalFollowingState = following?.map((follow) => follow.id)
-
+  
   const [followingMap, setFollowingMap] = useState(initalFollowingState)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  
 
   const toggleFollow = async (authorId: string) => {
-    setFollowingMap((prevMap) => {
-      if (prevMap?.includes(authorId)) {
-        return prevMap?.filter((id) => id !== authorId)
+
+    if(isLoading) return
+    
+    setFollowingMap((prev) => {
+      if (prev?.includes(authorId)) {
+        return prev?.filter((id) => id !== authorId)
       } else {
-        return [...prevMap, authorId]
+        return [...prev, authorId]
       }
     })
 
     const isFollowing = followingMap?.includes(authorId)
 
     if (isFollowing) {
-      setLoading(true)
+      setIsLoading(true)
       toast
         .promise(unfollowUser(authorId), {
           loading: "Unfollowing...",
           success: "Unfollowed",
           error: "Error unfollowing user",
         })
-        .finally(() => setLoading(false))
+        .finally(() => setIsLoading(false))
     } else {
-      setLoading(true)
+      setIsLoading(true)
       toast
         .promise(followUser(authorId), {
           loading: "Following...",
           success: "Followed",
           error: "Error following user",
         })
-        .finally(() => setLoading(false))
+        .finally(() => setIsLoading(false))
     }
   }
 
   return {
+    isLoading,
     followingMap,
     toggleFollow,
   }

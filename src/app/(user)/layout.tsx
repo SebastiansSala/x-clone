@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Input } from "@nextui-org/input"
 
@@ -8,6 +9,7 @@ import { SearchIcon } from "@/components/Icons/utility/search-icon"
 
 import { getUsers, getUsersNotFollowing } from "@/actions/users-get-actions"
 import FollowDataProvider from "@/contexts/follow-data-context"
+
 
 export default async function UserLayout({
   children,
@@ -19,6 +21,10 @@ export default async function UserLayout({
   const {
     data: { session },
   } = await supabase.auth.getSession()
+
+  if(!session){
+    redirect("/")
+  }
 
   const users = session?.user
     ? await getUsersNotFollowing(session.user.id)

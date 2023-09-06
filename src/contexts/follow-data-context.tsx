@@ -42,6 +42,8 @@ export default function FollowDataProvider({
     fetchFollowData()
   }, [])
 
+
+
   return (
     <FollowDataContext.Provider value={{ following, followers }}>
       {children}

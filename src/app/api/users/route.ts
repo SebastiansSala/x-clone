@@ -36,7 +36,6 @@ export async function GET(req: NextRequest) {
 
   const userId = session.user.id
   try {
-    console.log(userId, skip, MAX_POSTS_PER_FETCH, cursorObj)
     const users = await getAllUsers_sessionRequest(
       skip,
       MAX_POSTS_PER_FETCH,

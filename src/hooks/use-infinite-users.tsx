@@ -18,7 +18,7 @@ export default function useInfiniteUsers() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfinite("users", (pageParam) => fetchUsers(pageParam))
+  } = useInfinite(["users"], (pageParam) => fetchUsers(pageParam))
 
   useEffect(() => {
     if (inView && hasNextPage) {
