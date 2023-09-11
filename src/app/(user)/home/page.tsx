@@ -1,27 +1,27 @@
-import { cookies } from "next/headers"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { cookies } from "next/headers";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 
-import PostSection from "@/components/post/post-section"
+import PostSection from "@/components/post/post-section";
 
-import { postTabs } from "@/data/tabs"
+import { postTabs } from "@/data/tabs";
 
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies })
+  const supabase = createServerComponentClient({ cookies });
 
   const {
     data: { session },
-  } = await supabase.auth.getSession()
+  } = await supabase.auth.getSession();
 
-  const user = session?.user
+  const user = session?.user;
 
   return (
-    <main className='text-white relative'>
+    <main className="text-white relative">
       <PostSection
         user={user}
-        initialState='fyp'
+        initialState="fyp"
         tabs={postTabs}
         isSticky={true}
       />
     </main>
-  )
+  );
 }
