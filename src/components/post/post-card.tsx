@@ -6,13 +6,13 @@ import { Avatar } from "@nextui-org/avatar";
 import { Image } from "@nextui-org/image";
 
 import LikeButton from "./post-like-button";
-import CommentButton from "./post-comment-button";
 import RetweetButton from "./post-retweet-button";
 import OptionsDropdown from "./post-options-dropdown";
+import CommentsModal from "../comments-modal/comments-modal";
 
 import type { PostType } from "@/types/posts";
-import { Button } from "@nextui-org/button";
-import CommentsModal from "../comments-modal/comments-modal";
+
+import { Link } from "@nextui-org/link";
 
 type PostProps = {
   post: PostType;
@@ -21,6 +21,8 @@ type PostProps = {
   removeLikeMutation: any;
   isFollowing: boolean;
   onFollowChange: (authorId: string) => void;
+  addRetweetMutation: any;
+  deleteRetweetMutation: any;
 };
 
 export default function PostCard({
@@ -30,8 +32,15 @@ export default function PostCard({
   isFollowing,
   onFollowChange,
   removeLikeMutation,
+  addRetweetMutation,
+  deleteRetweetMutation,
 }: PostProps) {
   const isLiked = post.likes.some((like) => like.id === user?.id);
+  const isRetweeted = post.retweets.some(
+    (retweet) => retweet.authorId === user?.id
+  );
+
+  const [toggleRetweet, setToggleRetweet] = useState(isRetweeted);
 
   const showPublicButtons = user?.id !== post.author.id && user ? true : false;
 
@@ -49,17 +58,33 @@ export default function PostCard({
     }
   };
 
-  const handleRetweet = () => {};
+  const handleRetweet = async () => {
+    try {
+      console.log(toggleRetweet);
+      if (toggleRetweet) {
+        await deleteRetweetMutation.mutateAsync(post.id);
+        setToggleRetweet(false);
+        return;
+      }
+      await addRetweetMutation.mutateAsync(post.id);
+      setToggleRetweet(true);
+    } catch (e) {
+      console.error(e);
+      setToggleRetweet(!toggleRetweet);
+    }
+  };
 
   return (
-    <div className="grid grid-cols-12 p-4">
-      <Avatar className="col-span-1" src={post.author.avatar_url} />
+    <div className="grid grid-cols-12 p-4 relative">
+      <Link href={`/${post.author.user_name}`}>
+        <Avatar className="col-span-1 z-30" src={post.author.avatar_url} />
+      </Link>
       <div className="col-span-11">
         <div className="flex justify-between items-center">
-          <div className="flex gap-4">
-            <h4>{post.author.name}</h4>
-            <p className="text-gray-500">{post.author.user_name}</p>
-          </div>
+          <Link href={`/${post.author.user_name}`} className="flex gap-4 z-30">
+            <h4 className="text-white">{post.author.name}</h4>
+            <h5 className="text-gray-500">{post.author.user_name}</h5>
+          </Link>
           <OptionsDropdown
             author={post.author}
             isFollowing={isFollowing}
@@ -67,7 +92,7 @@ export default function PostCard({
             showPublicButtons={showPublicButtons}
           />
         </div>
-        <div className="w-full">
+        <div className="w-full ">
           <p className="truncate max-w-full">{post.text}</p>
         </div>
         <div>
@@ -93,6 +118,7 @@ export default function PostCard({
           <RetweetButton
             onClick={handleRetweet}
             retweetsCount={post.retweets.length}
+            isRetweeted={toggleRetweet}
           />
           <LikeButton
             onClick={handleLike}

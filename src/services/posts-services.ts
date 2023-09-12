@@ -1,6 +1,6 @@
-import type { ImageListType } from "react-images-uploading"
+import type { ImageListType } from "react-images-uploading";
 
-import type { PostType } from "@/types/posts"
+import type { PostType } from "@/types/posts";
 
 export const createPost = async (
   text: string,
@@ -18,17 +18,17 @@ export const createPost = async (
         images,
         selectedOption,
       }),
-    })
+    });
 
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
 export const fetchPosts = async (
   postType: string,
@@ -39,44 +39,85 @@ export const fetchPosts = async (
     `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}&username=${
       username ?? ""
     }`
-  )
+  );
   if (!res.ok) {
-    throw new Error(res.statusText)
+    throw new Error(res.statusText);
   }
 
-  const data = await res.json()
+  const data = await res.json();
 
-  return data
-}
+  return data;
+};
 
 export const likePost = async (postId: string) => {
   try {
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "PUT",
-    })
+    });
 
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
 export const unlikePost = async (postId: string) => {
   try {
     const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
       method: "DELETE",
-    })
+    });
 
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
+
+export const createRetweet = async (postId: string) => {
+  try {
+    console.log("postId", postId);
+    const res = await fetch(
+      `http://localhost:3000/api/posts/${postId}/retweets`,
+      {
+        method: "POST",
+      }
+    );
+
+    console.log("res", res);
+
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    return res.json();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const deleteRetweet = async (postId: string) => {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/posts/${postId}/retweets`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    return res.json();
+  } catch (e) {
+    console.error(e);
+  }
+};

@@ -10,6 +10,7 @@ import useInfinitePosts from "@/hooks/use-infinite-posts";
 import useAuthData from "@/hooks/use-auth-data";
 import usePostActions from "@/hooks/use-post-actions";
 import useFollow from "@/hooks/use-auth";
+import Link from "next/link";
 
 type Props = {
   postType: string;
@@ -25,7 +26,10 @@ export default function PostList({ postType, username, user }: Props) {
 
   const { followingMap, toggleFollow } = useFollow(following);
 
-  const { addLike, removeLike } = usePostActions(postType, user);
+  const { addLike, removeLike, removeRetweet, addRetweet } = usePostActions(
+    postType,
+    user
+  );
 
   if (isLoading)
     return (
@@ -38,7 +42,11 @@ export default function PostList({ postType, username, user }: Props) {
   return (
     <ul>
       {posts?.map((post) => (
-        <li key={post.id}>
+        <li key={post.id} className="relative">
+          <Link
+            href={`/${post.author.user_name}/${post.id}}`}
+            className="w-full h-full absolute inset-0 z-20"
+          />
           <PostCard
             post={post}
             user={user}
@@ -46,6 +54,8 @@ export default function PostList({ postType, username, user }: Props) {
             removeLikeMutation={removeLike}
             isFollowing={followingMap.includes(post.author.id)}
             onFollowChange={toggleFollow}
+            addRetweetMutation={addRetweet}
+            deleteRetweetMutation={removeRetweet}
           />
           <Divider />
         </li>

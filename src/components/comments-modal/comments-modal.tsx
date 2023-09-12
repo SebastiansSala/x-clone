@@ -61,7 +61,7 @@ export default function CommentsModal({
         isIconOnly
         color="primary"
         variant="light"
-        className="text-gray-500 hover:text-blue-500"
+        className="text-gray-500 hover:text-blue-500 z-30"
         onPress={onOpen}
       >
         <CommentIcon className="w-6 h-6 " />
