@@ -1,22 +1,16 @@
-"use client"
+"use client";
 
-import useFollowData from "@/hooks/use-follow-data"
-import FollowingCard from "../following-card"
+import FollowingCard from "../following-card";
 
-import useInfiniteUsers from "@/hooks/use-infinite-users"
-import useFollow from "@/hooks/use-follow"
-import { type User } from "@supabase/supabase-js"
+import useInfiniteUsers from "@/hooks/use-infinite-users";
+import useFollow from "@/hooks/use-auth";
+import useAuthData from "@/hooks/use-auth-data";
 
-type UsersListProps = {
-  user?: User 
-}
+export default function UsersList({ fetchType }: { fetchType: string }) {
+  const { users } = useInfiniteUsers(fetchType);
 
-
-export default function UsersList({ user}: UsersListProps) {
-  const { users } = useInfiniteUsers()
-
-  const { following } = useFollowData()
-  const { toggleFollow, isLoading } = useFollow(following)
+  const { following } = useAuthData();
+  const { toggleFollow, isLoading } = useFollow(following);
 
   return (
     <ul>
@@ -33,5 +27,5 @@ export default function UsersList({ user}: UsersListProps) {
         />
       ))}
     </ul>
-  )
+  );
 }

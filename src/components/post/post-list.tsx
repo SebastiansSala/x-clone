@@ -1,39 +1,39 @@
-"use client"
+"use client";
 
-import type { User } from "@supabase/supabase-js"
-import { Spinner } from "@nextui-org/spinner"
-import { Divider } from "@nextui-org/divider"
+import type { User } from "@supabase/supabase-js";
+import { Spinner } from "@nextui-org/spinner";
+import { Divider } from "@nextui-org/divider";
 
-import PostCard from "@/components/post/post-card"
+import PostCard from "@/components/post/post-card";
 
-import useInfinitePosts from "@/hooks/use-infinite-posts"
-import useFollowData from "@/hooks/use-follow-data"
-import usePostActions from "@/hooks/use-post-actions"
-import useFollow from "@/hooks/use-follow"
+import useInfinitePosts from "@/hooks/use-infinite-posts";
+import useAuthData from "@/hooks/use-auth-data";
+import usePostActions from "@/hooks/use-post-actions";
+import useFollow from "@/hooks/use-auth";
 
 type Props = {
-  postType: string
-  username?: string
-  user?: User
-}
+  postType: string;
+  username?: string;
+  user?: User;
+};
 
 export default function PostList({ postType, username, user }: Props) {
   const { posts, isLoading, isError, ref, isFetchingNextPage, error } =
-    useInfinitePosts(postType, username)
+    useInfinitePosts(postType, username);
 
-  const { following } = useFollowData()
+  const { following } = useAuthData();
 
-  const { followingMap, toggleFollow } = useFollow(following)
+  const { followingMap, toggleFollow } = useFollow(following);
 
-  const { addLike, removeLike } = usePostActions(postType, user)
+  const { addLike, removeLike } = usePostActions(postType, user);
 
   if (isLoading)
     return (
-      <div className='h-full w-full grid place-content-center min-h-screen'>
-        <Spinner color='default' size='lg' className='text-center mx-auto' />
+      <div className="h-full w-full grid place-content-center min-h-screen">
+        <Spinner color="default" size="lg" className="text-center mx-auto" />
       </div>
-    )
-  if (isError) return <div>Error! {JSON.stringify(error)}</div>
+    );
+  if (isError) return <div>Error! {JSON.stringify(error)}</div>;
 
   return (
     <ul>
@@ -52,8 +52,8 @@ export default function PostList({ postType, username, user }: Props) {
       ))}
 
       {isFetchingNextPage ? (
-        <div className='py-14 grid place-content-center'>
-          <Spinner color='default' size='lg' />
+        <div className="py-14 grid place-content-center">
+          <Spinner color="default" size="lg" />
         </div>
       ) : null}
 
@@ -61,5 +61,5 @@ export default function PostList({ postType, username, user }: Props) {
         intersection observer marker
       </span>
     </ul>
-  )
+  );
 }

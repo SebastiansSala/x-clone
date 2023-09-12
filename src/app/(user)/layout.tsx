@@ -8,7 +8,7 @@ import FollowingList from "@/components/following-list";
 import { SearchIcon } from "@/components/Icons/utility/search-icon";
 
 import { getUsers, getUsersNotFollowing } from "@/actions/users-get-actions";
-import FollowDataProvider from "@/contexts/follow-data-context";
+import AuthDataProvider from "@/contexts/auth-data-provider";
 
 export default async function UserLayout({
   children,
@@ -26,7 +26,7 @@ export default async function UserLayout({
     : await getUsers();
 
   return (
-    <FollowDataProvider>
+    <AuthDataProvider>
       <div className="bg-black">
         <div className="grid grid-cols-10 container mx-auto relative h-auto">
           <aside className="px-10 col-span-2">
@@ -51,6 +51,6 @@ export default async function UserLayout({
           </aside>
         </div>
       </div>
-    </FollowDataProvider>
+    </AuthDataProvider>
   );
 }

@@ -1,4 +1,4 @@
-import type { UserType } from "@/types/posts"
+import type { UserType } from "@/types/posts";
 
 export const createUser = async (
   id: string,
@@ -18,77 +18,78 @@ export const createUser = async (
         user_name,
         avatar_url,
       }),
-    })
+    });
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
 export const followUser = async (authorId: string) => {
   try {
-    console.log("follow")
+    console.log("follow");
     const res = await fetch(
       `http://localhost:3000/api/users/${authorId}/follow`,
       {
         method: "POST",
       }
-    )
+    );
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
-    return false
+    console.error(e);
+    return false;
   }
-}
+};
 
 export const unfollowUser = async (authorId: string) => {
   try {
-
     const res = await fetch(
       `http://localhost:3000/api/users/${authorId}/follow`,
       {
         method: "DELETE",
       }
-    )
+    );
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
-    return false
+    console.error(e);
+    return false;
   }
-}
+};
 
 export const fetchUserFollowData = async (userId: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/users/${userId}/follow`)
+    const res = await fetch(`http://localhost:3000/api/users/${userId}/follow`);
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
-export const fetchUsers = async (pageParam: number) => {
+export const fetchUsers = async (pageParam: number, fetchType: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/users?page=${pageParam}`)
+    const res = await fetch(
+      `http://localhost:3000/api/users?page=${pageParam}&fetchType=${fetchType}`
+    );
     if (!res.ok) {
-      throw new Error(res.statusText)
+      throw new Error(res.statusText);
     }
 
-    return res.json()
+    return res.json();
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
