@@ -7,7 +7,7 @@ import useInfinite from "./use-infinite";
 
 import { fetchUsers } from "@/services/users-services";
 
-export default function useInfiniteUsers(fetchType: string) {
+export default function useInfiniteUsers(fetchType: string, username: string) {
   const { ref, inView } = useInView();
 
   const {
@@ -18,7 +18,9 @@ export default function useInfiniteUsers(fetchType: string) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfinite([fetchType], (pageParam) => fetchUsers(pageParam, fetchType));
+  } = useInfinite([fetchType], (pageParam) =>
+    fetchUsers(pageParam, fetchType, username)
+  );
 
   useEffect(() => {
     if (inView && hasNextPage) {

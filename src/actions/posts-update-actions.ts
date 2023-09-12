@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma"
+import prisma from "@/utils/prisma";
 
 export const updatePostImages = async (postId: string, url: string) => {
   try {
@@ -13,11 +13,11 @@ export const updatePostImages = async (postId: string, url: string) => {
           },
         },
       },
-    })
+    });
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
 export const updatePostLikes = async (
   postId: string,
@@ -27,7 +27,6 @@ export const updatePostLikes = async (
   user_name: string
 ) => {
   try {
-    console.log(postId, userId, avatar_url, name, user_name)
     return await prisma.posts.update({
       where: {
         id: postId,
@@ -42,8 +41,8 @@ export const updatePostLikes = async (
       include: {
         likes: true,
       },
-    })
+    });
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};

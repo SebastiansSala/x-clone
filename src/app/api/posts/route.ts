@@ -1,63 +1,63 @@
-import { cookies } from "next/headers"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { type NextRequest, NextResponse } from "next/server"
-import { decode } from "base64-arraybuffer"
+import { cookies } from "next/headers";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { type NextRequest, NextResponse } from "next/server";
+import { decode } from "base64-arraybuffer";
 
-import { updatePostImages } from "@/actions/posts-update-actions"
-import { createPost } from "@/actions/posts-create-actions"
+import { updatePostImages } from "@/actions/posts-update-actions";
+import { createPost } from "@/actions/posts-create-actions";
 
-import { MAX_POSTS_PER_FETCH } from "@/const/posts"
-import { fetchPostFunctions } from "./postTypeFunctions"
-import { getPublicPosts } from "@/actions/posts-get-actions"
-import getNextId from "@/utils/getNextId"
+import { MAX_POSTS_PER_FETCH } from "@/const/posts";
+import { fetchPostFunctions } from "./postTypeFunctions";
+import { getPublicPosts } from "@/actions/posts-get-actions";
+import getNextId from "@/utils/getNextId";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
+  const { searchParams } = new URL(req.url);
 
-  const postType = searchParams.get("postType")
+  const postType = searchParams.get("postType");
 
   if (!postType) {
-    return NextResponse.json("Invalid data", { status: 400 })
+    return NextResponse.json("Invalid data", { status: 400 });
   }
 
-  const cursor = searchParams.get("cursor")
-  const skip = cursor && Number(cursor) !== 0 ? 1 : 0
-  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined
+  const cursor = searchParams.get("cursor");
+  const skip = cursor && Number(cursor) !== 0 ? 1 : 0;
+  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined;
 
   if (postType === "fyp") {
     try {
-      const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj)
-      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
+      const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj);
+      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
 
-      return NextResponse.json({ posts, nextId })
+      return NextResponse.json({ posts, nextId });
     } catch (e) {
-      console.error(e)
-      return NextResponse.error()
+      console.error(e);
+      return NextResponse.error();
     }
   }
 
-  const username = searchParams.get("username")
-  let usernameOrUserId = ""
+  const username = searchParams.get("username");
+  let usernameOrUserId = "";
 
   if (username) {
-    usernameOrUserId = username
+    usernameOrUserId = username;
   } else {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createServerComponentClient({ cookies });
 
     try {
       const {
         data: { session },
-      } = await supabase.auth.getSession()
+      } = await supabase.auth.getSession();
 
-      const userId = session?.user.id
+      const userId = session?.user.id;
 
       if (!userId) {
-        return NextResponse.json("Unauthorized", { status: 401 })
+        return NextResponse.json("Unauthorized", { status: 401 });
       }
-      usernameOrUserId = userId
+      usernameOrUserId = userId;
     } catch (e) {
-      console.error(e)
-      return NextResponse.error()
+      console.error(e);
+      return NextResponse.error();
     }
   }
 
@@ -68,20 +68,20 @@ export async function GET(req: NextRequest) {
       skip,
       MAX_POSTS_PER_FETCH,
       cursorObj
-    )
-    const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
+    );
+    const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
 
-    return NextResponse.json({ posts, nextId })
+    return NextResponse.json({ posts, nextId });
   } catch (e) {
-    console.error(e)
-    return NextResponse.error()
+    console.error(e);
+    return NextResponse.error();
   }
 }
 
 type imagesPost = {
-  dataURL: string
-  file: File
-}
+  dataURL: string;
+  file: File;
+};
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -90,55 +90,54 @@ export const POST = async (req: NextRequest) => {
       images,
       selectedOption,
     }: { text: string; images: imagesPost[]; selectedOption: string } =
-      await req.json()
+      await req.json();
 
     if (!text) {
-      return NextResponse.json("Invalid data", { status: 400 })
+      return NextResponse.json("Invalid data", { status: 400 });
     }
 
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createServerComponentClient({ cookies });
 
     const {
       data: { session },
-    } = await supabase.auth.getSession()
+    } = await supabase.auth.getSession();
 
     if (!session) {
-      return NextResponse.json("Unauthorized", { status: 401 })
+      return NextResponse.json("Unauthorized", { status: 401 });
     }
 
-    const userId = session.user.id
+    const userId = session.user.id;
 
-    const publicVisible = selectedOption === "Everyone" ? true : false
+    const publicVisible = selectedOption === "Everyone" ? true : false;
 
-    const post = await createPost(userId, text, publicVisible)
+    const post = await createPost(userId, text, publicVisible);
 
-    let imageUrls = []
+    let imageUrls = [];
     if (images.length > 0) {
       for (const image of images) {
-        let index = 1
+        let index = 1;
 
         const { data, error } = await supabase.storage
           .from("images")
-          .upload(`images/${image.file.name}`, image.dataURL)
+          .upload(`images/${image.file.name}`, image.dataURL);
         if (error) {
-          console.error("Error uploading images", error)
+          console.error("Error uploading images", error);
         }
-        console.log(data)
 
         if (data) {
-          imageUrls.push(data.path)
-          index++
+          imageUrls.push(data.path);
+          index++;
         }
       }
     }
 
     for (const imageUrl of imageUrls) {
-      await updatePostImages(post.id, imageUrl)
+      await updatePostImages(post.id, imageUrl);
     }
 
-    return NextResponse.json({ post })
+    return NextResponse.json({ post });
   } catch (e) {
-    console.error(e)
-    return NextResponse.error()
+    console.error(e);
+    return NextResponse.error();
   }
-}
+};

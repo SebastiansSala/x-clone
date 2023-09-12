@@ -45,7 +45,7 @@ export default function PostCard({
       }
       await likeMutation.mutateAsync(post.id);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

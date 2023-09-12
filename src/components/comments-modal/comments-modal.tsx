@@ -50,7 +50,7 @@ export default function CommentsModal({
       toast.error("Please login...");
     }
     if (!textareaValue) return;
-    console.log(textareaValue);
+
     onClose();
   };
 

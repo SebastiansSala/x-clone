@@ -6,8 +6,14 @@ import useInfiniteUsers from "@/hooks/use-infinite-users";
 import useFollow from "@/hooks/use-auth";
 import useAuthData from "@/hooks/use-auth-data";
 
-export default function UsersList({ fetchType }: { fetchType: string }) {
-  const { users } = useInfiniteUsers(fetchType);
+export default function UsersList({
+  fetchType,
+  username,
+}: {
+  fetchType: string;
+  username: string;
+}) {
+  const { users } = useInfiniteUsers(fetchType, username);
 
   const { following } = useAuthData();
   const { toggleFollow, isLoading } = useFollow(following);

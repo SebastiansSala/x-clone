@@ -32,7 +32,7 @@ export default async function ProfileFollowPage({
   return (
     <main>
       <ProfileTabs tabs={profileTabs} isSticky={true} followType={followType} />
-      <UsersList fetchType={followType} />
+      <UsersList fetchType={followType} username={username} />
     </main>
   );
 }

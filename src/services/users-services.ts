@@ -29,7 +29,6 @@ export const createUser = async (
 
 export const followUser = async (authorId: string) => {
   try {
-    console.log("follow");
     const res = await fetch(
       `http://localhost:3000/api/users/${authorId}/follow`,
       {
@@ -79,10 +78,14 @@ export const fetchUserFollowData = async (userId: string) => {
   }
 };
 
-export const fetchUsers = async (pageParam: number, fetchType: string) => {
+export const fetchUsers = async (
+  pageParam: number,
+  fetchType: string,
+  username: string
+) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/users?page=${pageParam}&fetchType=${fetchType}`
+      `http://localhost:3000/api/users?page=${pageParam}&fetchType=${fetchType}&username=${username}`
     );
     if (!res.ok) {
       throw new Error(res.statusText);

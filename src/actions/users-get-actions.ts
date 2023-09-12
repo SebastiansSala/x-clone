@@ -27,26 +27,26 @@ export const getAllUsers = async (
 export const getAllUsers_sessionRequest = async (
   skip: number,
   take: number,
-  userId: string,
+  username: string,
   cursorObj?: { id: string }
 ) => {
   return await prisma.users.findMany({
     where: {
       NOT: {
-        id: userId,
+        user_name: username,
       },
       OR: [
         {
           followers: {
             none: {
-              id: userId,
+              user_name: username,
             },
           },
         },
         {
           following: {
             some: {
-              id: userId,
+              user_name: username,
             },
           },
         },
@@ -61,19 +61,19 @@ export const getAllUsers_sessionRequest = async (
 export const getFollowing = async (
   skip: number,
   take: number,
-  userId: string,
+  username: string,
   cursorObj?: { id: string }
 ) => {
   return await prisma.users.findMany({
     where: {
       NOT: {
-        id: userId,
+        user_name: username,
       },
       AND: [
         {
           followers: {
             some: {
-              id: userId,
+              user_name: username,
             },
           },
         },
@@ -88,19 +88,19 @@ export const getFollowing = async (
 export const getFollowers = async (
   skip: number,
   take: number,
-  userId: string,
+  username: string,
   cursorObj?: { id: string }
 ) => {
   return await prisma.users.findMany({
     where: {
       NOT: {
-        id: userId,
+        user_name: username,
       },
       AND: [
         {
           following: {
             some: {
-              id: userId,
+              user_name: username,
             },
           },
         },

@@ -30,7 +30,7 @@ export default function useSession() {
         setCurrentSession({ id, avatar_url, name, user_name });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }, []);
 

@@ -7,11 +7,7 @@ import type { UserType } from "@/types/posts";
 import useFollow from "@/hooks/use-auth";
 
 export default function FollowingList({ users }: { users: UserType[] }) {
-  console.log(users);
-
   const { toggleFollow, isLoading, followingMap } = useFollow(users);
-
-  console.log(followingMap);
 
   return (
     <ul className="bg-[#16181c] text-[#676b70] rounded-xl">

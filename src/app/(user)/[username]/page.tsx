@@ -9,6 +9,8 @@ import PostSection from "@/components/post/post-section";
 
 import prisma from "@/utils/prisma";
 import { profileTabs } from "@/data/tabs";
+import { Button } from "@nextui-org/button";
+import { OptionsIcon } from "@/components/Icons/utility/option-icon";
 
 type ProfilePageProps = {
   params: {
@@ -40,10 +42,35 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     redirect("/");
   }
 
+  const isUser = session?.user?.id === user.id;
+
+  const isFollowing = await prisma.users.findFirst({
+    where: {
+      id: session?.user?.id,
+      following: {
+        some: {
+          id: user.id,
+        },
+      },
+    },
+  });
+
   return (
     <main className="text-white relative">
       <section className="relative p-4 space-y-6">
-        <Avatar className="w-40 h-40" src={user.avatar_url} />
+        <div className="flex items-center justify-between">
+          <Avatar className="w-40 h-40" src={user.avatar_url} />
+          {!isUser && (
+            <div className="flex items-center gap-8">
+              <Button radius="full" className="">
+                {isFollowing ? "UnFollow" : "Follow"}
+              </Button>
+              <Button radius="full" isIconOnly className="text-gray-500 ">
+                <OptionsIcon className="w-6 h-6" />
+              </Button>
+            </div>
+          )}
+        </div>
         <div className="">
           <p>{user.name}</p>
           <p className="text-gray-400">{user.user_name}</p>
