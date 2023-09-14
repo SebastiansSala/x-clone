@@ -6,12 +6,14 @@ type LikeButtonProps = {
   onClick: () => void;
   likesCount: number;
   isLiked: boolean;
+  isDisabled: boolean;
 };
 
 export default function LikeButton({
   onClick,
   likesCount,
   isLiked,
+  isDisabled,
 }: LikeButtonProps) {
   return (
     <>
@@ -23,6 +25,7 @@ export default function LikeButton({
           variant="light"
           className="text-gray-500 hover:text-red-500 z-30"
           onPress={onClick}
+          isDisabled={isDisabled}
         >
           <LikeIcon className="w-6 h-6 fill-red-500 " />
           {likesCount}

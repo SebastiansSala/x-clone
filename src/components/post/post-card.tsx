@@ -36,43 +36,55 @@ export default function PostCard({
   deleteRetweetMutation,
 }: PostProps) {
   const isLiked = post.likes.some((like) => like.id === user?.id);
+
   const isRetweeted = post.retweets.some(
     (retweet) => retweet.authorId === user?.id
   );
 
   const [toggleRetweet, setToggleRetweet] = useState(isRetweeted);
+  const [toggleLike, setToggleLike] = useState(isLiked);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const showPublicButtons = user?.id !== post.author.id && user ? true : false;
-
-  const likesCount = post.likes.length;
 
   const handleLike = async () => {
     try {
       if (isLiked) {
+        setIsLoading(true);
+        setToggleLike(false);
         await removeLikeMutation.mutateAsync(post.id);
         return;
       }
+      setIsLoading(true);
+      setToggleLike(true);
       await likeMutation.mutateAsync(post.id);
     } catch (err) {
       console.error(err);
+      setToggleLike(!toggleLike);
+      setIsLoading(false);
     }
   };
 
   const handleRetweet = async () => {
     try {
-      console.log(toggleRetweet);
       if (toggleRetweet) {
+        setIsLoading(true);
         await deleteRetweetMutation.mutateAsync(post.id);
         setToggleRetweet(false);
         return;
       }
+      setIsLoading(true);
       await addRetweetMutation.mutateAsync(post.id);
       setToggleRetweet(true);
     } catch (e) {
       console.error(e);
       setToggleRetweet(!toggleRetweet);
+      setIsLoading(false);
     }
   };
+
+  const likesCount = post.likes.length;
 
   return (
     <div className="grid grid-cols-12 p-4 relative">
@@ -119,11 +131,13 @@ export default function PostCard({
             onClick={handleRetweet}
             retweetsCount={post.retweets.length}
             isRetweeted={toggleRetweet}
+            isDisabled={isLoading}
           />
           <LikeButton
             onClick={handleLike}
             likesCount={likesCount}
-            isLiked={isLiked}
+            isLiked={toggleLike}
+            isDisabled={isLoading}
           />
         </div>
       </div>

@@ -31,9 +31,7 @@ export async function PUT(
 
     const { id, user_metadata } = session.user
 
-    const { user_name, avatar_url, name } = user_metadata
-
-    await updatePostLikes(postId, id, avatar_url, name, user_name)
+    await updatePostLikes(postId, id)
 
     return NextResponse.json({ message: "Like added" })
   } catch (e) {

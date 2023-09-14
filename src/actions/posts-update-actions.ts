@@ -22,9 +22,6 @@ export const updatePostImages = async (postId: string, url: string) => {
 export const updatePostLikes = async (
   postId: string,
   userId: string,
-  avatar_url: string,
-  name: string,
-  user_name: string
 ) => {
   try {
     return await prisma.posts.update({
