@@ -151,10 +151,8 @@ export const getIsBlockedUser = async (
   return await prisma.users.findUnique({
     where: {
       id: currentUserId,
-    },
-    include: {
       blockedUsers: {
-        where: {
+        some: {
           id: blockedUserId,
         },
       },

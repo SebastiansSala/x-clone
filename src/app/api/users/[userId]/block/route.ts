@@ -22,14 +22,16 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { userId: string } }
 ) {
   const userId = params.userId;
 
   if (!userId) return NextResponse.json("Missing userId", { status: 400 });
 
-  const { blockedUserId } = JSON.parse(await req.json());
+  const { blockedUserId } = await req.json();
+
+  console.log("blockedUserId", blockedUserId);
 
   if (!blockedUserId)
     return NextResponse.json("Missing blockedUserId", { status: 400 });

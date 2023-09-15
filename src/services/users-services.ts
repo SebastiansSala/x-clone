@@ -108,17 +108,17 @@ export const blockUser = async ({
   userId: string;
   blockedUserId: string;
 }) => {
+  console.log("blockedUserId", blockedUserId);
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/block`,
     {
       method: "PUT",
       body: JSON.stringify({
-        blockedUserId: blockedUserId,
+        blockedUserId,
       }),
     }
   );
-
-  console.log(res);
 
   if (!res.ok) {
     throw new Error(res.statusText);

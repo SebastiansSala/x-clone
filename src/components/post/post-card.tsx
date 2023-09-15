@@ -71,7 +71,7 @@ export default function PostCard({
     try {
       await blockMutation.mutateAsync({
         userId: user?.id,
-        blockedUserId: post.id,
+        blockedUserId: post.authorId,
       });
     } catch (e) {
       console.error(e);

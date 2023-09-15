@@ -78,7 +78,7 @@ export const deleteBlockedUser = async (authorId: string, userId: string) => {
 export const blockUser = async (authorId: string, userId: string) => {
   try {
     return await prisma.$transaction(async (tx) => {
-      await tx.users.update({
+      const x = await tx.users.update({
         where: {
           id: authorId,
         },
@@ -91,7 +91,7 @@ export const blockUser = async (authorId: string, userId: string) => {
         },
       });
 
-      await tx.users.update({
+      const y = await tx.users.update({
         where: {
           id: userId,
         },
@@ -103,6 +103,7 @@ export const blockUser = async (authorId: string, userId: string) => {
           },
         },
       });
+      console.log(y);
     });
   } catch (e) {
     console.error(e);
