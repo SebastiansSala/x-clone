@@ -143,3 +143,21 @@ export const getUserFollowData = async (currentUserId: string) => {
     },
   });
 };
+
+export const getIsBlockedUser = async (
+  currentUserId: string,
+  blockedUserId: string
+) => {
+  return await prisma.users.findUnique({
+    where: {
+      id: currentUserId,
+    },
+    include: {
+      blockedUsers: {
+        where: {
+          id: blockedUserId,
+        },
+      },
+    },
+  });
+};

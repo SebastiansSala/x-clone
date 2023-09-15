@@ -24,15 +24,30 @@ export async function GET(req: NextRequest) {
   const skip = cursor && Number(cursor) !== 0 ? 1 : 0;
   const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined;
 
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   if (postType === "fyp") {
-    try {
+    const userId = session?.user.id;
+
+    if (!userId) {
       const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj);
       const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
 
       return NextResponse.json({ posts, nextId });
-    } catch (e) {
-      console.error(e);
-      return NextResponse.error();
+    } else {
+      const posts = await getPublicPosts(
+        skip,
+        MAX_POSTS_PER_FETCH,
+        cursorObj,
+        userId
+      );
+      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
+
+      return NextResponse.json({ posts, nextId });
     }
   }
 
@@ -42,13 +57,7 @@ export async function GET(req: NextRequest) {
   if (username) {
     usernameOrUserId = username;
   } else {
-    const supabase = createServerComponentClient({ cookies });
-
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
       const userId = session?.user.id;
 
       if (!userId) {

@@ -31,6 +31,7 @@ export default function PostList({ postType, username, user }: Props) {
     deleteLikeMutation,
     deleteRetweetMutation,
     addRetweet,
+    blockMutation,
   } = usePostActions(postType, user);
 
   if (isLoading)
@@ -58,6 +59,7 @@ export default function PostList({ postType, username, user }: Props) {
             deleteLikeMutation={deleteLikeMutation}
             addRetweetMutation={addRetweet}
             deleteRetweetMutation={deleteRetweetMutation}
+            blockMutation={blockMutation}
           />
           <Divider />
         </li>

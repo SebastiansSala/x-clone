@@ -15,8 +15,6 @@ export default function RetweetButton({
   isRetweeted,
   isLoading,
 }: RetweetButtonProps) {
-  console.log(isRetweeted);
-
   return (
     <Button
       radius="full"

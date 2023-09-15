@@ -1,13 +1,23 @@
-import prisma from "@/utils/prisma"
+import prisma from "@/utils/prisma";
 
 export const getPublicPosts = async (
   skip: number,
   take: number,
-  cursorObj: { id: string } | undefined
+  cursorObj: { id: string } | undefined,
+  userId?: string
 ) => {
   return await prisma.posts.findMany({
     where: {
       publicVisible: true,
+      AND: {
+        author: {
+          blockedBy: {
+            none: {
+              id: userId,
+            },
+          },
+        },
+      },
     },
     include: {
       author: true,
@@ -22,8 +32,8 @@ export const getPublicPosts = async (
     take,
     skip,
     cursor: cursorObj,
-  })
-}
+  });
+};
 
 export const getFollowingPosts = (
   userId: string,
@@ -55,8 +65,8 @@ export const getFollowingPosts = (
     skip,
     take,
     cursor: cursorObj,
-  })
-}
+  });
+};
 
 export const getRetweetedPostsByUsername = async (
   username: string,
@@ -84,8 +94,8 @@ export const getRetweetedPostsByUsername = async (
     take,
     skip,
     cursor,
-  })
-}
+  });
+};
 
 export const getLikedPostsByUsername = async (
   username: string,
@@ -114,8 +124,8 @@ export const getLikedPostsByUsername = async (
     take,
     skip,
     cursor,
-  })
-}
+  });
+};
 
 export const getPostsByUsername = async (
   username: string,
@@ -139,8 +149,8 @@ export const getPostsByUsername = async (
     skip,
     take,
     cursor,
-  })
-}
+  });
+};
 
 export const getPostById = async (postId: string) => {
   return await prisma.posts.findFirst({
@@ -154,8 +164,8 @@ export const getPostById = async (postId: string) => {
       comments: true,
       images: true,
     },
-  })
-}
+  });
+};
 
 export const getUserLikedPost = async (postId: string, userId: string) => {
   return await prisma.posts.findFirst({
@@ -167,5 +177,5 @@ export const getUserLikedPost = async (postId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};

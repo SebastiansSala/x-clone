@@ -8,7 +8,7 @@ export const createPost = async (
   images?: ImageListType[]
 ) => {
   try {
-    const res = await fetch("http://localhost:3000/api/posts", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,9 @@ export const fetchPosts = async (
   username?: string
 ): Promise<{ posts: PostType[]; nextId: string }> => {
   const res = await fetch(
-    `http://localhost:3000/api/posts?postType=${postType}&cursor=${pageParam}&username=${
+    `${
+      process.env.NEXT_PUBLIC_API_URL
+    }/api/posts?postType=${postType}&cursor=${pageParam}&username=${
       username ?? ""
     }`
   );
@@ -51,9 +53,12 @@ export const fetchPosts = async (
 
 export const likePost = async (postId: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
-      method: "PUT",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/likes`,
+      {
+        method: "PUT",
+      }
+    );
 
     if (!res.ok) {
       throw new Error(res.statusText);
@@ -67,9 +72,12 @@ export const likePost = async (postId: string) => {
 
 export const unlikePost = async (postId: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/posts/${postId}/likes`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/likes`,
+      {
+        method: "DELETE",
+      }
+    );
 
     if (!res.ok) {
       throw new Error(res.statusText);
@@ -84,7 +92,7 @@ export const unlikePost = async (postId: string) => {
 export const createRetweet = async (postId: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/posts/${postId}/retweets`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/retweets`,
       {
         method: "POST",
       }
@@ -105,7 +113,7 @@ export const createRetweet = async (postId: string) => {
 export const deleteRetweet = async (postId: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/posts/${postId}/retweets`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/retweets`,
       {
         method: "DELETE",
       }

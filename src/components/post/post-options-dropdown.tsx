@@ -13,16 +13,20 @@ import type { UserType } from "@/types/posts";
 
 type OptionsDropdownProps = {
   author: UserType;
+  postId: string;
   isFollowing: boolean;
   onClick: (authorId: string) => void;
   showPublicButtons: boolean;
+  handleBlock: (authorId: string) => void;
 };
 
 export default function OptionsDropdown({
   author,
+  postId,
   isFollowing,
   onClick,
   showPublicButtons,
+  handleBlock,
 }: OptionsDropdownProps) {
   return (
     <Dropdown>
@@ -37,17 +41,21 @@ export default function OptionsDropdown({
           <OptionsIcon className="w-6 h-6" />
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Static Actions" className="text-white">
-        {showPublicButtons && (
-          <>
-            <DropdownItem key="unfollow" onPress={() => onClick(author.id)}>
-              {isFollowing ? "UnFollow" : "Follow"} @{author.user_name}
-            </DropdownItem>
-            <DropdownItem key="block">Block @{author.user_name}</DropdownItem>
-          </>
-        )}
-        <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
-      </DropdownMenu>
+      {showPublicButtons ? (
+        <DropdownMenu aria-label="Static Actions" className="text-white">
+          <DropdownItem key="unfollow" onPress={() => onClick(author.id)}>
+            {isFollowing ? "UnFollow" : "Follow"} @{author.user_name}
+          </DropdownItem>
+          <DropdownItem key="block" onPress={() => handleBlock(postId)}>
+            Block @{author.user_name}
+          </DropdownItem>
+          <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
+        </DropdownMenu>
+      ) : (
+        <DropdownMenu aria-label="Static Actions" className="text-white">
+          <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
+        </DropdownMenu>
+      )}
     </Dropdown>
   );
 }

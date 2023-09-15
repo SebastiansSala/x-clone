@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma"
+import prisma from "@/utils/prisma";
 
 export const deleteFollow = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -12,8 +12,8 @@ export const deleteFollow = async (authorId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};
 
 export const deleteFollower = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -27,8 +27,8 @@ export const deleteFollower = async (authorId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};
 
 export const addFollow = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -42,8 +42,8 @@ export const addFollow = async (authorId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};
 
 export const addFollower = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -57,8 +57,8 @@ export const addFollower = async (authorId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};
 
 export const deleteBlockedUser = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -72,5 +72,73 @@ export const deleteBlockedUser = async (authorId: string, userId: string) => {
         },
       },
     },
-  })
-}
+  });
+};
+
+export const blockUser = async (authorId: string, userId: string) => {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      await tx.users.update({
+        where: {
+          id: authorId,
+        },
+        data: {
+          blockedUsers: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+
+      await tx.users.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          blockedBy: {
+            connect: {
+              id: authorId,
+            },
+          },
+        },
+      });
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const unblockUser = async (authorId: string, userId: string) => {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      await tx.users.update({
+        where: {
+          id: authorId,
+        },
+        data: {
+          blockedUsers: {
+            disconnect: {
+              id: userId,
+            },
+          },
+        },
+      });
+
+      await tx.users.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          blockedBy: {
+            disconnect: {
+              id: authorId,
+            },
+          },
+        },
+      });
+    });
+  } catch (e) {
+    console.error(e);
+  }
+};

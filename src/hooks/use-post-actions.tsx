@@ -12,6 +12,7 @@ import {
 } from "@/services/posts-services";
 
 import { PostType } from "@/types/posts";
+import { blockUser } from "@/services/users-services";
 
 type PostObjectType = {
   pages: PageType[];
@@ -204,10 +205,47 @@ export default function usePostActions(postType: string, user?: User) {
     },
   });
 
+  const blockMutation = useMutation(blockUser, {
+    onMutate: async ({
+      userId,
+      blockedUserId,
+    }: {
+      userId: string;
+      blockedUserId: string;
+    }) => {
+      if (!user) return toast.error("You must be logged in to block a users");
+
+      await queryClient.cancelQueries(["posts", postType]);
+
+      const oldData = queryClient.getQueryData<PostObjectType>([
+        "posts",
+        postType,
+      ]);
+
+      queryClient.setQueryData(["posts", postType], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          posts: page.posts.filter((post) => post.author.id !== blockedUserId),
+        }));
+        return {
+          ...oldData,
+          pages: newData,
+        };
+      });
+    },
+    onError: (err, postId, context) => {
+      queryClient.setQueryData(["posts", postType], context);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["posts", postType]);
+    },
+  });
+
   return {
     addLikeMutation,
     deleteLikeMutation,
     addRetweet,
     deleteRetweetMutation,
+    blockMutation,
   };
 }

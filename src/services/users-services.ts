@@ -1,4 +1,4 @@
-import type { UserType } from "@/types/posts";
+import type { UserFollowDataType } from "@/types/posts";
 
 export const createUser = async (
   id: string,
@@ -7,7 +7,7 @@ export const createUser = async (
   avatar_url: string
 ) => {
   try {
-    const res = await fetch("http://localhost:3000/api/users", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const createUser = async (
 export const followUser = async (authorId: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/users/${authorId}/follow`,
+      `${process.env.NEXT_PUBLIC_API_URL}/${authorId}/follow`,
       {
         method: "POST",
       }
@@ -49,7 +49,7 @@ export const followUser = async (authorId: string) => {
 export const unfollowUser = async (authorId: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/users/${authorId}/follow`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/${authorId}/follow`,
       {
         method: "DELETE",
       }
@@ -65,9 +65,13 @@ export const unfollowUser = async (authorId: string) => {
   }
 };
 
-export const fetchUserFollowData = async (userId: string) => {
+export const fetchUserFollowData = async (
+  userId: string
+): Promise<UserFollowDataType | undefined> => {
   try {
-    const res = await fetch(`http://localhost:3000/api/users/${userId}/follow`);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/follow`
+    );
     if (!res.ok) {
       throw new Error(res.statusText);
     }
@@ -85,7 +89,7 @@ export const fetchUsers = async (
 ) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/users?page=${pageParam}&fetchType=${fetchType}&username=${username}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users?page=${pageParam}&fetchType=${fetchType}&username=${username}`
     );
     if (!res.ok) {
       throw new Error(res.statusText);
@@ -95,4 +99,30 @@ export const fetchUsers = async (
   } catch (e) {
     console.error(e);
   }
+};
+
+export const blockUser = async ({
+  userId,
+  blockedUserId,
+}: {
+  userId: string;
+  blockedUserId: string;
+}) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/block`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        blockedUserId: blockedUserId,
+      }),
+    }
+  );
+
+  console.log(res);
+
+  if (!res.ok) {
+    throw new Error(res.statusText);
+  }
+
+  return res.json();
 };

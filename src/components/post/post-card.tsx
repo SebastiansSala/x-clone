@@ -22,6 +22,7 @@ type PostProps = {
   deleteLikeMutation: any;
   addRetweetMutation: any;
   deleteRetweetMutation: any;
+  blockMutation: any;
 };
 
 export default function PostCard({
@@ -33,6 +34,7 @@ export default function PostCard({
   deleteLikeMutation,
   addRetweetMutation,
   deleteRetweetMutation,
+  blockMutation,
 }: PostProps) {
   const isLiked = post.likes.some((like) => like.id === user?.id);
   const isRetweeted = post.retweets.some(
@@ -40,7 +42,6 @@ export default function PostCard({
   );
 
   const likesCount = post.likes.length;
-  const showPublicButtons = user?.id !== post.author.id && user ? true : false;
 
   const handleLike = async () => {
     try {
@@ -66,6 +67,17 @@ export default function PostCard({
     }
   };
 
+  const handleBlock = async () => {
+    try {
+      await blockMutation.mutateAsync({
+        userId: user?.id,
+        blockedUserId: post.id,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="grid grid-cols-12 p-4 relative">
       <Link href={`/${post.author.user_name}`}>
@@ -79,9 +91,11 @@ export default function PostCard({
           </Link>
           <OptionsDropdown
             author={post.author}
+            postId={post.id}
             isFollowing={isFollowing}
             onClick={onFollowChange}
-            showPublicButtons={showPublicButtons}
+            showPublicButtons={user?.id !== post.author.id}
+            handleBlock={handleBlock}
           />
         </div>
         <div className="w-full ">
