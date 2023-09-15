@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { Avatar } from "@nextui-org/avatar";
 import { Image } from "@nextui-org/image";
 
-import LikeButton from "./post-like-button";
-import RetweetButton from "./post-retweet-button";
+import LikeButton from "../like-button";
+import RetweetButton from "../retweet-button";
 import OptionsDropdown from "./post-options-dropdown";
 import CommentsModal from "../comments-modal/comments-modal";
 
@@ -17,10 +16,10 @@ import { Link } from "@nextui-org/link";
 type PostProps = {
   post: PostType;
   user?: User;
-  likeMutation: any;
-  removeLikeMutation: any;
-  isFollowing: boolean;
   onFollowChange: (authorId: string) => void;
+  isFollowing: boolean;
+  addLikeMutation: any;
+  deleteLikeMutation: any;
   addRetweetMutation: any;
   deleteRetweetMutation: any;
 };
@@ -28,63 +27,44 @@ type PostProps = {
 export default function PostCard({
   post,
   user,
-  likeMutation,
+  addLikeMutation,
   isFollowing,
   onFollowChange,
-  removeLikeMutation,
+  deleteLikeMutation,
   addRetweetMutation,
   deleteRetweetMutation,
 }: PostProps) {
   const isLiked = post.likes.some((like) => like.id === user?.id);
-
   const isRetweeted = post.retweets.some(
     (retweet) => retweet.authorId === user?.id
   );
 
-  const [toggleRetweet, setToggleRetweet] = useState(isRetweeted);
-  const [toggleLike, setToggleLike] = useState(isLiked);
-
-  const [isLoading, setIsLoading] = useState(false);
-
+  const likesCount = post.likes.length;
   const showPublicButtons = user?.id !== post.author.id && user ? true : false;
 
   const handleLike = async () => {
     try {
       if (isLiked) {
-        setIsLoading(true);
-        setToggleLike(false);
-        await removeLikeMutation.mutateAsync(post.id);
-        return;
+        await deleteLikeMutation.mutateAsync(post.id);
+      } else {
+        await addLikeMutation.mutateAsync(post.id);
       }
-      setIsLoading(true);
-      setToggleLike(true);
-      await likeMutation.mutateAsync(post.id);
     } catch (err) {
       console.error(err);
-      setToggleLike(!toggleLike);
-      setIsLoading(false);
     }
   };
 
   const handleRetweet = async () => {
     try {
-      if (toggleRetweet) {
-        setIsLoading(true);
+      if (isRetweeted) {
         await deleteRetweetMutation.mutateAsync(post.id);
-        setToggleRetweet(false);
-        return;
+      } else {
+        await addRetweetMutation.mutateAsync(post.id);
       }
-      setIsLoading(true);
-      await addRetweetMutation.mutateAsync(post.id);
-      setToggleRetweet(true);
     } catch (e) {
       console.error(e);
-      setToggleRetweet(!toggleRetweet);
-      setIsLoading(false);
     }
   };
-
-  const likesCount = post.likes.length;
 
   return (
     <div className="grid grid-cols-12 p-4 relative">
@@ -130,14 +110,18 @@ export default function PostCard({
           <RetweetButton
             onClick={handleRetweet}
             retweetsCount={post.retweets.length}
-            isRetweeted={toggleRetweet}
-            isDisabled={isLoading}
+            isRetweeted={isRetweeted}
+            isLoading={
+              addRetweetMutation.isLoading || deleteRetweetMutation.isLoading
+            }
           />
           <LikeButton
             onClick={handleLike}
             likesCount={likesCount}
-            isLiked={toggleLike}
-            isDisabled={isLoading}
+            isLiked={isLiked}
+            isLoading={
+              addLikeMutation.isLoading || deleteLikeMutation.isLoading
+            }
           />
         </div>
       </div>

@@ -26,10 +26,12 @@ export default function PostList({ postType, username, user }: Props) {
 
   const { followingMap, toggleFollow } = useFollow(following);
 
-  const { addLike, removeLike, removeRetweet, addRetweet } = usePostActions(
-    postType,
-    user
-  );
+  const {
+    addLikeMutation,
+    deleteLikeMutation,
+    deleteRetweetMutation,
+    addRetweet,
+  } = usePostActions(postType, user);
 
   if (isLoading)
     return (
@@ -50,12 +52,12 @@ export default function PostList({ postType, username, user }: Props) {
           <PostCard
             post={post}
             user={user}
-            likeMutation={addLike}
-            removeLikeMutation={removeLike}
             isFollowing={followingMap.includes(post.author.id)}
             onFollowChange={toggleFollow}
+            addLikeMutation={addLikeMutation}
+            deleteLikeMutation={deleteLikeMutation}
             addRetweetMutation={addRetweet}
-            deleteRetweetMutation={removeRetweet}
+            deleteRetweetMutation={deleteRetweetMutation}
           />
           <Divider />
         </li>

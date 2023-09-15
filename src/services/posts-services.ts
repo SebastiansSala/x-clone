@@ -83,7 +83,6 @@ export const unlikePost = async (postId: string) => {
 
 export const createRetweet = async (postId: string) => {
   try {
-    console.log("postId", postId);
     const res = await fetch(
       `http://localhost:3000/api/posts/${postId}/retweets`,
       {

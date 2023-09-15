@@ -1,25 +1,24 @@
 "use client";
 
-import Link from "next/link";
+import { Avatar } from "@nextui-org/avatar";
 import { Button } from "@nextui-org/button";
+import { Textarea } from "@nextui-org/input";
 import {
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { Avatar } from "@nextui-org/avatar";
-import { Textarea } from "@nextui-org/input";
+import Link from "next/link";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { CommentIcon } from "../Icons/utility/comment-icon";
 
-import formatDate from "@/utils/format-date";
 import useSession from "@/hooks/use-session";
-import { useState } from "react";
-import { on } from "events";
-import toast from "react-hot-toast";
+import formatDate from "@/utils/format-date";
 
 type Props = {
   commentsCount: number;
