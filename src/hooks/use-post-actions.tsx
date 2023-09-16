@@ -115,7 +115,7 @@ export default function usePostActions(postType: string, user?: User) {
     },
   });
 
-  const addRetweet = useMutation(createRetweet, {
+  const addRetweetMutation = useMutation(createRetweet, {
     onMutate: async (postId: string) => {
       if (!user) return toast.error("You must be logged in to retweet a post");
 
@@ -244,7 +244,7 @@ export default function usePostActions(postType: string, user?: User) {
   return {
     addLikeMutation,
     deleteLikeMutation,
-    addRetweet,
+    addRetweetMutation,
     deleteRetweetMutation,
     blockMutation,
   };

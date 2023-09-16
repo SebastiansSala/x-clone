@@ -34,8 +34,15 @@ export const getAllUsers_sessionRequest = async (
     where: {
       NOT: {
         user_name: username,
+        AND: {
+          blockedBy: {
+            none: {
+              user_name: username,
+            },
+          },
+        },
       },
-      OR: [
+      AND: [
         {
           followers: {
             none: {
@@ -119,6 +126,13 @@ export const getUsersNotFollowing = async (currentUserId: string) => {
         NOT: {
           followers: {
             some: {
+              id: currentUserId,
+            },
+          },
+        },
+        AND: {
+          blockedBy: {
+            none: {
               id: currentUserId,
             },
           },

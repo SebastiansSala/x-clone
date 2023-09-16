@@ -1,22 +1,20 @@
-"use client";
+'use client'
 
-import FollowingCard from "../following-card";
+import FollowingCard from '../following-card'
 
-import useInfiniteUsers from "@/hooks/use-infinite-users";
-import useFollow from "@/hooks/use-auth";
-import useAuthData from "@/hooks/use-auth-data";
+import useFollow from '@/hooks/use-follow'
+import useInfiniteUsers from '@/hooks/use-infinite-users'
 
 export default function UsersList({
   fetchType,
   username,
 }: {
-  fetchType: string;
-  username: string;
+  fetchType: string
+  username: string
 }) {
-  const { users } = useInfiniteUsers(fetchType, username);
+  const { users } = useInfiniteUsers(fetchType, username)
 
-  const { following } = useAuthData();
-  const { toggleFollow, isLoading } = useFollow(following);
+  const { toggleFollow, getIsFollowing } = useFollow()
 
   return (
     <ul>
@@ -27,11 +25,10 @@ export default function UsersList({
           avatar_url={avatar_url}
           name={name}
           user_name={user_name}
+          isFollowing={getIsFollowing(id)}
           toggleFollow={toggleFollow}
-          isLoading={isLoading}
-          isFollowing={following?.includes(id)}
         />
       ))}
     </ul>
-  );
+  )
 }

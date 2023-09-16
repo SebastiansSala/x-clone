@@ -1,30 +1,27 @@
-import type { User } from "@supabase/supabase-js";
+import { Button } from '@nextui-org/button'
 import {
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
   DropdownItem,
-} from "@nextui-org/dropdown";
-import { Button } from "@nextui-org/button";
+  DropdownMenu,
+  DropdownTrigger,
+} from '@nextui-org/dropdown'
 
-import { OptionsIcon } from "../Icons/utility/option-icon";
+import { OptionsIcon } from '../Icons/utility/option-icon'
 
-import type { UserType } from "@/types/posts";
+import type { UserType } from '@/types/posts'
 
 type OptionsDropdownProps = {
-  author: UserType;
-  postId: string;
-  isFollowing: boolean;
-  onClick: (authorId: string) => void;
-  showPublicButtons: boolean;
-  handleBlock: (authorId: string) => void;
-};
+  author: UserType
+  isFollowing: boolean
+  toggleFollow: (authorId: string) => void
+  showPublicButtons: boolean
+  handleBlock: (authorId: string) => void
+}
 
 export default function OptionsDropdown({
   author,
-  postId,
   isFollowing,
-  onClick,
+  toggleFollow,
   showPublicButtons,
   handleBlock,
 }: OptionsDropdownProps) {
@@ -43,10 +40,10 @@ export default function OptionsDropdown({
       </DropdownTrigger>
       {showPublicButtons ? (
         <DropdownMenu aria-label="Static Actions" className="text-white">
-          <DropdownItem key="unfollow" onPress={() => onClick(author.id)}>
-            {isFollowing ? "UnFollow" : "Follow"} @{author.user_name}
+          <DropdownItem key="unfollow" onPress={() => toggleFollow(author.id)}>
+            {isFollowing ? 'UnFollow' : 'Follow'} @{author.user_name}
           </DropdownItem>
-          <DropdownItem key="block" onPress={() => handleBlock(postId)}>
+          <DropdownItem key="block" onPress={() => handleBlock(author.id)}>
             Block @{author.user_name}
           </DropdownItem>
           <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
@@ -57,5 +54,5 @@ export default function OptionsDropdown({
         </DropdownMenu>
       )}
     </Dropdown>
-  );
+  )
 }

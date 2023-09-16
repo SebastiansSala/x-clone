@@ -1,21 +1,21 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import type { User } from "@supabase/supabase-js";
+import { redirect } from 'next/navigation'
+import { useState } from 'react'
 
-import PostList from "./post-list";
-import Tabs from "@/components/post/post-tabs";
+import Tabs from '@/components/post/post-tabs'
+import PostList from './post-list'
 
-import { TabsType } from "@/types";
-import { redirect } from "next/navigation";
+import { TabsType } from '@/types'
+import type { User } from '@supabase/supabase-js'
 
 type PostSectionProps = {
-  initialState: string;
-  tabs: TabsType[];
-  isSticky: boolean;
-  user?: User;
-  username?: string;
-};
+  initialState: string
+  tabs: TabsType[]
+  isSticky: boolean
+  user?: User
+  username?: string
+}
 
 export default function PostSection({
   user,
@@ -24,14 +24,14 @@ export default function PostSection({
   tabs,
   isSticky,
 }: PostSectionProps) {
-  const [tab, setTab] = useState(initialState);
+  const [tab, setTab] = useState(initialState)
 
   const handleTabChange = (tab: string) => {
-    setTab(tab);
-  };
+    setTab(tab)
+  }
 
-  if (!user && tab === "following") {
-    return redirect("/");
+  if (!user && tab === 'following') {
+    return redirect('/')
   }
 
   return (
@@ -44,5 +44,5 @@ export default function PostSection({
       />
       <PostList postType={tab} user={user} username={username} />
     </>
-  );
+  )
 }

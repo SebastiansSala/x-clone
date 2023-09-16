@@ -1,53 +1,53 @@
-"use client";
+'use client'
 
-import { useState } from "react";
 import {
-  useDisclosure,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
-} from "@nextui-org/modal";
-import type { ImageListType } from "react-images-uploading";
+  ModalHeader,
+  useDisclosure,
+} from '@nextui-org/modal'
+import { useState } from 'react'
+import type { ImageListType } from 'react-images-uploading'
 
-import PostModalBody from "./create-post-modal-body";
-import PostModalFooter from "./create-post-modal-footer";
+import PostModalBody from './create-post-modal-body'
+import PostModalFooter from './create-post-modal-footer'
 
-import { createPost } from "@/services/posts-services";
+import { createPost } from '@/services/posts-services'
 
 export default function CreatePostModal() {
-  const [images, setImages] = useState([]);
-  const [textarea, setTextarea] = useState("");
-  const [selectedOption, setSelectedOption] = useState("Everyone");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [images, setImages] = useState([])
+  const [textarea, setTextarea] = useState('')
+  const [selectedOption, setSelectedOption] = useState('Everyone')
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleImageUpload = (
     imagesList: ImageListType,
     addUpdatedIndex: number[] | undefined
   ) => {
-    setImages(imagesList as never[]);
-  };
+    setImages(imagesList as never[])
+  }
 
   const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
+    setImages(images.filter((_, i) => i !== index))
+  }
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (textarea.length > 280) return;
-    setTextarea(e.target.value);
-  };
+    if (textarea.length > 280) return
+    setTextarea(e.target.value)
+  }
 
   const handleSelectedOption = (option: string) => {
-    setSelectedOption(option);
-  };
+    setSelectedOption(option)
+  }
 
   const handleSubmit = async () => {
-    const post = await createPost(textarea, selectedOption, images);
+    const post = await createPost(textarea, selectedOption, images)
 
-    if (!post) return;
-    onClose();
-  };
+    if (!post) return
+    onClose()
+  }
 
   return (
     <>
@@ -86,5 +86,5 @@ export default function CreatePostModal() {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }

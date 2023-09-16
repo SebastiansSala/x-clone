@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Avatar } from "@nextui-org/avatar";
-import { Button } from "@nextui-org/button";
+import { Avatar } from '@nextui-org/avatar'
+import { Button } from '@nextui-org/button'
+import Link from 'next/link'
+import { useState } from 'react'
 
-import type { UserType } from "../types/posts";
+import type { UserType } from '../types/posts'
 
 type FollowingCardProps = UserType & {
-  toggleFollow: (authorId: string) => void;
-  isLoading: boolean;
-  isFollowing: boolean;
-};
+  toggleFollow: (authorId: string) => Promise<void>
+  isFollowing: boolean
+}
 
 const FollowingCard = ({
   id,
@@ -18,12 +18,24 @@ const FollowingCard = ({
   user_name,
   avatar_url,
   toggleFollow,
-  isLoading,
   isFollowing,
 }: FollowingCardProps) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleToggleFollow = async () => {
+    try {
+      setIsLoading(true)
+      await toggleFollow(id)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <li className="relative cursor-pointer hover:bg-[#1d1f23] transition duration-250">
-      <Link href={"/" + user_name} className="absolute z-0 h-full w-full" />
+      <Link href={'/' + user_name} className="absolute z-0 h-full w-full" />
       <div className="z-50 flex justify-between items-center p-4">
         <div className="flex gap-4 items-center">
           <Avatar src={avatar_url} />
@@ -35,16 +47,16 @@ const FollowingCard = ({
         <Button
           color="default"
           disabled={isLoading}
-          onPress={() => toggleFollow(id)}
+          onPress={() => handleToggleFollow()}
           className={`bg-white hover:bg-gray-300 text-black ${
-            isLoading && "bg-gray-300"
+            isLoading && 'bg-gray-300'
           }`}
         >
-          {isLoading ? "Loading" : isFollowing ? "Unfollow" : "Follow"}
+          {isLoading ? 'Loading' : isFollowing ? 'Unfollow' : 'Follow'}
         </Button>
       </div>
     </li>
-  );
-};
+  )
+}
 
-export default FollowingCard;
+export default FollowingCard

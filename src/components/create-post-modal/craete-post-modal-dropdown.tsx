@@ -1,10 +1,10 @@
-import { Button } from "@nextui-org/button"
+import { Button } from '@nextui-org/button'
 import {
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
   DropdownItem,
-} from "@nextui-org/dropdown"
+  DropdownMenu,
+  DropdownTrigger,
+} from '@nextui-org/dropdown'
 
 type Props = {
   handleSelectedOption: (option: string) => void
@@ -15,16 +15,16 @@ export default function CreatePostModalDropdown({
   handleSelectedOption,
   selectedOption,
 }: Props) {
-  const visibilityOptions = ["Everyone", "Followers"]
+  const visibilityOptions = ['Everyone', 'Followers']
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button color='primary' variant='light'>
+        <Button color="primary" variant="light">
           {selectedOption}
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label='Static Actions'>
+      <DropdownMenu aria-label="Static Actions">
         {visibilityOptions.map((option) => (
           <DropdownItem
             key={option}

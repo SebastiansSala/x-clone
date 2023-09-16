@@ -1,82 +1,42 @@
-"use client";
+'use client'
 
-import type { User } from "@supabase/supabase-js";
-import { Avatar } from "@nextui-org/avatar";
-import { Image } from "@nextui-org/image";
+import { Avatar } from '@nextui-org/avatar'
+import { Image } from '@nextui-org/image'
+import { Link } from '@nextui-org/link'
+import type { User } from '@supabase/supabase-js'
 
-import LikeButton from "../like-button";
-import RetweetButton from "../retweet-button";
-import OptionsDropdown from "./post-options-dropdown";
-import CommentsModal from "../comments-modal/comments-modal";
+import CommentsModal from '../comments-modal/comments-modal'
+import LikeButton from '../like-button'
+import RetweetButton from '../retweet-button'
+import OptionsDropdown from './post-options-dropdown'
 
-import type { PostType } from "@/types/posts";
-
-import { Link } from "@nextui-org/link";
+import type { PostType } from '@/types/posts'
 
 type PostProps = {
-  post: PostType;
-  user?: User;
-  onFollowChange: (authorId: string) => void;
-  isFollowing: boolean;
-  addLikeMutation: any;
-  deleteLikeMutation: any;
-  addRetweetMutation: any;
-  deleteRetweetMutation: any;
-  blockMutation: any;
-};
+  post: PostType
+  user?: User
+  isFollowing: boolean
+  toggleFollow: (authorId: string) => Promise<void>
+  handleLike: (isLiked: boolean, postId: string) => void
+  handleRetweet: (isRetweeted: boolean, postId: string) => void
+  handleBlock: (authorId: string) => void
+}
 
 export default function PostCard({
   post,
   user,
-  addLikeMutation,
   isFollowing,
-  onFollowChange,
-  deleteLikeMutation,
-  addRetweetMutation,
-  deleteRetweetMutation,
-  blockMutation,
+  toggleFollow,
+  handleLike,
+  handleRetweet,
+  handleBlock,
 }: PostProps) {
-  const isLiked = post.likes.some((like) => like.id === user?.id);
+  const isLiked = post.likes.some((like) => like.id === user?.id)
   const isRetweeted = post.retweets.some(
     (retweet) => retweet.authorId === user?.id
-  );
+  )
 
-  const likesCount = post.likes.length;
-
-  const handleLike = async () => {
-    try {
-      if (isLiked) {
-        await deleteLikeMutation.mutateAsync(post.id);
-      } else {
-        await addLikeMutation.mutateAsync(post.id);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleRetweet = async () => {
-    try {
-      if (isRetweeted) {
-        await deleteRetweetMutation.mutateAsync(post.id);
-      } else {
-        await addRetweetMutation.mutateAsync(post.id);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleBlock = async () => {
-    try {
-      await blockMutation.mutateAsync({
-        userId: user?.id,
-        blockedUserId: post.authorId,
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const likesCount = post.likes.length
 
   return (
     <div className="grid grid-cols-12 p-4 relative">
@@ -93,7 +53,7 @@ export default function PostCard({
             author={post.author}
             postId={post.id}
             isFollowing={isFollowing}
-            onClick={onFollowChange}
+            toggleFollow={toggleFollow}
             showPublicButtons={user?.id !== post.author.id}
             handleBlock={handleBlock}
           />
@@ -122,23 +82,19 @@ export default function PostCard({
             created_at={post.createdAt}
           />
           <RetweetButton
-            onClick={handleRetweet}
+            onClick={() => handleRetweet(isRetweeted, post.id)}
             retweetsCount={post.retweets.length}
             isRetweeted={isRetweeted}
-            isLoading={
-              addRetweetMutation.isLoading || deleteRetweetMutation.isLoading
-            }
+            isLoading={false}
           />
           <LikeButton
-            onClick={handleLike}
+            onClick={() => handleLike(isLiked, post.id)}
             likesCount={likesCount}
             isLiked={isLiked}
-            isLoading={
-              addLikeMutation.isLoading || deleteLikeMutation.isLoading
-            }
+            isLoading={false}
           />
         </div>
       </div>
     </div>
-  );
+  )
 }
