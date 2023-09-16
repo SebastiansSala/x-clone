@@ -6,7 +6,7 @@ import NavigationList from './navigation-list'
 
 const NavigationAside = () => {
   return (
-    <nav className="sticky space-y-6 w-full inset-0 min-h-screen">
+    <nav className="sticky bottom-0 flex sm:block sm:space-y-6 z-50 sm:py-0 w-full inset-0 sm:min-h-screen bg-black border-t-1 sm:border-t-0 border-[#2f3336]">
       <NavigationLinkIcon
         href="/home"
         icon={<Logo className="h-8 fill-white font-black" />}
@@ -14,7 +14,7 @@ const NavigationAside = () => {
 
       <NavigationList />
       <PostModal />
-      <div className="absolute bottom-0 color-white">
+      <div className="absolute bottom-0 color-white hidden md:block">
         <SignOutClientButton />
       </div>
     </nav>

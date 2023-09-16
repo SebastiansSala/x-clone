@@ -1,79 +1,76 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   createRetweet,
   deleteRetweeet,
   findRetweet,
-} from "@/actions/retweet-actions";
+} from '@/actions/retweet-actions'
 
 export async function POST(
   req: Request,
   { params }: { params: { postId: string } }
 ) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getSession()
 
   if (!session) {
-    return NextResponse.redirect("/login");
+    return NextResponse.redirect('/login')
   }
 
-  const { user } = session;
+  const { user } = session
 
-  const postId = params.postId;
+  const postId = params.postId
 
   if (!postId) {
-    console.log("postId", postId);
     return NextResponse.json({
-      error: "postId is required",
-    });
+      error: 'postId is required',
+    })
   }
 
-  console.log("postId", postId);
+  const created_at = new Date().toDateString()
+  await createRetweet(postId, user.id, created_at)
 
-  const created_at = new Date().toDateString();
-  await createRetweet(postId, user.id, created_at);
-
-  return NextResponse.json({ message: "Retweet added!" });
+  return NextResponse.json({ message: 'Retweet added!' })
 }
 
 export async function DELETE(
   req: Request,
   { params }: { params: { postId: string } }
 ) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getSession()
 
   if (!session) {
-    return NextResponse.redirect("/login");
+    return NextResponse.redirect('/login')
   }
 
-  const { user } = session;
+  const { user } = session
 
-  const postId = params.postId;
+  const postId = params.postId
 
   if (!postId) {
     return NextResponse.json({
-      error: "postId is required",
-    });
+      error: 'postId is required',
+    })
   }
 
-  const retweet = await findRetweet(postId, user.id);
+  const retweet = await findRetweet(postId, user.id)
 
   if (!retweet) {
     return NextResponse.json({
-      error: "Retweet not found",
-    });
+      error: 'Retweet not found',
+    })
   }
 
-  await deleteRetweeet(retweet.id);
+  await deleteRetweeet(retweet.id)
 
-  return NextResponse.json({ message: "Retweet deleted!" });
+  return NextResponse.json({ message: 'Retweet deleted!' })
 }

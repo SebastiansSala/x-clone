@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma";
+import prisma from '@/utils/prisma'
 
 export const deleteFollow = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -12,8 +12,8 @@ export const deleteFollow = async (authorId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const deleteFollower = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -27,8 +27,8 @@ export const deleteFollower = async (authorId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const addFollow = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -42,8 +42,8 @@ export const addFollow = async (authorId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const addFollower = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -57,8 +57,8 @@ export const addFollower = async (authorId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const deleteBlockedUser = async (authorId: string, userId: string) => {
   return await prisma.users.update({
@@ -72,8 +72,8 @@ export const deleteBlockedUser = async (authorId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const blockUser = async (authorId: string, userId: string) => {
   try {
@@ -89,7 +89,7 @@ export const blockUser = async (authorId: string, userId: string) => {
             },
           },
         },
-      });
+      })
 
       const y = await tx.users.update({
         where: {
@@ -102,13 +102,12 @@ export const blockUser = async (authorId: string, userId: string) => {
             },
           },
         },
-      });
-      console.log(y);
-    });
+      })
+    })
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
-};
+}
 
 export const unblockUser = async (authorId: string, userId: string) => {
   try {
@@ -124,7 +123,7 @@ export const unblockUser = async (authorId: string, userId: string) => {
             },
           },
         },
-      });
+      })
 
       await tx.users.update({
         where: {
@@ -137,9 +136,9 @@ export const unblockUser = async (authorId: string, userId: string) => {
             },
           },
         },
-      });
-    });
+      })
+    })
   } catch (e) {
-    console.error(e);
+    console.error(e)
   }
-};
+}

@@ -27,12 +27,12 @@ export default function NavigationLink({
       color="foreground"
       disableAnimation={false}
       className={clsx(
-        'text-white text-xl hover:bg-slate-500 transition rounded-full flex gap-2 items-center w-fit px-2 justify-center text-center',
+        'text-white text-xl hover:bg-slate-500 transition py-4 sm:rounded-full flex gap-2 items-center px-2 justify-center text-center w-full xl:w-fit',
         selectedLink && 'font-black'
       )}
     >
-      <span className="mr-3">{selectedLink ? filledIcon : icon}</span>
-      {text}
+      <span className="xl:mr-3">{selectedLink ? filledIcon : icon}</span>
+      <span className="hidden xl:block">{text}</span>
     </Link>
   )
 }

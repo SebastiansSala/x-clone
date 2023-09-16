@@ -25,7 +25,7 @@ export default function NavigationLinkIcon({
       color="foreground"
       disableAnimation={false}
       className={clsx(
-        'text-white text-xl hover:bg-slate-500 transition rounded-full flex gap-2 items-center w-fit p-2 justify-center text-center',
+        'text-white text-xl hover:bg-slate-500 transition rounded-full gap-2 items-center xl:w-fit w-full p-2 justify-center text-center hidden sm:flex',
         selectedLink && 'font-black'
       )}
     >

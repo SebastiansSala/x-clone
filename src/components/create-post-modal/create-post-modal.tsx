@@ -15,6 +15,7 @@ import PostModalBody from './create-post-modal-body'
 import PostModalFooter from './create-post-modal-footer'
 
 import { createPost } from '@/services/posts-services'
+import { Button } from '@nextui-org/button'
 
 export default function CreatePostModal() {
   const [images, setImages] = useState([])
@@ -51,12 +52,22 @@ export default function CreatePostModal() {
 
   return (
     <>
-      <button
-        className="bg-[#1d9bf0] hover:bg-blue-500/95 w-full text-white text-center py-4 rounded-full"
+      <div className="flex justify-center">
+        <Button
+          isIconOnly
+          className="xl:hidden mx-auto"
+          color="primary"
+          radius="full"
+        ></Button>
+      </div>
+
+      <Button
+        className="bg-[#1d9bf0] hover:bg-blue-500/95 xl:block hidden xl:w-full text-white text-center p-2 rounded-full"
         onClick={onOpen}
       >
         Post
-      </button>
+      </Button>
+      <div></div>
       <Modal
         size="lg"
         isOpen={isOpen}

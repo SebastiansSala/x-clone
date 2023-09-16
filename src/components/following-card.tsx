@@ -27,7 +27,7 @@ const FollowingCard = ({
       setIsLoading(true)
       await toggleFollow(id)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     } finally {
       setIsLoading(false)
     }
