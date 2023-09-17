@@ -40,10 +40,13 @@ export default function PostCard({
 
   return (
     <div className="grid grid-cols-12 p-4 relative">
-      <Link href={`/${post.author.user_name}`}>
-        <Avatar className="col-span-1 z-30" src={post.author.avatar_url} />
+      <Link
+        href={`/${post.author.user_name}`}
+        className="col-span-1 z-30 place-self-start mt-2"
+      >
+        <Avatar src={post.author.avatar_url} />
       </Link>
-      <div className="col-span-11">
+      <div className="col-span-11 px-4">
         <div className="flex justify-between items-center">
           <Link href={`/${post.author.user_name}`} className="flex gap-4 z-30">
             <h4 className="text-white">{post.author.name}</h4>
@@ -51,7 +54,6 @@ export default function PostCard({
           </Link>
           <OptionsDropdown
             author={post.author}
-            postId={post.id}
             isFollowing={isFollowing}
             toggleFollow={toggleFollow}
             showPublicButtons={user?.id !== post.author.id}

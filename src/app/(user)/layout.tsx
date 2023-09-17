@@ -28,9 +28,7 @@ export default async function UserLayout({
     <InitialDataProvider>
       <div className="bg-black">
         <div className="sm:grid sm:grid-cols-10 container mx-auto relative h-auto md:px-10">
-          <aside className="sm:p-4 z-50 xl:px-10 xl:col-span-2 sm:col-span-1 fixed w-full sm:static bottom-0">
-            <NavigationAside />
-          </aside>
+          <NavigationAside />
           <section className="xl:col-span-5 sm:col-span-9 lg:col-span-6 border-x-1 border-[#2f3336] min-h-screen">
             {children}
           </section>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Link } from '@nextui-org/link'
+import Link from 'next/link'
 import clsx from 'clsx'
 import { usePathname } from 'next/navigation'
 
@@ -22,12 +22,9 @@ export default function NavigationLink({
 
   return (
     <Link
-      isBlock
       href={href}
-      color="foreground"
-      disableAnimation={false}
       className={clsx(
-        'text-white text-xl hover:bg-slate-500 transition py-4 sm:rounded-full flex gap-2 items-center px-2 justify-center text-center w-full xl:w-fit',
+        'text-white text-xl flex hover:bg-slate-500 py-3 md:py-1 transition xl:py-2 justify-center px-2 xl:rounded-full xl:gap-2 xl:items-center xl:justify-center xl:text-center w-full xl:w-fit',
         selectedLink && 'font-black'
       )}
     >
