@@ -15,42 +15,53 @@ export type UserFollowDataType = UserType & {
 export type PostType = {
   id: string
   text: string
-  authorId: string
-  createdAt: Date
-  updatedAt: Date | null
   author: UserType
-  comments: CommentType[]
+  authorId: string
   retweets: RetweetType[]
+  createdAt: Date
+  images?: ImageType | null
+  updatedAt: Date | null
   likes: UserType[]
-  image?: ImageType
+  comments: CommentType[]
 }
 
 export type CommentType = {
   id: string
   text: string
-  createdAt: Date
-  updatedAt: Date | null
-  likes: UserType[]
-  post: PostType
-  postId: string
-  author: UserType
+  author?: UserType
   authorId: string
-  image?: ImageType
+  retweets?: RetweetType[]
+  createdAt: Date
+  image?: ImageType | null
+  updatedAt?: string
+  likes?: UserType[]
+  comments?: CommentType[]
+  post?: PostType
+  postId: string
+  parent?: CommentType
+  parentId?: string | null
 }
 
 type RetweetType = {
   id: string
-  created_at: string
+  created_at: Date
   text: string
+  author?: UserType
   authorId: string
-  postId: string
+  post?: PostType
+  postId?: string | null
+  comment?: CommentType
+  commentId?: string | null
 }
 
 type ImageType = {
   id: string
   createdAt: Date
   url: string
-  postId: string | null
-  messageId: string | null
-  commentId: string | null
+  post?: PostType
+  postId?: string | null
+  message?: CommentType
+  messageId?: string | null
+  comment?: CommentType
+  commentId?: string | null
 }

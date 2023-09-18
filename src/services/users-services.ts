@@ -1,4 +1,4 @@
-import type { UserFollowDataType } from '@/types/posts'
+import type { UserFollowDataType, UserType } from '@/types/posts'
 
 export const createUser = async (
   id: string,
@@ -27,14 +27,21 @@ export const createUser = async (
   }
 }
 
-export const followUser = async (authorId: string) => {
+export const followUser = async (
+  userId: string,
+  authorId: string
+): Promise<UserType | undefined> => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/${authorId}/follow`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/follow`,
       {
         method: 'POST',
+        body: JSON.stringify({
+          authorId,
+        }),
       }
     )
+
     if (!res.ok) {
       throw new Error(res.statusText)
     }
@@ -42,16 +49,18 @@ export const followUser = async (authorId: string) => {
     return res.json()
   } catch (e) {
     console.error(e)
-    return false
   }
 }
 
-export const unfollowUser = async (authorId: string) => {
+export const unfollowUser = async (userId: string, authorId: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${authorId}/follow`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/follow`,
       {
         method: 'DELETE',
+        body: JSON.stringify({
+          authorId,
+        }),
       }
     )
     if (!res.ok) {

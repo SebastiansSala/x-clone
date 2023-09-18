@@ -25,7 +25,6 @@ model Users {
   posts            Posts[]
   retweets         Retweets[] @relation("PostRetweetedBy")
   likedComments    Comments[] @relation("CommentsLikedBy")
-  bookmarks        Posts[]    @relation("PostBookmarkedBy")
   comments         Comments[]
   recievedMessages Messages[] @relation("RecievedMessage")
   sentMessages     Messages[] @relation("SentMessage")
@@ -47,20 +46,37 @@ model Messages {
 }
 
 model Posts {
-  id            String     @id @default(uuid())
-  text          String
-  author        Users      @relation(fields: [authorId], references: [id])
-  authorId      String
-  retweets      Retweets[] @relation("RetweetedPost")
-  createdAt     DateTime   @default(now())
-  images        Images[]
-  updatedAt     DateTime?
-  likes         Users[]    @relation("PostLikeBy")
-  comments      Comments[] @relation("PostComment")
-  bookmarks     Users[]    @relation("PostBookmarkedBy")
-  publicVisible Boolean    @default(true)
+  id        String     @id @default(uuid())
+  text      String
+  author    Users      @relation(fields: [authorId], references: [id])
+  authorId  String
+  retweets  Retweets[] @relation("RetweetedPost")
+  createdAt DateTime   @default(now())
+  images    Images?
+  updatedAt DateTime?
+  likes     Users[]    @relation("PostLikeBy")
+  comments  Comments[] @relation("PostComment")
 
   @@map("posts")
+}
+
+model Comments {
+  id        String     @id @default(uuid())
+  text      String
+  author    Users      @relation(fields: [authorId], references: [id])
+  authorId  String
+  retweets  Retweets[]
+  createdAt DateTime   @default(now())
+  image     Images?
+  updatedAt String
+  likes     Users[]    @relation("CommentsLikedBy")
+  comments  Comments[] @relation("CommentComment")
+  post      Posts      @relation("PostComment", fields: [postId], references: [id])
+  postId    String
+  parent    Comments?  @relation("CommentComment", fields: [parentId], references: [id])
+  parentId  String?
+
+  @@map("comments")
 }
 
 model Images {
@@ -68,7 +84,7 @@ model Images {
   createdAt DateTime  @default(now())
   url       String
   post      Posts?    @relation(fields: [postId], references: [id])
-  postId    String?
+  postId    String?   @unique
   message   Messages? @relation(fields: [messageId], references: [id])
   messageId String?
   comment   Comments? @relation(fields: [commentId], references: [id])
@@ -77,29 +93,16 @@ model Images {
   @@map("images")
 }
 
-model Comments {
-  id        String  @id @default(uuid())
-  createdAt String
-  updatedAt String
-  text      String
-  likes     Users[] @relation("CommentsLikedBy")
-  post      Posts   @relation("PostComment", fields: [postId], references: [id])
-  postId    String
-  author    Users   @relation(fields: [authorId], references: [id])
-  authorId  String
-  image     Images?
-
-  @@map("comments")
-}
-
 model Retweets {
-  id         String @id @default(uuid())
-  created_at String
+  id         String    @id @default(uuid())
+  created_at DateTime  @default(now())
   text       String
-  author     Users  @relation("PostRetweetedBy", fields: [authorId], references: [id])
+  author     Users     @relation("PostRetweetedBy", fields: [authorId], references: [id])
   authorId   String
-  post       Posts  @relation("RetweetedPost", fields: [postId], references: [id])
-  postId     String
+  post       Posts?    @relation("RetweetedPost", fields: [postId], references: [id])
+  postId     String?
+  Comments   Comments? @relation(fields: [commentsId], references: [id])
+  commentsId String?
 
   @@map("retweets")
 }

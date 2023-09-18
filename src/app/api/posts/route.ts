@@ -1,72 +1,73 @@
-import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { type NextRequest, NextResponse } from "next/server";
-import { decode } from "base64-arraybuffer";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
 
-import { updatePostImages } from "@/actions/posts-update-actions";
-import { createPost } from "@/actions/posts-create-actions";
+import { createPost } from '@/actions/posts-create-actions'
+import { updatePostImages } from '@/actions/posts-update-actions'
 
-import { MAX_POSTS_PER_FETCH } from "@/const/posts";
-import { fetchPostFunctions } from "./postTypeFunctions";
-import { getPublicPosts } from "@/actions/posts-get-actions";
-import getNextId from "@/utils/getNextId";
+import { getPublicPosts } from '@/actions/posts-get-actions'
+import { MAX_POSTS_PER_FETCH } from '@/const/posts'
+import getNextId from '@/utils/getNextId'
+import { fetchPostFunctions } from './postTypeFunctions'
+
+import type { NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(req.url)
 
-  const postType = searchParams.get("postType");
+  const postType = searchParams.get('postType')
 
   if (!postType) {
-    return NextResponse.json("Invalid data", { status: 400 });
+    return NextResponse.json('Invalid data', { status: 400 })
   }
 
-  const cursor = searchParams.get("cursor");
-  const skip = cursor && Number(cursor) !== 0 ? 1 : 0;
-  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined;
+  const cursor = searchParams.get('cursor')
+  const skip = cursor && Number(cursor) !== 0 ? 1 : 0
+  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined
 
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getSession()
 
-  if (postType === "fyp") {
-    const userId = session?.user.id;
+  if (postType === 'fyp') {
+    const userId = session?.user.id
 
     if (!userId) {
-      const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj);
-      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
+      const posts = await getPublicPosts(skip, MAX_POSTS_PER_FETCH, cursorObj)
+      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
 
-      return NextResponse.json({ posts, nextId });
+      return NextResponse.json({ posts, nextId })
     } else {
       const posts = await getPublicPosts(
         skip,
         MAX_POSTS_PER_FETCH,
         cursorObj,
         userId
-      );
-      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
+      )
+      const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
 
-      return NextResponse.json({ posts, nextId });
+      return NextResponse.json({ posts, nextId })
     }
   }
 
-  const username = searchParams.get("username");
-  let usernameOrUserId = "";
+  const username = searchParams.get('username')
+  let usernameOrUserId = ''
 
   if (username) {
-    usernameOrUserId = username;
+    usernameOrUserId = username
   } else {
     try {
-      const userId = session?.user.id;
+      const userId = session?.user.id
 
       if (!userId) {
-        return NextResponse.json("Unauthorized", { status: 401 });
+        return NextResponse.json('Unauthorized', { status: 401 })
       }
-      usernameOrUserId = userId;
+      usernameOrUserId = userId
     } catch (e) {
-      console.error(e);
-      return NextResponse.error();
+      console.error(e)
+      return NextResponse.error()
     }
   }
 
@@ -77,76 +78,62 @@ export async function GET(req: NextRequest) {
       skip,
       MAX_POSTS_PER_FETCH,
       cursorObj
-    );
-    const nextId = getNextId(posts, MAX_POSTS_PER_FETCH);
+    )
+    const nextId = getNextId(posts, MAX_POSTS_PER_FETCH)
 
-    return NextResponse.json({ posts, nextId });
+    return NextResponse.json({ posts, nextId })
   } catch (e) {
-    console.error(e);
-    return NextResponse.error();
+    console.error(e)
+    return NextResponse.error()
   }
 }
 
 type imagesPost = {
-  dataURL: string;
-  file: File;
-};
+  dataURL: string
+  file: File
+}
 
 export const POST = async (req: NextRequest) => {
   try {
     const {
       text,
-      images,
+      image,
       selectedOption,
-    }: { text: string; images: imagesPost[]; selectedOption: string } =
-      await req.json();
+    }: { text: string; image: imagesPost; selectedOption: string } =
+      await req.json()
 
     if (!text) {
-      return NextResponse.json("Invalid data", { status: 400 });
+      return NextResponse.json('Invalid data', { status: 400 })
     }
 
-    const supabase = createServerComponentClient({ cookies });
+    const supabase = createServerComponentClient({ cookies })
 
     const {
       data: { session },
-    } = await supabase.auth.getSession();
+    } = await supabase.auth.getSession()
 
     if (!session) {
-      return NextResponse.json("Unauthorized", { status: 401 });
+      return NextResponse.json('Unauthorized', { status: 401 })
     }
 
-    const userId = session.user.id;
+    const userId = session.user.id
 
-    const publicVisible = selectedOption === "Everyone" ? true : false;
+    const publicVisible = selectedOption === 'Everyone' ? true : false
 
-    const post = await createPost(userId, text, publicVisible);
+    const post = await createPost(userId, text, publicVisible)
 
-    let imageUrls = [];
-    if (images.length > 0) {
-      for (const image of images) {
-        let index = 1;
-
-        const { data, error } = await supabase.storage
-          .from("images")
-          .upload(`images/${image.file.name}`, image.dataURL);
-        if (error) {
-          console.error("Error uploading images", error);
-        }
-
-        if (data) {
-          imageUrls.push(data.path);
-          index++;
-        }
-      }
+    const { data, error } = await supabase.storage
+      .from('images')
+      .upload(`images/${image.file.name}`, image.dataURL)
+    if (error) {
+      console.error('Error uploading images', error)
     }
 
-    for (const imageUrl of imageUrls) {
-      await updatePostImages(post.id, imageUrl);
-    }
+    await updatePostImages(post.id, image.dataURL)
 
-    return NextResponse.json({ post });
+    return NextResponse.json({ post })
   } catch (e) {
-    console.error(e);
-    return NextResponse.error();
+    console.error(e)
+    return NextResponse.error()
   }
-};
+}

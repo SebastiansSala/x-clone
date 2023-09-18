@@ -1,54 +1,56 @@
-"use client";
+'use client'
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { ReactNode, createContext, useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { ReactNode, createContext, useContext, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 import {
   setBlockedUsers,
   setFollowers,
   setFollowing,
-} from "@/features/auth-slice";
-import { fetchUserFollowData } from "@/services/users-services";
+  setUserData,
+} from '@/features/auth-slice'
+import { fetchUserFollowData } from '@/services/users-services'
 
-const InitialDataContext = createContext(null);
+const InitialDataContext = createContext(null)
 
 export const useInitialData = () => {
-  return useContext(InitialDataContext);
-};
+  return useContext(InitialDataContext)
+}
 
 export default function InitialDataProvider({
   children,
 }: {
-  children: ReactNode;
+  children: ReactNode
 }) {
-  const supabase = createClientComponentClient();
+  const supabase = createClientComponentClient()
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchFollowData = async () => {
       const {
         data: { session },
-      } = await supabase.auth.getSession();
+      } = await supabase.auth.getSession()
 
-      if (!session) return;
+      if (!session) return
 
-      const followData = await fetchUserFollowData(session.user.id);
+      const followData = await fetchUserFollowData(session.user.id)
 
-      if (!followData) return;
+      if (!followData) return
 
-      dispatch(setFollowing(followData.following));
-      dispatch(setFollowers(followData.followers));
-      dispatch(setBlockedUsers(followData.blockedUsers));
-    };
+      dispatch(setFollowing(followData.following))
+      dispatch(setFollowers(followData.followers))
+      dispatch(setBlockedUsers(followData.blockedUsers))
+      dispatch(setUserData(followData))
+    }
 
-    fetchFollowData();
-  }, [supabase.auth, dispatch]);
+    fetchFollowData()
+  }, [supabase.auth, dispatch, supabase.auth.onAuthStateChange])
 
   return (
     <InitialDataContext.Provider value={null}>
       {children}
     </InitialDataContext.Provider>
-  );
+  )
 }

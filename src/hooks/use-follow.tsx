@@ -19,14 +19,25 @@ export default function useFollow() {
       toast.error('You must be logged in to follow users')
       return
     }
+
+    const userId = userData.id
+
     try {
+      console.log('isFollowing', isFollowing)
       if (isFollowing) {
-        const res = await unfollowUser(authorId)
-        dispatch(unfollow(res))
+        await unfollowUser(userId, authorId)
+        dispatch(unfollow(authorId))
         toast.success('Unfollowed')
       } else {
-        await followUser(authorId)
-        dispatch(follow(userData))
+        const followedUser = await followUser(userId, authorId)
+
+        console.log('followedUser', followedUser)
+
+        if (!followedUser) {
+          toast.error('Error following user')
+          return
+        }
+        dispatch(follow(followedUser))
         toast.success('Followed')
       }
     } catch (e) {

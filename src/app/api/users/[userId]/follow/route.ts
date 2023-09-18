@@ -1,93 +1,63 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse } from 'next/server'
 
-import {
-  deleteFollow,
-  addFollow,
-  deleteFollower,
-  addFollower,
-} from "@/actions/users-update-actions";
-import { getUserFollowData } from "@/actions/users-get-actions";
+import { deleteFollow, addFollow } from '@/actions/users-update-actions'
+import { getUserFollowData } from '@/actions/users-get-actions'
 
-export async function GET() {
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+export async function GET(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
+  try {
+    const userId = params.userId
 
-  if (!session) return NextResponse.json("No session");
+    if (!userId) return NextResponse.json('No session')
 
-  const userId = session.user.id;
-  const userData = await getUserFollowData(userId);
+    const userData = await getUserFollowData(userId)
 
-  return NextResponse.json(userData);
+    return NextResponse.json(userData)
+  } catch (e) {
+    console.error(e)
+    return NextResponse.json({ success: false })
+  }
 }
 
 export async function POST(
   req: Request,
   { params }: { params: { userId: string } }
 ) {
-  const userId = params.userId;
+  const userId = params.userId
 
-  if (!userId) return NextResponse.json("Missing userId");
+  if (!userId) return NextResponse.json('Missing userId, not logged in')
 
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const res = await req.json()
 
-  if (!session) return NextResponse.json("No session");
+  const { authorId } = res
 
-  const sessionUserId = session.user.id;
+  const followedUser = await addFollow(authorId, userId)
 
-  try {
-    await addFollow(userId, sessionUserId);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.error();
-  }
-
-  try {
-    await addFollower(userId, sessionUserId);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.error();
-  }
-
-  return NextResponse.json({ success: true });
+  return NextResponse.json(followedUser)
 }
 
 export async function DELETE(
   req: Request,
   { params }: { params: { userId: string } }
 ) {
-  const userId = params.userId;
-
-  if (!userId) return NextResponse.json("Missing userId");
-
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) return NextResponse.json("No session");
-
-  const sessionUserId = session.user.id;
-
   try {
-    await deleteFollow(userId, sessionUserId);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.error();
-  }
+    const userId = params.userId
 
-  try {
-    await deleteFollower(userId, sessionUserId);
-  } catch (e) {
-    console.error(e);
-    return NextResponse.error();
-  }
+    if (!userId) return NextResponse.json('No session')
 
-  return NextResponse.json({ success: true });
+    const res = await req.json()
+
+    const { authorId } = res
+
+    if (!authorId) return NextResponse.json('Missing authorId')
+
+    await deleteFollow(authorId, userId)
+
+    return NextResponse.json({ success: true })
+  } catch (e) {
+    console.error(e)
+    return NextResponse.json({ success: false })
+  }
 }

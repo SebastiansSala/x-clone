@@ -1,45 +1,45 @@
-"use client";
+'use client'
 
-import type { User } from "@supabase/supabase-js";
-import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
+import type { User } from '@supabase/supabase-js'
+import toast from 'react-hot-toast'
+import { useMutation, useQueryClient } from 'react-query'
 
 import {
   createRetweet,
   deleteRetweet,
   likePost,
   unlikePost,
-} from "@/services/posts-services";
+} from '@/services/posts-services'
 
-import { PostType } from "@/types/posts";
-import { blockUser } from "@/services/users-services";
+import { PostType } from '@/types/posts'
+import { blockUser } from '@/services/users-services'
 
 type PostObjectType = {
-  pages: PageType[];
-  pageParams: pageParams[];
-};
+  pages: PageType[]
+  pageParams: pageParams[]
+}
 
 type PageType = {
-  nextId?: string;
-  posts: PostType[];
-};
+  nextId?: string
+  posts: PostType[]
+}
 
-type pageParams = string | undefined;
+type pageParams = string | undefined
 
 export default function usePostActions(postType: string, user?: User) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const deleteLikeMutation = useMutation(unlikePost, {
     onMutate: async (postId: string) => {
-      await queryClient.cancelQueries(["posts", postType]);
+      await queryClient.cancelQueries(['posts', postType])
       const oldData = queryClient.getQueryData<PostObjectType>([
-        "posts",
+        'posts',
         postType,
-      ]);
+      ])
 
-      if (!user) return toast.error("You must be logged in to like a post");
+      if (!user) return toast.error('You must be logged in to like a post')
 
-      queryClient.setQueryData(["posts", postType], (old: any) => {
+      queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
           posts: page.posts.map((post) => {
@@ -47,39 +47,41 @@ export default function usePostActions(postType: string, user?: User) {
               return {
                 ...post,
                 likes: post.likes.filter((like) => like.id !== user.id),
-              };
+              }
             }
-            return post;
+            return post
           }),
-        }));
+        }))
 
         return {
           ...oldData,
           pages: newData,
-        };
-      });
+        }
+      })
+
+      return { oldData }
     },
     onError: (err, postId, context) => {
-      queryClient.setQueryData(["posts", postType], context);
+      queryClient.setQueryData(['posts', postType], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["posts", postType]);
+      queryClient.invalidateQueries(['posts', postType])
     },
-  });
+  })
 
   const addLikeMutation = useMutation(likePost, {
     onMutate: async (postId: string) => {
-      await queryClient.cancelQueries(["posts", postType]);
+      await queryClient.cancelQueries(['posts', postType])
       const oldData = queryClient.getQueryData<PostObjectType>([
-        "posts",
+        'posts',
         postType,
-      ]);
+      ])
 
-      if (!user) return toast.error("You must be logged in to like a post");
+      if (!user) return toast.error('You must be logged in to like a post')
 
-      const { id, user_name, name, avatar_url } = user.user_metadata;
+      const { id, user_name, name, avatar_url } = user.user_metadata
 
-      queryClient.setQueryData(["posts", postType], (old: any) => {
+      queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
           posts: page.posts.map((post) => {
@@ -95,40 +97,42 @@ export default function usePostActions(postType: string, user?: User) {
                     avatar_url,
                   },
                 ],
-              };
+              }
             }
-            return post;
+            return post
           }),
-        }));
+        }))
 
         return {
           ...oldData,
           pages: newData,
-        };
-      });
+        }
+      })
+
+      return { oldData }
     },
     onError: (err, postId, context) => {
-      queryClient.setQueryData(["posts", postType], context);
+      queryClient.setQueryData(['posts', postType], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["posts", postType]);
+      queryClient.invalidateQueries(['posts', postType])
     },
-  });
+  })
 
   const addRetweetMutation = useMutation(createRetweet, {
     onMutate: async (postId: string) => {
-      if (!user) return toast.error("You must be logged in to retweet a post");
+      if (!user) return toast.error('You must be logged in to retweet a post')
 
-      await queryClient.cancelQueries(["posts", postType]);
+      await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
-        "posts",
+        'posts',
         postType,
-      ]);
+      ])
 
-      const { id, user_name, name, avatar_url } = user.user_metadata;
+      const { id, user_name, name, avatar_url } = user.user_metadata
 
-      queryClient.setQueryData(["posts", postType], (old: any) => {
+      queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
           posts: page.posts.map((post) => {
@@ -144,37 +148,38 @@ export default function usePostActions(postType: string, user?: User) {
                     avatar_url,
                   },
                 ],
-              };
+              }
             }
-            return post;
+            return post
           }),
-        }));
+        }))
         return {
           ...oldData,
           pages: newData,
-        };
-      });
+        }
+      })
+      return { oldData }
     },
     onError: (err, postId, context) => {
-      queryClient.setQueryData(["posts", postType], context);
+      queryClient.setQueryData(['posts', postType], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["posts", postType]);
+      queryClient.invalidateQueries(['posts', postType])
     },
-  });
+  })
 
   const deleteRetweetMutation = useMutation(deleteRetweet, {
     onMutate: async (postId: string) => {
-      if (!user) return toast.error("You must be logged in to retweet a post");
+      if (!user) return toast.error('You must be logged in to retweet a post')
 
-      await queryClient.cancelQueries(["posts", postType]);
+      await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
-        "posts",
+        'posts',
         postType,
-      ]);
+      ])
 
-      queryClient.setQueryData(["posts", postType], (old: any) => {
+      queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
           posts: page.posts.map((post) => {
@@ -186,60 +191,62 @@ export default function usePostActions(postType: string, user?: User) {
                     (retweet) => retweet.authorId !== user.id
                   ),
                 ],
-              };
+              }
             }
-            return post;
+            return post
           }),
-        }));
+        }))
         return {
           ...oldData,
           pages: newData,
-        };
-      });
+        }
+      })
+      return { oldData }
     },
     onError: (err, postId, context) => {
-      queryClient.setQueryData(["posts", postType], context);
+      queryClient.setQueryData(['posts', postType], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["posts", postType]);
+      queryClient.invalidateQueries(['posts', postType])
     },
-  });
+  })
 
   const blockMutation = useMutation(blockUser, {
     onMutate: async ({
       userId,
       blockedUserId,
     }: {
-      userId: string;
-      blockedUserId: string;
+      userId: string
+      blockedUserId: string
     }) => {
-      if (!user) return toast.error("You must be logged in to block a users");
+      if (!user) return toast.error('You must be logged in to block a users')
 
-      await queryClient.cancelQueries(["posts", postType]);
+      await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
-        "posts",
+        'posts',
         postType,
-      ]);
+      ])
 
-      queryClient.setQueryData(["posts", postType], (old: any) => {
+      queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
           posts: page.posts.filter((post) => post.author.id !== blockedUserId),
-        }));
+        }))
         return {
           ...oldData,
           pages: newData,
-        };
-      });
+        }
+      })
+      return { oldData }
     },
     onError: (err, postId, context) => {
-      queryClient.setQueryData(["posts", postType], context);
+      queryClient.setQueryData(['posts', postType], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["posts", postType]);
+      queryClient.invalidateQueries(['posts', postType])
     },
-  });
+  })
 
   return {
     addLikeMutation,
@@ -247,5 +254,5 @@ export default function usePostActions(postType: string, user?: User) {
     addRetweetMutation,
     deleteRetweetMutation,
     blockMutation,
-  };
+  }
 }

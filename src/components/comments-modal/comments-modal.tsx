@@ -21,16 +21,16 @@ import useSession from '@/hooks/use-session'
 import formatDate from '@/utils/format-date'
 
 type Props = {
-  commentsCount: number
-  author_avatarUrl: string
-  author_name: string
-  post_description: string
+  commentsCount?: number
+  author_avatarUrl?: string
+  author_name?: string
+  post_description?: string
   created_at: Date
-  author_username: string
+  author_username?: string
 }
 
 export default function CommentsModal({
-  commentsCount,
+  commentsCount = 0,
   author_avatarUrl,
   author_name,
   post_description,

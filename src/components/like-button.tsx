@@ -1,17 +1,17 @@
-import { Button } from "@nextui-org/button";
+import { Button } from '@nextui-org/button'
 
-import { LikeIcon } from "./Icons/utility/like-icon";
+import { LikeIcon } from './Icons/utility/like-icon'
 
 type LikeButtonProps = {
-  onClick: () => void;
-  likesCount: number;
-  isLiked: boolean;
-  isLoading: boolean;
-};
+  onClick: () => void
+  likesCount?: number
+  isLiked: boolean
+  isLoading: boolean
+}
 
 export default function LikeButton({
   onClick,
-  likesCount,
+  likesCount = 0,
   isLiked,
   isLoading,
 }: LikeButtonProps) {
@@ -25,8 +25,8 @@ export default function LikeButton({
       className={`text-gray-500 hover:text-red-500 z-30`}
       onPress={onClick}
     >
-      <LikeIcon className={`w-6 h-6 ${isLiked && "fill-red-500"} `} />
+      <LikeIcon className={`w-6 h-6 ${isLiked && 'fill-red-500'} `} />
       {likesCount}
     </Button>
-  );
+  )
 }

@@ -44,7 +44,13 @@ const authSlice = createSlice({
   },
 })
 
-export const { setFollowing, setFollowers, setBlockedUsers, unfollow, follow } =
-  authSlice.actions
+export const {
+  setFollowing,
+  setFollowers,
+  setBlockedUsers,
+  unfollow,
+  follow,
+  setUserData,
+} = authSlice.actions
 
 export default authSlice.reducer

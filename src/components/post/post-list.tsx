@@ -1,18 +1,12 @@
 'use client'
 
-import { Divider } from '@nextui-org/divider'
 import { Spinner } from '@nextui-org/spinner'
-import Link from 'next/link'
-import toast from 'react-hot-toast'
-import { useSelector } from 'react-redux'
 
 import PostCard from '@/components/post/post-card'
 
 import useFollow from '@/hooks/use-follow'
 import useInfinitePosts from '@/hooks/use-infinite-posts'
-import usePostActions from '@/hooks/use-post-actions'
 
-import type { RootState } from '@/app/store'
 import type { User } from '@supabase/supabase-js'
 
 type Props = {
@@ -25,54 +19,7 @@ export default function PostList({ postType, username, user }: Props) {
   const { posts, isLoading, isError, ref, isFetchingNextPage, error } =
     useInfinitePosts(postType, username)
 
-  const {
-    addLikeMutation,
-    deleteLikeMutation,
-    deleteRetweetMutation,
-    addRetweetMutation,
-    blockMutation,
-  } = usePostActions(postType, user)
-
-  const following = useSelector((state: RootState) => state.auth.following)
-  const userData = useSelector((state: RootState) => state.auth.userData)
-
   const { toggleFollow } = useFollow()
-
-  const handleLike = async (isLiked: boolean, postId: string) => {
-    try {
-      if (isLiked) {
-        await deleteLikeMutation.mutateAsync(postId)
-      } else {
-        await addLikeMutation.mutateAsync(postId)
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const handleRetweet = async (isRetweeted: boolean, postId: string) => {
-    try {
-      if (isRetweeted) {
-        await deleteRetweetMutation.mutateAsync(postId)
-      } else {
-        await addRetweetMutation.mutateAsync(postId)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const handleBlock = async (authorId: string) => {
-    try {
-      if (!userData) return toast.error('You must be logged in to block a user')
-      await blockMutation.mutateAsync({
-        userId: userData?.id,
-        blockedUserId: authorId,
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
   if (isLoading)
     return (
@@ -85,26 +32,13 @@ export default function PostList({ postType, username, user }: Props) {
   return (
     <ul>
       {posts?.map((post) => (
-        <li key={post.id} className="relative">
-          <Link
-            href={`/${post.author.user_name}/status/${post.id}`}
-            className="w-full h-full absolute inset-0 z-20"
-          />
-          <PostCard
-            post={post}
-            user={user}
-            isFollowing={following.includes(post.author)}
-            isLiked={post.likes.some((like) => like.id === user?.id)}
-            isRetweeted={post.retweets.some(
-              (retweet) => retweet.authorId === user?.id
-            )}
-            toggleFollow={toggleFollow}
-            handleLike={handleLike}
-            handleRetweet={handleRetweet}
-            handleBlock={handleBlock}
-          />
-          <Divider />
-        </li>
+        <PostCard
+          key={post.id}
+          post={post}
+          postType={postType}
+          user={user}
+          toggleFollow={toggleFollow}
+        />
       ))}
 
       {isFetchingNextPage ? (

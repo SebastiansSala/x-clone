@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma";
+import prisma from '@/utils/prisma'
 
 export const getPublicPosts = async (
   skip: number,
@@ -8,7 +8,6 @@ export const getPublicPosts = async (
 ) => {
   return await prisma.posts.findMany({
     where: {
-      publicVisible: true,
       AND: {
         author: {
           blockedBy: {
@@ -27,13 +26,13 @@ export const getPublicPosts = async (
       images: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     take,
     skip,
     cursor: cursorObj,
-  });
-};
+  })
+}
 
 export const getFollowingPosts = (
   userId: string,
@@ -43,7 +42,6 @@ export const getFollowingPosts = (
 ) => {
   return prisma.posts.findMany({
     where: {
-      publicVisible: true,
       author: {
         followers: {
           some: {
@@ -60,13 +58,13 @@ export const getFollowingPosts = (
       images: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     skip,
     take,
     cursor: cursorObj,
-  });
-};
+  })
+}
 
 export const getRetweetedPostsByUsername = async (
   username: string,
@@ -94,8 +92,8 @@ export const getRetweetedPostsByUsername = async (
     take,
     skip,
     cursor,
-  });
-};
+  })
+}
 
 export const getLikedPostsByUsername = async (
   username: string,
@@ -119,13 +117,13 @@ export const getLikedPostsByUsername = async (
       images: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     take,
     skip,
     cursor,
-  });
-};
+  })
+}
 
 export const getPostsByUsername = async (
   username: string,
@@ -149,8 +147,8 @@ export const getPostsByUsername = async (
     skip,
     take,
     cursor,
-  });
-};
+  })
+}
 
 export const getPostById = async (postId: string) => {
   return await prisma.posts.findFirst({
@@ -164,8 +162,8 @@ export const getPostById = async (postId: string) => {
       comments: true,
       images: true,
     },
-  });
-};
+  })
+}
 
 export const getUserLikedPost = async (postId: string, userId: string) => {
   return await prisma.posts.findFirst({
@@ -177,5 +175,5 @@ export const getUserLikedPost = async (postId: string, userId: string) => {
         },
       },
     },
-  });
-};
+  })
+}

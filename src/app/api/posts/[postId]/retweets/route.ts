@@ -32,8 +32,9 @@ export async function POST(
     })
   }
 
-  const created_at = new Date().toDateString()
-  await createRetweet(postId, user.id, created_at)
+  console.log('prueba')
+
+  await createRetweet(postId, user.id)
 
   return NextResponse.json({ message: 'Retweet added!' })
 }

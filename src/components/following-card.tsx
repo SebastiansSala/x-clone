@@ -48,7 +48,7 @@ const FollowingCard = ({
           color="default"
           disabled={isLoading}
           onPress={() => handleToggleFollow()}
-          className={`bg-white hover:bg-gray-300 text-black ${
+          className={`bg-white hover:bg-gray-300 text-black font-bold rounded-full ${
             isLoading && 'bg-gray-300'
           }`}
         >

@@ -1,20 +1,21 @@
 'use client'
 
 import { Avatar } from '@nextui-org/avatar'
-import { useSelector } from 'react-redux'
+import { Divider } from '@nextui-org/divider'
+import { Input } from '@nextui-org/input'
 import Image from 'next/image'
+import { useSelector } from 'react-redux'
 
 import OptionsDropdown from '@/components/post/post-options-dropdown'
+import CommentCard from '../comment-card'
+import CommentsModal from '../comments-modal/comments-modal'
+import LikeButton from '../like-button'
+import RetweetButton from '../retweet-button'
+
+import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
-import { PostType } from '@/types/posts'
-import useFollow from '@/hooks/use-follow'
-import { Divider } from '@nextui-org/divider'
-import CommentsModal from '../comments-modal/comments-modal'
-import RetweetButton from '../retweet-button'
-import LikeButton from '../like-button'
-import { Input } from '@nextui-org/input'
-import PostCard from '../post/post-card'
+import type { PostType } from '@/types/posts'
 
 type Props = {
   postInfo: PostType
@@ -24,10 +25,9 @@ export default function PostPageMain({ postInfo }: Props) {
   const userData = useSelector((state: RootState) => state.auth.userData)
   const following = useSelector((state: RootState) => state.auth.following)
 
-  const isFollowing = following?.includes(postInfo.author)
   const showPublicButtons = userData?.id !== postInfo.author.id
 
-  const { toggleFollow } = useFollow()
+  const { toggleFollow, getIsFollowing } = useFollow()
 
   //get hours and minutes
   const hourCreated = new Date(postInfo.createdAt).getHours()
@@ -43,6 +43,13 @@ export default function PostPageMain({ postInfo }: Props) {
     day: 'numeric',
     year: 'numeric',
   })
+
+  const isLiked = userData ? postInfo.likes?.includes(userData) : false
+  const isRetweeted = userData
+    ? postInfo.retweets?.some((retweet) => retweet.authorId === userData.id)
+    : false
+
+  const isFollowing = following?.some((follow) => follow.id === userData?.id)
 
   return (
     <section className="px-6">
@@ -64,8 +71,8 @@ export default function PostPageMain({ postInfo }: Props) {
       </header>
       <div className="mt-4">
         <p>{postInfo.text}</p>
-        {postInfo.images.length > 0 && (
-          <Image src={postInfo.images[0].url} alt={postInfo.images[0].url} />
+        {postInfo.images && (
+          <Image src={postInfo.images.url} alt={postInfo.images.url} />
         )}
         <div className="flex gap-4 text-[#71767b]">
           <p>
@@ -108,7 +115,17 @@ export default function PostPageMain({ postInfo }: Props) {
       <section>
         <ul>
           {postInfo.comments.map((comment) => (
-            <PostCard key={comment.id} post={comment} />
+            <CommentCard
+              key={comment.id}
+              comment={comment}
+              isFollowing={getIsFollowing(comment.authorId)}
+              isLiked={isLiked}
+              isRetweeted={isRetweeted}
+              toggleFollow={toggleFollow}
+              handleLike={() => {}}
+              handleRetweet={() => {}}
+              handleBlock={() => {}}
+            />
           ))}
         </ul>
       </section>

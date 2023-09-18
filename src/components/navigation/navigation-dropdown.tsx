@@ -27,6 +27,15 @@ export default function NavigationDropdown() {
         </Button>
       </DropdownTrigger>
       <DropdownMenu>
+        <DropdownItem key="blockedUsers">
+          <Button
+            as={'a'}
+            href="/blocked-users"
+            className="text-white bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium rounded-lg text-sm xl:px-5 w-full xl:py-2.5 text-center items-center dark:focus:ring-gray-500 dark:hover:bg-[#050708]/30 xl:mr-2 xl:mb-2"
+          >
+            Blocked users
+          </Button>
+        </DropdownItem>
         <DropdownItem key="signout">
           <SignOutClientButton />
         </DropdownItem>

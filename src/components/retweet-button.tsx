@@ -1,17 +1,17 @@
-import { Button } from "@nextui-org/button";
+import { Button } from '@nextui-org/button'
 
-import { RetweetIcon } from "./Icons/utility/retweet-icon";
+import { RetweetIcon } from './Icons/utility/retweet-icon'
 
 type RetweetButtonProps = {
-  onClick: () => void;
-  retweetsCount: number;
-  isRetweeted: boolean;
-  isLoading: boolean;
-};
+  onClick: () => void
+  retweetsCount?: number
+  isRetweeted: boolean
+  isLoading: boolean
+}
 
 export default function RetweetButton({
   onClick,
-  retweetsCount,
+  retweetsCount = 0,
   isRetweeted,
   isLoading,
 }: RetweetButtonProps) {
@@ -25,8 +25,8 @@ export default function RetweetButton({
       variant="light"
       className={`text-gray-500 hover:text-green-500 z-30 `}
     >
-      <RetweetIcon className={`w-6 h-6 ${isRetweeted && "text-green-500"}`} />
+      <RetweetIcon className={`w-6 h-6 ${isRetweeted && 'text-green-500'}`} />
       {retweetsCount}
     </Button>
-  );
+  )
 }

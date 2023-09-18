@@ -1,30 +1,21 @@
-import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Avatar } from "@nextui-org/avatar";
-import { Divider } from "@nextui-org/divider";
+import { redirect } from 'next/navigation'
 
-import PostSection from "@/components/post/post-section";
-import ArrowBackButton from "@/components/navigation/navigation-back-button";
+import ArrowBackButton from '@/components/navigation/navigation-back-button'
 
-import prisma from "@/utils/prisma";
-import { profileTabs } from "@/data/tabs";
+import prisma from '@/utils/prisma'
 
 type ProfilePageProps = {
   params: {
-    username: string;
-  };
-  children: React.ReactNode;
-};
+    username: string
+  }
+  children: React.ReactNode
+}
 
 export default async function ProfilePageLayout({
   params,
   children,
 }: ProfilePageProps) {
-  const supabase = createServerComponentClient({ cookies });
-
-  const username = params.username;
+  const username = params.username
 
   const user = await prisma.users.findFirst({
     where: {
@@ -35,10 +26,10 @@ export default async function ProfilePageLayout({
         select: { posts: true, followers: true, following: true },
       },
     },
-  });
+  })
 
   if (!user) {
-    redirect("/");
+    redirect('/')
   }
 
   return (
@@ -52,5 +43,5 @@ export default async function ProfilePageLayout({
       </header>
       {children}
     </main>
-  );
+  )
 }
