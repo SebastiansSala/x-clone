@@ -2,11 +2,7 @@ import type { ImageListType } from 'react-images-uploading'
 
 import type { PostType } from '@/types/posts'
 
-export const createPost = async (
-  text: string,
-  selectedOption: string,
-  images?: ImageListType[]
-) => {
+export const createPost = async (text: string, images?: ImageListType) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
       method: 'POST',
@@ -16,7 +12,6 @@ export const createPost = async (
       body: JSON.stringify({
         text,
         images,
-        selectedOption,
       }),
     })
 

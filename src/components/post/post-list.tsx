@@ -87,13 +87,17 @@ export default function PostList({ postType, username, user }: Props) {
       {posts?.map((post) => (
         <li key={post.id} className="relative">
           <Link
-            href={`/${post.author.user_name}/${post.id}}`}
+            href={`/${post.author.user_name}/status/${post.id}`}
             className="w-full h-full absolute inset-0 z-20"
           />
           <PostCard
             post={post}
             user={user}
             isFollowing={following.includes(post.author)}
+            isLiked={post.likes.some((like) => like.id === user?.id)}
+            isRetweeted={post.retweets.some(
+              (retweet) => retweet.authorId === user?.id
+            )}
             toggleFollow={toggleFollow}
             handleLike={handleLike}
             handleRetweet={handleRetweet}

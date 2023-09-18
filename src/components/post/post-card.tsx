@@ -10,12 +10,14 @@ import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
 import OptionsDropdown from './post-options-dropdown'
 
-import type { PostType } from '@/types/posts'
+import type { CommentType, PostType } from '@/types/posts'
 
 type PostProps = {
-  post: PostType
+  post: PostType | CommentType
   user?: User
   isFollowing: boolean
+  isLiked: boolean
+  isRetweeted: boolean
   toggleFollow: (authorId: string) => Promise<void>
   handleLike: (isLiked: boolean, postId: string) => void
   handleRetweet: (isRetweeted: boolean, postId: string) => void
@@ -30,12 +32,9 @@ export default function PostCard({
   handleLike,
   handleRetweet,
   handleBlock,
+  isLiked,
+  isRetweeted,
 }: PostProps) {
-  const isLiked = post.likes.some((like) => like.id === user?.id)
-  const isRetweeted = post.retweets.some(
-    (retweet) => retweet.authorId === user?.id
-  )
-
   const likesCount = post.likes.length
 
   return (
@@ -44,13 +43,20 @@ export default function PostCard({
         href={`/${post.author.user_name}`}
         className="col-span-1 z-30 place-self-start mt-2"
       >
-        <Avatar src={post.author.avatar_url} />
+        <Avatar
+          src={post.author.avatar_url}
+          className="w-8 h-8 md:h-10 md:w-10"
+        />
       </Link>
       <div className="col-span-11 px-4">
         <div className="flex justify-between items-center">
           <Link href={`/${post.author.user_name}`} className="flex gap-4 z-30">
-            <h4 className="text-white">{post.author.name}</h4>
-            <h5 className="text-gray-500">{post.author.user_name}</h5>
+            <h4 className="text-white text-xs sm:text-sm md:text-base">
+              {post.author.name}
+            </h4>
+            <h5 className="text-gray-500 text-xs sm:text-sm md:text-base">
+              {post.author.user_name}
+            </h5>
           </Link>
           <OptionsDropdown
             author={post.author}
@@ -61,19 +67,21 @@ export default function PostCard({
           />
         </div>
         <div className="w-full ">
-          <p className="truncate max-w-full">{post.text}</p>
+          <p className="truncate max-w-full text-xs sm:text-sm md:text-base">
+            {post.text}
+          </p>
         </div>
-        <div>
-          {post.images?.map((image, index) => (
-            <Image
-              key={index}
-              isZoomed
-              width={240}
-              alt={index.toString()}
-              src={image.url}
-            />
-          ))}
-        </div>
+
+        {post.image && (
+          <Image
+            key={post.image.id}
+            isZoomed
+            width={240}
+            alt={post.image.url}
+            src={post.image.url}
+          />
+        )}
+
         <div className="flex justify-evenly py-2">
           <CommentsModal
             commentsCount={post.comments.length}

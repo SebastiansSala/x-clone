@@ -21,7 +21,6 @@ import PostIcon from '../Icons/utility/post-icon'
 export default function CreatePostModal() {
   const [images, setImages] = useState([])
   const [textarea, setTextarea] = useState('')
-  const [selectedOption, setSelectedOption] = useState('Everyone')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleImageUpload = (
@@ -40,12 +39,8 @@ export default function CreatePostModal() {
     setTextarea(e.target.value)
   }
 
-  const handleSelectedOption = (option: string) => {
-    setSelectedOption(option)
-  }
-
   const handleSubmit = async () => {
-    const post = await createPost(textarea, selectedOption, images)
+    const post = await createPost(textarea, images)
 
     if (!post) return
     onClose()
@@ -76,8 +71,6 @@ export default function CreatePostModal() {
               removeImage={removeImage}
               textarea={textarea}
               handleTextAreaChange={handleTextAreaChange}
-              selectedOption={selectedOption}
-              handleSelectedOption={handleSelectedOption}
             />
           </ModalBody>
           <ModalFooter>

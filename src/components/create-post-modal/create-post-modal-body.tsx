@@ -3,13 +3,12 @@
 import { Avatar } from '@nextui-org/avatar'
 import { Button } from '@nextui-org/button'
 import { Textarea } from '@nextui-org/input'
-import clsx from 'clsx'
 import Image from 'next/image'
+import { useSelector } from 'react-redux'
 
 import { RemoveIcon } from '../Icons/utility/remove-icon'
-import CreatePostModalDropdown from './craete-post-modal-dropdown'
 
-import getClassNameBasedOnImageCount from '@/utils/getClassNameBasedOnImageCount'
+import type { RootState } from '@/app/store'
 
 type PostModalBodyProps = {
   images: {
@@ -18,8 +17,6 @@ type PostModalBodyProps = {
   removeImage: (index: number) => void
   textarea: string
   handleTextAreaChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleSelectedOption: (option: string) => void
-  selectedOption: string
 }
 
 export default function CreatePostModalBody({
@@ -27,35 +24,26 @@ export default function CreatePostModalBody({
   removeImage,
   handleTextAreaChange,
   textarea,
-  handleSelectedOption,
-  selectedOption,
 }: PostModalBodyProps) {
+  const userData = useSelector((state: RootState) => state.auth.userData)
+
   return (
     <div>
       <div className="grid grid-cols-12 items-center">
-        <Avatar className="col-span-1" />
+        <Avatar className="col-span-1" src={userData?.avatar_url} />
         <div className="col-span-11 px-10 grid bg-black">
-          <CreatePostModalDropdown
-            handleSelectedOption={handleSelectedOption}
-            selectedOption={selectedOption}
-          />
           <Textarea
             placeholder="What is happening?!"
-            className="text-black fill-black"
+            className="text-white fill-black"
             onChange={(e) => handleTextAreaChange(e)}
             value={textarea}
           />
         </div>
       </div>
       {images.length > 0 && (
-        <div className="grid grid-cols-2 grid-rows-2 items-center gap-4">
+        <>
           {images.map((image, index) => (
-            <div
-              key={index}
-              className={clsx('relative', {
-                [getClassNameBasedOnImageCount(images.length)]: true,
-              })}
-            >
+            <div key={index} className="relative p-4">
               <Image
                 src={image.dataURL}
                 key={index}
@@ -76,7 +64,7 @@ export default function CreatePostModalBody({
               </Button>
             </div>
           ))}
-        </div>
+        </>
       )}
     </div>
   )

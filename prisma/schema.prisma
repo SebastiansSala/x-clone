@@ -81,6 +81,7 @@ model Comments {
   id        String  @id @default(uuid())
   createdAt String
   updatedAt String
+  text      String
   likes     Users[] @relation("CommentsLikedBy")
   post      Posts   @relation("PostComment", fields: [postId], references: [id])
   postId    String
