@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server'
 
-import { deleteLikeFromPost } from '@/actions/post-delete-actions'
-import { updatePostLikes } from '@/actions/posts-update-actions'
+import {
+  deleteLikeFromComment,
+  updateCommentLikes,
+} from '@/actions/comments-actions'
 
 import type { NextRequest } from 'next/server'
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: { commentId: string } }
 ) {
   try {
     const res = await req.json()
@@ -20,11 +22,11 @@ export async function PUT(
       })
     }
 
-    const postId = params.postId
+    const commentId = params.commentId
 
-    if (!postId) return NextResponse.json('Invalid data', { status: 400 })
+    if (!commentId) return NextResponse.json('Invalid data', { status: 400 })
 
-    await updatePostLikes(postId, userId)
+    await updateCommentLikes(commentId, userId)
 
     return NextResponse.json({ message: 'Like added' })
   } catch (e) {
@@ -34,7 +36,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: { commentId: string } }
 ) {
   try {
     const res = await req.json()
@@ -47,11 +49,11 @@ export async function DELETE(
       })
     }
 
-    const postId = params.postId
+    const commentId = params.commentId
 
-    if (!postId) return NextResponse.json('Invalid data', { status: 400 })
+    if (!commentId) return NextResponse.json('Invalid data', { status: 400 })
 
-    await deleteLikeFromPost(postId, userId)
+    await deleteLikeFromComment(commentId, userId)
 
     return NextResponse.json({ message: 'Like deleted' })
   } catch (e) {

@@ -1,30 +1,31 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { NextResponse } from 'next/server'
 
-export async function PUT(req: NextRequest) {
+import { getCommentsByPostId } from '@/actions/posts-get-actions'
+import getNextId from '@/utils/getNextId'
+
+import { MAX_COMMENTS_PER_COMMENT, MAX_COMMENTS_PER_FETCH } from '@/const/posts'
+
+import type { NextRequest } from 'next/server'
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { postId: string } }
+) {
   const { searchParams } = new URL(req.url)
-  const postId = searchParams.get("postId")
 
-  if (!postId) {
-    return NextResponse.json("Invalid data", { status: 400 })
-  }
+  const cursor = searchParams.get('cursor')
+  const skip = cursor && Number(cursor) !== 0 ? 1 : 0
+  const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined
 
-  const supabase = createServerComponentClient({ cookies })
+  const comments = await getCommentsByPostId(
+    params.postId,
+    cursorObj,
+    skip,
+    MAX_COMMENTS_PER_COMMENT,
+    MAX_COMMENTS_PER_FETCH
+  )
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const nextId = getNextId(comments, MAX_COMMENTS_PER_FETCH)
 
-  if (!session) {
-    return NextResponse.json("Unauthorized", { status: 401 })
-  }
-
-  const { id, user_metadata } = session.user
-
-  const { x } = user_metadata
-
-  // const updatedPost = await updatePostLikes(postId, user.id)
-
-  // return NextResponse.json({ updatedPost })
+  return NextResponse.json({ comments, nextId })
 }

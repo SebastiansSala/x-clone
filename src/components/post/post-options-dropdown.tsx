@@ -46,11 +46,10 @@ export default function OptionsDropdown({
           <DropdownItem key="block" onPress={() => handleBlock(author.id)}>
             Block @{author.user_name}
           </DropdownItem>
-          <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
         </DropdownMenu>
       ) : (
         <DropdownMenu aria-label="Static Actions" className="text-white">
-          <DropdownItem key="bookmark">Bookmark Post</DropdownItem>
+          <DropdownItem key="delete">Delete Post</DropdownItem>
         </DropdownMenu>
       )}
     </Dropdown>

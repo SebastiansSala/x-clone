@@ -3,7 +3,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 
 import { getPostById } from '@/actions/posts-get-actions'
 import { redirect } from 'next/navigation'
-import PostPageMain from '@/components/post-page/post-page-main'
+import PostPageMain from '@/components/post/post-page'
 
 type ProfileFollowPageProps = {
   params: {
@@ -17,6 +17,8 @@ export default async function ProfileFollowPage({
   const { postId } = params
 
   const postInfo = await getPostById(postId)
+
+  console.log(postInfo)
 
   if (!postInfo) {
     redirect('/home')

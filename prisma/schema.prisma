@@ -52,7 +52,7 @@ model Posts {
   authorId  String
   retweets  Retweets[] @relation("RetweetedPost")
   createdAt DateTime   @default(now())
-  images    Images?
+  image     Images?
   updatedAt DateTime?
   likes     Users[]    @relation("PostLikeBy")
   comments  Comments[] @relation("PostComment")
@@ -71,8 +71,8 @@ model Comments {
   updatedAt String
   likes     Users[]    @relation("CommentsLikedBy")
   comments  Comments[] @relation("CommentComment")
-  post      Posts      @relation("PostComment", fields: [postId], references: [id])
-  postId    String
+  post      Posts?     @relation("PostComment", fields: [postId], references: [id])
+  postId    String?
   parent    Comments?  @relation("CommentComment", fields: [parentId], references: [id])
   parentId  String?
 

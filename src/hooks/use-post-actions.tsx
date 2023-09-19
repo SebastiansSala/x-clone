@@ -1,8 +1,8 @@
 'use client'
 
-import type { User } from '@supabase/supabase-js'
 import toast from 'react-hot-toast'
 import { useMutation, useQueryClient } from 'react-query'
+import { useSelector } from 'react-redux'
 
 import {
   createRetweet,
@@ -10,9 +10,10 @@ import {
   likePost,
   unlikePost,
 } from '@/services/posts-services'
-
-import { PostType } from '@/types/posts'
 import { blockUser } from '@/services/users-services'
+
+import type { PostType, UserType } from '@/types/posts'
+import type { RootState } from '@/app/store'
 
 type PostObjectType = {
   pages: PageType[]
@@ -26,18 +27,18 @@ type PageType = {
 
 type pageParams = string | undefined
 
-export default function usePostActions(postType: string, user?: User) {
+export default function usePostActions(postType: string) {
   const queryClient = useQueryClient()
 
   const deleteLikeMutation = useMutation(unlikePost, {
-    onMutate: async (postId: string) => {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
+      if (!user) return toast.error('You must be logged in to like a post')
+
       await queryClient.cancelQueries(['posts', postType])
       const oldData = queryClient.getQueryData<PostObjectType>([
         'posts',
         postType,
       ])
-
-      if (!user) return toast.error('You must be logged in to like a post')
 
       queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
@@ -70,16 +71,16 @@ export default function usePostActions(postType: string, user?: User) {
   })
 
   const addLikeMutation = useMutation(likePost, {
-    onMutate: async (postId: string) => {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
+      if (!user) return toast.error('You must be logged in to like a post')
+
       await queryClient.cancelQueries(['posts', postType])
       const oldData = queryClient.getQueryData<PostObjectType>([
         'posts',
         postType,
       ])
 
-      if (!user) return toast.error('You must be logged in to like a post')
-
-      const { id, user_name, name, avatar_url } = user.user_metadata
+      const { id, user_name, name, avatar_url } = user
 
       queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
@@ -120,7 +121,7 @@ export default function usePostActions(postType: string, user?: User) {
   })
 
   const addRetweetMutation = useMutation(createRetweet, {
-    onMutate: async (postId: string) => {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
       if (!user) return toast.error('You must be logged in to retweet a post')
 
       await queryClient.cancelQueries(['posts', postType])
@@ -130,7 +131,7 @@ export default function usePostActions(postType: string, user?: User) {
         postType,
       ])
 
-      const { id, user_name, name, avatar_url } = user.user_metadata
+      const { id, user_name, name, avatar_url } = user
 
       queryClient.setQueryData(['posts', postType], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
@@ -140,7 +141,7 @@ export default function usePostActions(postType: string, user?: User) {
               return {
                 ...post,
                 retweets: [
-                  ...post.retweets,
+                  ...post.retweets!,
                   {
                     id,
                     user_name,
@@ -169,7 +170,7 @@ export default function usePostActions(postType: string, user?: User) {
   })
 
   const deleteRetweetMutation = useMutation(deleteRetweet, {
-    onMutate: async (postId: string) => {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
       if (!user) return toast.error('You must be logged in to retweet a post')
 
       await queryClient.cancelQueries(['posts', postType])
@@ -187,7 +188,7 @@ export default function usePostActions(postType: string, user?: User) {
               return {
                 ...post,
                 retweets: [
-                  ...post.retweets.filter(
+                  ...post.retweets!.filter(
                     (retweet) => retweet.authorId !== user.id
                   ),
                 ],
@@ -213,10 +214,10 @@ export default function usePostActions(postType: string, user?: User) {
 
   const blockMutation = useMutation(blockUser, {
     onMutate: async ({
-      userId,
+      user,
       blockedUserId,
     }: {
-      userId: string
+      user: UserType
       blockedUserId: string
     }) => {
       if (!user) return toast.error('You must be logged in to block a users')

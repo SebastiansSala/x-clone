@@ -1,19 +1,10 @@
-import type { ImageListType } from 'react-images-uploading'
+import { UserType } from '@/types/posts'
 
-import type { PostType, UserType } from '@/types/posts'
-
-export const createPost = async (text: string, images?: ImageListType) => {
+export const fetchComments = async (postId: string, pageParam: number) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        images,
-      }),
-    })
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/comments?cursor=${pageParam}`
+    )
 
     if (!res.ok) {
       throw new Error(res.statusText)
@@ -25,28 +16,7 @@ export const createPost = async (text: string, images?: ImageListType) => {
   }
 }
 
-export const fetchPosts = async (
-  postType: string,
-  pageParam: number,
-  username?: string
-): Promise<{ posts: PostType[]; nextId: string }> => {
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/api/posts?postType=${postType}&cursor=${pageParam}&username=${
-      username ?? ''
-    }`
-  )
-  if (!res.ok) {
-    throw new Error(res.statusText)
-  }
-
-  const data = await res.json()
-
-  return data
-}
-
-export const likePost = async ({
+export const likeComment = async ({
   postId,
   user,
 }: {
@@ -55,7 +25,7 @@ export const likePost = async ({
 }) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/likes`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}/likes`,
       {
         method: 'PUT',
         body: JSON.stringify({
@@ -74,7 +44,7 @@ export const likePost = async ({
   }
 }
 
-export const unlikePost = async ({
+export const unlikeComment = async ({
   postId,
   user,
 }: {
@@ -83,7 +53,7 @@ export const unlikePost = async ({
 }) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/likes`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}/likes`,
       {
         method: 'DELETE',
         body: JSON.stringify({
@@ -102,7 +72,7 @@ export const unlikePost = async ({
   }
 }
 
-export const createRetweet = async ({
+export const createCommentRetweet = async ({
   postId,
   user,
 }: {
@@ -111,7 +81,7 @@ export const createRetweet = async ({
 }) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/retweets`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}/retweets`,
       {
         method: 'POST',
         body: JSON.stringify({
@@ -130,7 +100,7 @@ export const createRetweet = async ({
   }
 }
 
-export const deleteRetweet = async ({
+export const deleteCommentRetweet = async ({
   postId,
   user,
 }: {
@@ -139,7 +109,7 @@ export const deleteRetweet = async ({
 }) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/retweets`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}/retweets`,
       {
         method: 'DELETE',
         body: JSON.stringify({

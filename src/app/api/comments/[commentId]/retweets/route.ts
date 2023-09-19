@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
 
 import {
-  createRetweet,
-  deleteRetweeet,
-  findRetweet,
-} from '@/actions/retweet-actions'
+  createCommentRetweet,
+  findRetweetByPostIdAndUserId,
+  deleteCommentRetweet,
+} from '@/actions/comments-actions'
 
 export async function POST(
   req: Request,
-  { params }: { params: { postId: string } }
+  { params }: { params: { commentId: string } }
 ) {
   const res = await req.json()
 
@@ -20,22 +20,22 @@ export async function POST(
     })
   }
 
-  const postId = params.postId
+  const { commentId } = params
 
-  if (!postId) {
+  if (!commentId) {
     return NextResponse.json({
-      error: 'postId is required',
+      error: 'commentId is required',
     })
   }
 
-  await createRetweet(postId, userId)
+  await createCommentRetweet(commentId, userId)
 
   return NextResponse.json({ message: 'Retweet added!' })
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { postId: string } }
+  { params }: { params: { commentId: string } }
 ) {
   const res = await req.json()
 
@@ -47,15 +47,15 @@ export async function DELETE(
     })
   }
 
-  const postId = params.postId
+  const commentId = params.commentId
 
-  if (!postId) {
+  if (!commentId) {
     return NextResponse.json({
       error: 'postId is required',
     })
   }
 
-  const retweet = await findRetweet(postId, userId)
+  const retweet = await findRetweetByPostIdAndUserId(commentId, userId)
 
   if (!retweet) {
     return NextResponse.json({
@@ -63,7 +63,7 @@ export async function DELETE(
     })
   }
 
-  await deleteRetweeet(retweet.id)
+  await deleteCommentRetweet(retweet.id)
 
   return NextResponse.json({ message: 'Retweet deleted!' })
 }

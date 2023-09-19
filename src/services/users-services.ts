@@ -111,14 +111,14 @@ export const fetchUsers = async (
 }
 
 export const blockUser = async ({
-  userId,
+  user,
   blockedUserId,
 }: {
-  userId: string
+  user: UserType
   blockedUserId: string
 }) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/block`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${user.id}/block`,
     {
       method: 'PUT',
       body: JSON.stringify({

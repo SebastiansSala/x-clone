@@ -23,7 +23,7 @@ export const getPublicPosts = async (
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -55,7 +55,7 @@ export const getFollowingPosts = (
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -87,7 +87,7 @@ export const getRetweetedPostsByUsername = async (
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
     take,
     skip,
@@ -114,7 +114,7 @@ export const getLikedPostsByUsername = async (
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -142,7 +142,7 @@ export const getPostsByUsername = async (
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
     skip,
     take,
@@ -160,7 +160,7 @@ export const getPostById = async (postId: string) => {
       likes: true,
       retweets: true,
       comments: true,
-      images: true,
+      image: true,
     },
   })
 }
@@ -175,5 +175,38 @@ export const getUserLikedPost = async (postId: string, userId: string) => {
         },
       },
     },
+  })
+}
+
+export const getCommentsByPostId = async (
+  postId: string,
+  cursor: { id: string } | undefined,
+  skip: number,
+  takeComments: number,
+  takeChildComments: number
+) => {
+  return await prisma.comments.findMany({
+    where: {
+      postId,
+    },
+    include: {
+      comments: {
+        take: takeChildComments,
+        include: {
+          author: true,
+          retweets: true,
+          comments: true,
+          likes: true,
+          parent: true,
+          image: true,
+        },
+      },
+      likes: true,
+      retweets: true,
+      image: true,
+    },
+    skip,
+    take: takeComments,
+    cursor,
   })
 }

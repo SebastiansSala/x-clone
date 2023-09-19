@@ -17,9 +17,9 @@ export type PostType = {
   text: string
   author: UserType
   authorId: string
-  retweets: RetweetType[]
+  retweets?: RetweetType[]
   createdAt: Date
-  images?: ImageType | null
+  image?: ImageType | null
   updatedAt: Date | null
   likes: UserType[]
   comments: CommentType[]
@@ -28,16 +28,16 @@ export type PostType = {
 export type CommentType = {
   id: string
   text: string
-  author?: UserType
+  author: UserType
   authorId: string
-  retweets?: RetweetType[]
+  retweets: RetweetType[]
   createdAt: Date
   image?: ImageType | null
   updatedAt?: string
-  likes?: UserType[]
-  comments?: CommentType[]
-  post?: PostType
-  postId: string
+  likes: UserType[]
+  comments: CommentType[]
+  post: PostType
+  postId?: string | null
   parent?: CommentType
   parentId?: string | null
 }
@@ -52,6 +52,23 @@ type RetweetType = {
   postId?: string | null
   comment?: CommentType
   commentId?: string | null
+}
+
+export type ItemType = {
+  id: string
+  text: string
+  author: UserType
+  authorId: string
+  retweets: RetweetType[]
+  createdAt: Date
+  image?: ImageType | null
+  updatedAt?: string
+  likes: UserType[]
+  comments: CommentType[]
+  post: PostType
+  postId?: string | null
+  parent?: CommentType
+  parentId?: string | null
 }
 
 type ImageType = {
