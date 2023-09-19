@@ -42,7 +42,7 @@ export default function PostSection({
         postType={tab}
         handleTabChange={handleTabChange}
       />
-      <PostList postType={tab} user={user} username={username} />
+      <PostList postType={tab} username={username} />
     </>
   )
 }

@@ -33,7 +33,7 @@ export type CommentType = {
   retweets: RetweetType[]
   createdAt: Date
   image?: ImageType | null
-  updatedAt?: string
+  updatedAt?: Date | null
   likes: UserType[]
   comments: CommentType[]
   post: PostType
@@ -52,23 +52,6 @@ type RetweetType = {
   postId?: string | null
   comment?: CommentType
   commentId?: string | null
-}
-
-export type ItemType = {
-  id: string
-  text: string
-  author: UserType
-  authorId: string
-  retweets: RetweetType[]
-  createdAt: Date
-  image?: ImageType | null
-  updatedAt?: string
-  likes: UserType[]
-  comments: CommentType[]
-  post: PostType
-  postId?: string | null
-  parent?: CommentType
-  parentId?: string | null
 }
 
 type ImageType = {

@@ -98,7 +98,6 @@ export const POST = async (req: NextRequest) => {
     const {
       text,
       image,
-      selectedOption,
     }: { text: string; image: imagesPost; selectedOption: string } =
       await req.json()
 
@@ -118,9 +117,7 @@ export const POST = async (req: NextRequest) => {
 
     const userId = session.user.id
 
-    const publicVisible = selectedOption === 'Everyone' ? true : false
-
-    const post = await createPost(userId, text, publicVisible)
+    const post = await createPost(userId, text)
 
     const { data, error } = await supabase.storage
       .from('images')

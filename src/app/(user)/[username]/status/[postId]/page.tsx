@@ -18,8 +18,6 @@ export default async function ProfileFollowPage({
 
   const postInfo = await getPostById(postId)
 
-  console.log(postInfo)
-
   if (!postInfo) {
     redirect('/home')
   }

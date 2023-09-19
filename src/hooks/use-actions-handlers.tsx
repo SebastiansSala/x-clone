@@ -26,7 +26,6 @@ export default function useActionHandlers(
   ) {
     try {
       if (!user) {
-        console.log(id, user)
         setIsLikedLocal(!isLikedLocal)
         toast.error('You must be logged in to block a user')
         return

@@ -14,40 +14,61 @@ import {
 import Link from 'next/link'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 
-import { CommentIcon } from '../Icons/utility/comment-icon'
+import { CommentIcon } from './Icons/utility/comment-icon'
 
-import useSession from '@/hooks/use-session'
+import { createComment } from '@/services/comments-services'
 import formatDate from '@/utils/format-date'
 
+import type { RootState } from '@/app/store'
+
 type Props = {
-  commentsCount?: number
-  author_avatarUrl?: string
-  author_name?: string
-  post_description?: string
+  commentsCount: number
+  author_avatarUrl: string
+  author_name: string
+  post_description: string
   created_at: Date
-  author_username?: string
+  author_username: string
+  postId: string
 }
 
 export default function CommentsModal({
-  commentsCount = 0,
+  commentsCount,
   author_avatarUrl,
   author_name,
   post_description,
   created_at,
   author_username,
+  postId,
 }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [textareaValue, setTextareaValue] = useState('')
 
   const date = formatDate(created_at)
 
-  const { currentSession } = useSession()
+  const userData = useSelector((state: RootState) => state.auth.userData)
 
-  const handleReply = (onClose: () => void) => {
-    if (!currentSession) {
-      toast.error('Please login...')
+  const handleReply = async (onClose: () => void) => {
+    try {
+      if (!userData) {
+        toast.error('Please login...')
+        return
+      }
+      if (!textareaValue) return
+      await createComment({
+        postId,
+        user: userData,
+        text: textareaValue,
+      })
+      toast.success('Comment created successfully')
+    } catch (e) {
+      console.error(e)
+      toast.error('Error creating comment')
+    } finally {
+      setTextareaValue('')
     }
+
     if (!textareaValue) return
 
     onClose()
@@ -87,10 +108,7 @@ export default function CommentsModal({
                 </div>
               </ModalHeader>
               <ModalBody className="grid grid-cols-12">
-                <Avatar
-                  className="col-span-2"
-                  src={currentSession?.avatar_url}
-                />
+                <Avatar className="col-span-2" src={userData?.avatar_url} />
                 <Textarea
                   placeholder="Post your reply!"
                   className="max-w-xs col-span-10"

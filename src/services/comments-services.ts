@@ -16,6 +16,37 @@ export const fetchComments = async (postId: string, pageParam: number) => {
   }
 }
 
+export const createComment = async ({
+  postId,
+  user,
+  text,
+}: {
+  postId: string
+  user: UserType
+  text: string
+}) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/comments`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: user.id,
+          text,
+        }),
+      }
+    )
+
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export const likeComment = async ({
   postId,
   user,

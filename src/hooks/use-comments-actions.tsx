@@ -41,7 +41,7 @@ export default function useCommentsActions() {
       queryClient.setQueryData(['comments'], (old: any) => {
         const newData = old?.pages?.map((page: PageType) => ({
           ...page,
-          posts: page.comments.map((comment) => {
+          comments: page.comments.map((comment) => {
             if (comment.id === postId) {
               return {
                 ...comment,

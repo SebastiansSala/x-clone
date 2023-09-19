@@ -23,15 +23,12 @@ export default function useFollow() {
     const userId = userData.id
 
     try {
-      console.log('isFollowing', isFollowing)
       if (isFollowing) {
         await unfollowUser(userId, authorId)
         dispatch(unfollow(authorId))
         toast.success('Unfollowed')
       } else {
         const followedUser = await followUser(userId, authorId)
-
-        console.log('followedUser', followedUser)
 
         if (!followedUser) {
           toast.error('Error following user')

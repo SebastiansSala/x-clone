@@ -68,7 +68,7 @@ model Comments {
   retweets  Retweets[]
   createdAt DateTime   @default(now())
   image     Images?
-  updatedAt String
+  updatedAt String?
   likes     Users[]    @relation("CommentsLikedBy")
   comments  Comments[] @relation("CommentComment")
   post      Posts?     @relation("PostComment", fields: [postId], references: [id])

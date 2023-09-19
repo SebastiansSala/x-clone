@@ -2,13 +2,12 @@
 
 import { Avatar } from '@nextui-org/avatar'
 import { Divider } from '@nextui-org/divider'
-import { Input } from '@nextui-org/input'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 
 import OptionsDropdown from '@/components/post/post-options-dropdown'
 import CommentList from '../comment-list'
-import CommentsModal from '../comments-modal/comments-modal'
+import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
 
@@ -16,7 +15,6 @@ import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
 import type { PostType } from '@/types/posts'
-import { Button } from '@nextui-org/button'
 
 type Props = {
   postInfo: PostType
@@ -87,6 +85,7 @@ export default function PostPageMain({ postInfo }: Props) {
             author_username={postInfo.author.user_name}
             post_description={postInfo.text}
             created_at={postInfo.createdAt}
+            postId={postInfo.id}
           />
           <RetweetButton
             onClick={() => {}}
@@ -102,17 +101,13 @@ export default function PostPageMain({ postInfo }: Props) {
           />
         </div>
         <Divider className="bg-[#71767b] mt-2" />
-        <div className="grid grid-cols-12 py-6 gap-2">
-          <Avatar className="col-span-1" src={postInfo.author.avatar_url} />
-          <Input className="col-span-9" placeholder="Post your reply" />
-          <Button className="col-span-2" color="primary">
-            Reply
-          </Button>
-        </div>
       </section>
 
       <section>
-        <CommentList postId={postInfo.id} />
+        <CommentList
+          postId={postInfo.id}
+          postAuthorAvatar={postInfo.author.avatar_url}
+        />
       </section>
     </section>
   )
