@@ -189,10 +189,12 @@ export const getCommentsByPostId = async (
   return await prisma.comments.findMany({
     where: {
       postId,
-      author: {
-        blockedBy: {
-          none: {
-            id: userId,
+      AND: {
+        author: {
+          blockedBy: {
+            none: {
+              id: userId,
+            },
           },
         },
       },
