@@ -1,25 +1,24 @@
 'use client'
 
+import { UserType } from '@/types/posts'
 import { Avatar } from '@nextui-org/avatar'
 import { Button } from '@nextui-org/button'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import type { UserType } from '../types/posts'
-
-type FollowingCardProps = UserType & {
+type Props = UserType & {
   toggleFollow: (authorId: string) => Promise<void>
   isFollowing: boolean
 }
 
-export default function FollowingCard({
+export default function BlockedUsersCard({
   id,
   name,
   user_name,
   avatar_url,
   toggleFollow,
   isFollowing,
-}: FollowingCardProps) {
+}: Props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleToggleFollow = async () => {

@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
 
-import useInfinite from "./use-infinite";
+import useInfinite from './use-infinite'
 
-import { fetchUsers } from "@/services/users-services";
+import { fetchUsers } from '@/services/users-services'
 
 export default function useInfiniteUsers(fetchType: string, username: string) {
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView()
 
   const {
     data,
@@ -20,15 +20,15 @@ export default function useInfiniteUsers(fetchType: string, username: string) {
     isFetchingNextPage,
   } = useInfinite([fetchType], (pageParam) =>
     fetchUsers(pageParam, fetchType, username)
-  );
+  )
 
   useEffect(() => {
     if (inView && hasNextPage) {
-      fetchNextPage();
+      fetchNextPage()
     }
-  }, [inView, fetchNextPage, hasNextPage]);
+  }, [inView, fetchNextPage, hasNextPage])
 
-  const users = data?.pages.flatMap((page) => page.users);
+  const users = data?.pages.flatMap((page) => page.users)
 
   return {
     users,
@@ -37,5 +37,5 @@ export default function useInfiniteUsers(fetchType: string, username: string) {
     isFetchingNextPage,
     error,
     ref,
-  };
+  }
 }

@@ -49,6 +49,16 @@ export default function useFollow() {
     return isFollowing
   }
 
+  const toggleblock = async (authorId: string) => {
+    try {
+      await blockUser(authorId)
+      toast.success('User blocked successfully')
+    } catch (e) {
+      console.error(e)
+      toast.error('Error blocking user')
+    }
+  }
+
   return {
     toggleFollow,
     getIsFollowing,

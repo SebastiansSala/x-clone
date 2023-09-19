@@ -80,8 +80,10 @@ export default function useActionHandlers(
         user: user,
         blockedUserId: authorId,
       })
+      toast.success('User blocked successfully')
     } catch (err) {
       console.error(err)
+      toast.error('Error blocking user')
     }
   }
 

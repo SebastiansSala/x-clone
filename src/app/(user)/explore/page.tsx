@@ -1,17 +1,17 @@
-import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Divider } from "@nextui-org/divider";
-import { Input } from "@nextui-org/input";
+import { cookies } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { Divider } from '@nextui-org/divider'
+import { Input } from '@nextui-org/input'
 
-import UsersList from "@/components/explore/explore-users-list";
-import { SearchIcon } from "@/components/Icons/utility/search-icon";
+import UsersList from '@/components/explore/explore-users-list'
+import { SearchIcon } from '@/components/Icons/utility/search-icon'
 
 export default async function ExplorePage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient({ cookies })
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getSession()
 
   return (
     <main>
@@ -27,7 +27,10 @@ export default async function ExplorePage() {
         </div>
         <Divider />
       </div>
-      <UsersList fetchType="explore" />
+      <UsersList
+        username={session?.user.user_metadata.user_name}
+        fetchType="explore"
+      />
     </main>
-  );
+  )
 }

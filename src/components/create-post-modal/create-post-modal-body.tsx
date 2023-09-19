@@ -4,11 +4,8 @@ import { Avatar } from '@nextui-org/avatar'
 import { Button } from '@nextui-org/button'
 import { Textarea } from '@nextui-org/input'
 import Image from 'next/image'
-import { useSelector } from 'react-redux'
 
 import { RemoveIcon } from '../Icons/utility/remove-icon'
-
-import type { RootState } from '@/app/store'
 
 type PostModalBodyProps = {
   images: {
@@ -17,6 +14,7 @@ type PostModalBodyProps = {
   removeImage: (index: number) => void
   textarea: string
   handleTextAreaChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  avatar_url?: string
 }
 
 export default function CreatePostModalBody({
@@ -24,13 +22,12 @@ export default function CreatePostModalBody({
   removeImage,
   handleTextAreaChange,
   textarea,
+  avatar_url,
 }: PostModalBodyProps) {
-  const userData = useSelector((state: RootState) => state.auth.userData)
-
   return (
     <div>
       <div className="grid grid-cols-12 items-center">
-        <Avatar className="col-span-1" src={userData?.avatar_url} />
+        <Avatar className="col-span-1" src={avatar_url} />
         <div className="col-span-11 px-10 grid bg-black">
           <Textarea
             placeholder="What is happening?!"

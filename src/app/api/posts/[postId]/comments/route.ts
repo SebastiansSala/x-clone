@@ -14,12 +14,14 @@ export async function GET(
 ) {
   const { searchParams } = new URL(req.url)
 
+  const userId = searchParams.get('userId') || ''
   const cursor = searchParams.get('cursor')
   const skip = cursor && Number(cursor) !== 0 ? 1 : 0
   const cursorObj = skip === 1 && cursor ? { id: cursor } : undefined
 
   const comments = await getCommentsByPostId(
     params.postId,
+    userId,
     cursorObj,
     skip,
     MAX_COMMENTS_PER_FETCH,

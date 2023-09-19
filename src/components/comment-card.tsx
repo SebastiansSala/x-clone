@@ -111,6 +111,7 @@ export default function CommentCard({
               author_username={comment.author ? comment.author.user_name : ''}
               post_description={comment.text}
               created_at={comment.createdAt}
+              postId={comment.id}
             />
             <RetweetButton
               onClick={() =>

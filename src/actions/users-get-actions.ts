@@ -1,15 +1,40 @@
-import prisma from "@/utils/prisma";
+import prisma from '@/utils/prisma'
 
 export const getUsers = async () => {
   try {
     return await prisma.users.findMany({
       take: 5,
-    });
+    })
   } catch (e) {
-    console.error(e);
-    return [];
+    console.error(e)
+    return []
   }
-};
+}
+
+export const getBlockedUsers = async (
+  skip: number,
+  take: number,
+  username: string,
+  cursorObj?: { id: string }
+) => {
+  return await prisma.users.findMany({
+    where: {
+      NOT: {
+        user_name: username,
+      },
+      AND: {
+        blockedBy: {
+          some: {
+            user_name: username,
+          },
+        },
+      },
+    },
+    skip,
+    take,
+    cursor: cursorObj ? { id: cursorObj.id } : undefined,
+  })
+}
 
 export const getAllUsers = async (
   skip: number,
@@ -21,8 +46,8 @@ export const getAllUsers = async (
     skip,
     take,
     cursor: cursorObj ? { id: cursorObj.id } : undefined,
-  });
-};
+  })
+}
 
 export const getAllUsers_sessionRequest = async (
   skip: number,
@@ -34,36 +59,25 @@ export const getAllUsers_sessionRequest = async (
     where: {
       NOT: {
         user_name: username,
-        AND: {
-          blockedBy: {
-            none: {
-              user_name: username,
-            },
+      },
+      AND: {
+        followers: {
+          none: {
+            user_name: username,
+          },
+        },
+        blockedBy: {
+          none: {
+            user_name: username,
           },
         },
       },
-      AND: [
-        {
-          followers: {
-            none: {
-              user_name: username,
-            },
-          },
-        },
-        {
-          following: {
-            some: {
-              user_name: username,
-            },
-          },
-        },
-      ],
     },
     skip,
     take,
     cursor: cursorObj ? { id: cursorObj.id } : undefined,
-  });
-};
+  })
+}
 
 export const getFollowing = async (
   skip: number,
@@ -89,8 +103,8 @@ export const getFollowing = async (
     skip,
     take,
     cursor: cursorObj ? { id: cursorObj.id } : undefined,
-  });
-};
+  })
+}
 
 export const getFollowers = async (
   skip: number,
@@ -116,8 +130,8 @@ export const getFollowers = async (
     skip,
     take,
     cursor: cursorObj ? { id: cursorObj.id } : undefined,
-  });
-};
+  })
+}
 
 export const getUsersNotFollowing = async (currentUserId: string) => {
   try {
@@ -139,12 +153,12 @@ export const getUsersNotFollowing = async (currentUserId: string) => {
         },
       },
       take: 5,
-    });
+    })
   } catch (e) {
-    console.error(e);
-    return [];
+    console.error(e)
+    return []
   }
-};
+}
 
 export const getUserFollowData = async (currentUserId: string) => {
   return await prisma.users.findUnique({
@@ -155,8 +169,8 @@ export const getUserFollowData = async (currentUserId: string) => {
       followers: true,
       following: true,
     },
-  });
-};
+  })
+}
 
 export const getIsBlockedUser = async (
   currentUserId: string,
@@ -171,5 +185,5 @@ export const getIsBlockedUser = async (
         },
       },
     },
-  });
-};
+  })
+}

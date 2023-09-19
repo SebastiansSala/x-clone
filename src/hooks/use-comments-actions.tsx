@@ -206,7 +206,7 @@ export default function useCommentsActions() {
       queryClient.setQueryData(['comments'], context)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['comment'])
+      queryClient.invalidateQueries(['comments'])
     },
   })
 

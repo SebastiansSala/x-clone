@@ -67,7 +67,7 @@ export const getFollowingPosts = (
 }
 
 export const getRetweetedPostsByUsername = async (
-  username: string,
+  userId: string,
   skip: number,
   take: number,
   cursor: { id: string } | undefined
@@ -77,7 +77,7 @@ export const getRetweetedPostsByUsername = async (
       retweets: {
         some: {
           author: {
-            user_name: username,
+            id: userId,
           },
         },
       },
@@ -96,7 +96,7 @@ export const getRetweetedPostsByUsername = async (
 }
 
 export const getLikedPostsByUsername = async (
-  username: string,
+  userId: string,
   skip: number,
   take: number,
   cursor: { id: string } | undefined
@@ -105,7 +105,7 @@ export const getLikedPostsByUsername = async (
     where: {
       likes: {
         some: {
-          user_name: username,
+          user_name: userId,
         },
       },
     },
@@ -126,7 +126,7 @@ export const getLikedPostsByUsername = async (
 }
 
 export const getPostsByUsername = async (
-  username: string,
+  userId: string,
   skip: number,
   take: number,
   cursor: { id: string } | undefined
@@ -134,7 +134,7 @@ export const getPostsByUsername = async (
   return await prisma.posts.findMany({
     where: {
       author: {
-        user_name: username,
+        user_name: userId,
       },
     },
     include: {
@@ -180,6 +180,7 @@ export const getUserLikedPost = async (postId: string, userId: string) => {
 
 export const getCommentsByPostId = async (
   postId: string,
+  userId: string,
   cursor: { id: string } | undefined,
   skip: number,
   takeComments: number,
@@ -188,9 +189,25 @@ export const getCommentsByPostId = async (
   return await prisma.comments.findMany({
     where: {
       postId,
+      author: {
+        blockedBy: {
+          none: {
+            id: userId,
+          },
+        },
+      },
     },
     include: {
       comments: {
+        where: {
+          author: {
+            blockedBy: {
+              none: {
+                id: postId,
+              },
+            },
+          },
+        },
         take: takeChildComments,
         include: {
           author: true,
@@ -204,6 +221,7 @@ export const getCommentsByPostId = async (
       likes: true,
       retweets: true,
       image: true,
+      author: true,
     },
     skip,
     take: takeComments,

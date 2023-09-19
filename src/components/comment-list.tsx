@@ -25,8 +25,10 @@ export default function CommentList({
   postId: string
   postAuthorAvatar: string
 }) {
+  const userData = useSelector((state: RootState) => state.auth.userData)
+
   const { comments, isLoading, isFetchingNextPage, error, ref, isError } =
-    useInfiniteComments(postId)
+    useInfiniteComments(postId, userData?.id)
 
   const [input, setInput] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
@@ -38,8 +40,6 @@ export default function CommentList({
     addRetweetMutation,
     blockMutation,
   } = useCommentsActions()
-
-  const userData = useSelector((state: RootState) => state.auth.userData)
 
   const { toggleFollow, getIsFollowing } = useFollow()
 

@@ -6,7 +6,7 @@ import useInfinite from './use-infinite'
 import { fetchComments } from '@/services/comments-services'
 import { CommentType } from '@/types/posts'
 
-export default function useInfiniteComments(postId: string) {
+export default function useInfiniteComments(postId: string, userId?: string) {
   const { ref, inView } = useInView()
 
   const {
@@ -17,7 +17,9 @@ export default function useInfiniteComments(postId: string) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfinite(['comments'], (pageParam) => fetchComments(postId, pageParam))
+  } = useInfinite(['comments'], (pageParam) =>
+    fetchComments(postId, pageParam, userId)
+  )
 
   useEffect(() => {
     if (inView && hasNextPage) {

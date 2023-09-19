@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@nextui-org/button'
 import {
   Modal,
   ModalBody,
@@ -10,18 +11,22 @@ import {
 } from '@nextui-org/modal'
 import { useState } from 'react'
 import type { ImageListType } from 'react-images-uploading'
+import { useSelector } from 'react-redux'
 
 import PostModalBody from './create-post-modal-body'
 import PostModalFooter from './create-post-modal-footer'
 
 import { createPost } from '@/services/posts-services'
-import { Button } from '@nextui-org/button'
 import PostIcon from '../Icons/utility/post-icon'
+
+import type { RootState } from '@/app/store'
 
 export default function CreatePostModal() {
   const [images, setImages] = useState([])
   const [textarea, setTextarea] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const userData = useSelector((state: RootState) => state.auth.userData)
 
   const handleImageUpload = (
     imagesList: ImageListType,
@@ -40,7 +45,7 @@ export default function CreatePostModal() {
   }
 
   const handleSubmit = async () => {
-    const post = await createPost(textarea, images)
+    const post = await createPost(textarea, images, userData?.id)
 
     if (!post) return
     onClose()
@@ -71,6 +76,7 @@ export default function CreatePostModal() {
               removeImage={removeImage}
               textarea={textarea}
               handleTextAreaChange={handleTextAreaChange}
+              avatar_url={userData?.avatar_url}
             />
           </ModalBody>
           <ModalFooter>

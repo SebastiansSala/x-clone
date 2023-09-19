@@ -3,12 +3,12 @@ import {
   getLikedPostsByUsername,
   getPostsByUsername,
   getRetweetedPostsByUsername,
-} from "@/actions/posts-get-actions"
+} from '@/actions/posts-get-actions'
 
-import type { PostType } from "@/types/posts"
+import type { PostType } from '@/types/posts'
 
 type FetchFunction = (
-  usernameOrUserId: string,
+  userId: string,
   skip: number,
   take: number,
   cursor: { id: string } | undefined
@@ -27,7 +27,7 @@ const postTypeFunctions: PostTypeFunctions = {
 
 export const fetchPostFunctions = async (
   postType: string,
-  usernameOruserId: string,
+  userId: string,
   skip: number,
   take: number,
   cursorObj: { id: string } | undefined
@@ -35,8 +35,8 @@ export const fetchPostFunctions = async (
   const fetchFunction = postTypeFunctions[postType]
 
   if (!fetchFunction) {
-    throw new Error("Invalid post type")
+    throw new Error('Invalid post type')
   }
 
-  return fetchFunction(usernameOruserId, skip, take, cursorObj)
+  return fetchFunction(userId, skip, take, cursorObj)
 }

@@ -2,7 +2,11 @@ import type { ImageListType } from 'react-images-uploading'
 
 import type { PostType, UserType } from '@/types/posts'
 
-export const createPost = async (text: string, images?: ImageListType) => {
+export const createPost = async (
+  text: string,
+  image?: ImageListType,
+  userId?: string
+) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
       method: 'POST',
@@ -11,7 +15,8 @@ export const createPost = async (text: string, images?: ImageListType) => {
       },
       body: JSON.stringify({
         text,
-        images,
+        image,
+        userId,
       }),
     })
 
@@ -28,14 +33,10 @@ export const createPost = async (text: string, images?: ImageListType) => {
 export const fetchPosts = async (
   postType: string,
   pageParam: number,
-  username?: string
+  userId?: string
 ): Promise<{ posts: PostType[]; nextId: string }> => {
   const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/api/posts?postType=${postType}&cursor=${pageParam}&username=${
-      username ?? ''
-    }`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/posts?postType=${postType}&cursor=${pageParam}&userId=${userId}`
   )
   if (!res.ok) {
     throw new Error(res.statusText)

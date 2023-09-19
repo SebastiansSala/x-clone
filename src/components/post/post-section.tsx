@@ -11,6 +11,7 @@ import type { User } from '@supabase/supabase-js'
 
 type PostSectionProps = {
   initialState: string
+  userId?: string
   tabs: TabsType[]
   isSticky: boolean
   user?: User
@@ -19,7 +20,7 @@ type PostSectionProps = {
 
 export default function PostSection({
   user,
-  username,
+  userId,
   initialState,
   tabs,
   isSticky,
@@ -42,7 +43,7 @@ export default function PostSection({
         postType={tab}
         handleTabChange={handleTabChange}
       />
-      <PostList postType={tab} username={username} />
+      <PostList postType={tab} userId={userId} />
     </>
   )
 }

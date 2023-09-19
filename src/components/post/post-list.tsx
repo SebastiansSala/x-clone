@@ -13,12 +13,14 @@ import { RootState } from '@/app/store'
 
 type Props = {
   postType: string
-  username?: string
+  userId?: string
 }
 
-export default function PostList({ postType, username }: Props) {
+export default function PostList({ postType, userId }: Props) {
+  const userData = useSelector((state: RootState) => state.auth.userData)
+
   const { posts, isLoading, isError, ref, isFetchingNextPage, error } =
-    useInfinitePosts(postType, username)
+    useInfinitePosts(postType, userId)
 
   const {
     addLikeMutation,
@@ -29,8 +31,6 @@ export default function PostList({ postType, username }: Props) {
   } = usePostActions(postType)
 
   const { getIsFollowing, toggleFollow } = useFollow()
-
-  const userData = useSelector((state: RootState) => state.auth.userData)
 
   if (isLoading)
     return (

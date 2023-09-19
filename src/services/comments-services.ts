@@ -1,9 +1,13 @@
 import { UserType } from '@/types/posts'
 
-export const fetchComments = async (postId: string, pageParam: number) => {
+export const fetchComments = async (
+  postId: string,
+  pageParam: number,
+  userId?: string
+) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/comments?cursor=${pageParam}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/comments?cursor=${pageParam}&userId=${userId}`
     )
 
     if (!res.ok) {

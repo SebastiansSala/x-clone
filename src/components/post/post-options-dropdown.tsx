@@ -15,7 +15,7 @@ type OptionsDropdownProps = {
   isFollowing: boolean
   toggleFollow: (authorId: string) => void
   showPublicButtons: boolean
-  handleBlock: (authorId: string) => void
+  handleBlock: () => void
 }
 
 export default function OptionsDropdown({
@@ -43,7 +43,7 @@ export default function OptionsDropdown({
           <DropdownItem key="unfollow" onPress={() => toggleFollow(author.id)}>
             {isFollowing ? 'UnFollow' : 'Follow'} @{author.user_name}
           </DropdownItem>
-          <DropdownItem key="block" onPress={() => handleBlock(author.id)}>
+          <DropdownItem key="block" onPress={handleBlock}>
             Block @{author.user_name}
           </DropdownItem>
         </DropdownMenu>

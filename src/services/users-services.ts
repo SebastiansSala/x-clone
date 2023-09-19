@@ -110,6 +110,25 @@ export const fetchUsers = async (
   }
 }
 
+export const fetchBlockedUsers = async (
+  pageParam: number,
+  fetchType: string,
+  username: string
+) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users?page=${pageParam}&fetchType=${fetchType}&username=${username}`
+    )
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export const blockUser = async ({
   user,
   blockedUserId,
