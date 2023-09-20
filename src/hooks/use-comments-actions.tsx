@@ -9,6 +9,7 @@ import {
   likeComment,
   unlikeComment,
   createChildComment,
+  createComment,
 } from '@/services/comments-services'
 import { blockUser } from '@/services/users-services'
 
@@ -30,7 +31,58 @@ type pageParams = string | undefined
 export default function useCommentsActions() {
   const queryClient = useQueryClient()
 
-  const addCommentMutation = useMutation(createChildComment, {
+  const addCommentMutation = useMutation(createComment, {
+    onMutate: async ({
+      user,
+      text,
+      parentId,
+    }: {
+      user: UserType
+      text: string
+      parentId: string
+    }) => {
+      await queryClient.cancelQueries(['comments'])
+      const oldData = queryClient.getQueryData<CommentsObjectType>(['comments'])
+
+      const { user_name, name, avatar_url } = user
+
+      queryClient.setQueryData(['comments'], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          comments: [
+            ...page.comments,
+            {
+              id: v4(),
+              parentId,
+              text,
+              user_name,
+              name,
+              avatar_url,
+              comments: [],
+              likes: [],
+              retweets: [],
+            },
+          ],
+        }))
+
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+
+      return { oldData }
+    },
+    onError: (err, commentId, context) => {
+      queryClient.setQueryData(['comments'], context)
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries(['comments'])
+    },
+  })
+
+  const addChildCommentMutation = useMutation(createChildComment, {
     onMutate: async ({
       user,
       text,
@@ -477,5 +529,6 @@ export default function useCommentsActions() {
     deleteLikeChildMutation,
     addChildRetweetMutation,
     deleteChildRetweetMutation,
+    addChildCommentMutation,
   }
 }

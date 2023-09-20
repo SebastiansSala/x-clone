@@ -56,10 +56,10 @@ export default function CommentList({
       if (!input) return
       if (!userData) return
       setIsDisabled(true)
-      await createComment({
-        postId,
+      await addCommentMutation.mutateAsync({
         user: userData,
         text: input,
+        parentId: postId,
       })
     } catch (e) {
       console.error(e)
@@ -136,7 +136,7 @@ export default function CommentList({
                 addRetweetMutation={addRetweetMutation}
                 deleteRetweetMutation={deleteRetweetMutation}
                 blockMutation={blockMutation}
-                addCommentMutation={addCommentMutation}
+                addCommentMutation={addChildCommentMutation}
               />
               {comment.comments &&
                 comment.comments.slice(0, 2).map((childComment) => {
