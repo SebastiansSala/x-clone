@@ -168,6 +168,8 @@ export const getUserFollowData = async (currentUserId: string) => {
     include: {
       followers: true,
       following: true,
+      blockedUsers: true,
+      blockedBy: true,
     },
   })
 }

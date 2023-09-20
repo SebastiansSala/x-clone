@@ -40,6 +40,11 @@ export type CommentType = {
   postId?: string | null
   parent?: CommentType
   parentId?: string | null
+  _count: {
+    likes: number
+    comments: number
+    retweets: number
+  }
 }
 
 type RetweetType = {

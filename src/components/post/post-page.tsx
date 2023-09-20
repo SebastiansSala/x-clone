@@ -15,12 +15,14 @@ import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
 import type { PostType } from '@/types/posts'
+import type { User } from '@supabase/supabase-js'
 
 type Props = {
   postInfo: PostType
+  user?: User
 }
 
-export default function PostPageMain({ postInfo }: Props) {
+export default function PostPageMain({ postInfo, user }: Props) {
   const userData = useSelector((state: RootState) => state.auth.userData)
 
   const showPublicButtons = userData?.id !== postInfo.author.id
@@ -107,6 +109,8 @@ export default function PostPageMain({ postInfo }: Props) {
         <CommentList
           postId={postInfo.id}
           postAuthorAvatar={postInfo.author.avatar_url}
+          userData={userData}
+          user={user}
         />
       </section>
     </section>

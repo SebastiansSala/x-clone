@@ -58,11 +58,12 @@ export default function useActionHandlers(
         return
       }
 
-      setIsRetweetedLocal(!isRetweetedLocal)
       setIsRetweetLoading(true)
       if (isRetweeted) {
+        setIsRetweetedLocal(!isRetweetedLocal)
         await deleteRetweetMutation.mutateAsync({ postId: id, user: user })
       } else {
+        setIsRetweetedLocal(!isRetweetedLocal)
         await addRetweetMutation.mutateAsync({ postId: id, user: user })
       }
     } catch (e) {
@@ -87,6 +88,26 @@ export default function useActionHandlers(
     }
   }
 
+  async function handleAddComment(
+    parentId: string,
+    text: string,
+    commentMutation: any
+  ) {
+    try {
+      if (!user) return toast.error('You must be logged in to comment')
+      await commentMutation.mutateAsync({
+        user: user,
+        text: text,
+        parentId: parentId,
+      })
+
+      toast.success('Comment created successfully')
+    } catch (err) {
+      console.error(err)
+      toast.error('Error creating comment')
+    }
+  }
+
   return {
     handleLike,
     handleRetweet,
@@ -95,5 +116,6 @@ export default function useActionHandlers(
     isRetweetedLocal,
     isLikedloading,
     isRetweetLoading,
+    handleAddComment,
   }
 }

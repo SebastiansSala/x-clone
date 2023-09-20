@@ -5,30 +5,32 @@ import { Button } from '@nextui-org/button'
 import { Input } from '@nextui-org/input'
 import { Spinner } from '@nextui-org/spinner'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-
-import PostCard from './post/post-card'
 
 import useCommentsActions from '@/hooks/use-comments-actions'
 import useFollow from '@/hooks/use-follow'
 import useInfiniteComments from '@/hooks/use-infinite-comments'
-
-import type { RootState } from '@/app/store'
-import { createComment } from '@/services/comments-services'
 import toast from 'react-hot-toast'
+
 import CommentCard from './comment-card'
+
+import { createComment } from '@/services/comments-services'
+
+import type { UserType } from '@/types/posts'
+import type { User } from '@supabase/supabase-js'
 
 export default function CommentList({
   postId,
   postAuthorAvatar,
+  userData,
+  user,
 }: {
   postId: string
   postAuthorAvatar: string
+  userData: UserType | null
+  user?: User
 }) {
-  const userData = useSelector((state: RootState) => state.auth.userData)
-
   const { comments, isLoading, isFetchingNextPage, error, ref, isError } =
-    useInfiniteComments(postId, userData?.id)
+    useInfiniteComments(postId, user?.id)
 
   const [input, setInput] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
@@ -39,6 +41,9 @@ export default function CommentList({
     deleteRetweetMutation,
     addRetweetMutation,
     blockMutation,
+    addCommentMutation,
+    addLikeChildMutation,
+    deleteLikeChildMutation,
   } = useCommentsActions()
 
   const { toggleFollow, getIsFollowing } = useFollow()
@@ -73,7 +78,7 @@ export default function CommentList({
 
   if (isLoading)
     return (
-      <div className="h-full w-full grid place-content-center">
+      <div className="h-full w-full grid place-content-center py-20">
         <Spinner color="default" size="lg" className="text-center mx-auto" />
       </div>
     )
@@ -104,15 +109,15 @@ export default function CommentList({
           const isFollowing = getIsFollowing(comment.authorId)
 
           const isRetweeted =
-            userData && comment.retweets
+            user && comment.retweets
               ? comment.retweets?.some(
-                  (retweet) => retweet.authorId === userData.id
+                  (retweet) => retweet.authorId === user.id
                 )
               : false
 
           const isLiked =
-            userData && comment.likes
-              ? comment.likes.some((like) => like.id === userData.id)
+            user && comment.likes
+              ? comment.likes.some((like) => like.id === user.id)
               : false
 
           return (
@@ -132,23 +137,22 @@ export default function CommentList({
                 addRetweetMutation={addRetweetMutation}
                 deleteRetweetMutation={deleteRetweetMutation}
                 blockMutation={blockMutation}
+                addCommentMutation={addCommentMutation}
               />
               {comment.comments &&
-                comment.comments.map((childComment) => {
+                comment.comments.slice(0, 2).map((childComment) => {
                   const isFollowing = getIsFollowing(comment.authorId)
 
                   const isRetweeted =
-                    userData && childComment.retweets
+                    user && childComment.retweets
                       ? childComment.retweets?.some(
-                          (retweet) => retweet.authorId === userData.id
+                          (retweet) => retweet.authorId === user.id
                         )
                       : false
 
                   const isLiked =
-                    userData && childComment.likes
-                      ? childComment.likes.some(
-                          (like) => like.id === userData.id
-                        )
+                    user && childComment.likes
+                      ? childComment.likes.some((like) => like.id === user.id)
                       : false
 
                   return (
@@ -159,11 +163,12 @@ export default function CommentList({
                       isFollowing={isFollowing}
                       isRetweeted={isRetweeted}
                       isLiked={isLiked}
-                      addLikeMutation={addLikeMutation}
-                      deleteLikeMutation={deleteLikeMutation}
+                      addLikeMutation={addLikeChildMutation}
+                      deleteLikeMutation={deleteLikeChildMutation}
                       addRetweetMutation={addRetweetMutation}
                       deleteRetweetMutation={deleteRetweetMutation}
                       blockMutation={blockMutation}
+                      addCommentMutation={addCommentMutation}
                     />
                   )
                 })}

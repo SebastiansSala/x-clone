@@ -30,7 +30,7 @@ export default async function ProfileFollowPage({
 
   return (
     <main>
-      <PostPageMain postInfo={postInfo} />
+      <PostPageMain postInfo={postInfo} user={session?.user} />
     </main>
   )
 }

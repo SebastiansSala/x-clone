@@ -8,7 +8,7 @@ import { useState } from 'react'
 
 type Props = UserType & {
   toggleFollow: (authorId: string) => Promise<void>
-  isFollowing: boolean
+  isBlocked: boolean
 }
 
 export default function BlockedUsersCard({
@@ -17,7 +17,7 @@ export default function BlockedUsersCard({
   user_name,
   avatar_url,
   toggleFollow,
-  isFollowing,
+  isBlocked,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -51,7 +51,7 @@ export default function BlockedUsersCard({
             isLoading && 'bg-gray-300'
           }`}
         >
-          {isLoading ? 'Loading' : isFollowing ? 'Unfollow' : 'Follow'}
+          {isLoading ? 'Loading' : isBlocked ? 'Unblock' : 'Block'}
         </Button>
       </div>
     </li>

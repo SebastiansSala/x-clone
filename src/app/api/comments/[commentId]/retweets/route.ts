@@ -28,6 +28,18 @@ export async function POST(
     })
   }
 
+  const isRetweeted = await findRetweetByPostIdAndUserId(commentId, userId)
+
+  console.log(isRetweeted)
+
+  if (isRetweeted) {
+    return NextResponse.json({
+      error: 'Already retweeted',
+    })
+  }
+
+  console.log('prueba2')
+
   await createCommentRetweet(commentId, userId)
 
   return NextResponse.json({ message: 'Retweet added!' })

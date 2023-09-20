@@ -13,13 +13,27 @@ export const createCommentRetweet = async (
   })
 }
 
+export const createChildComment = async (
+  commentId: string,
+  authorId: string,
+  text: string
+) => {
+  return await prisma.comments.create({
+    data: {
+      text,
+      authorId,
+      parentId: commentId,
+    },
+  })
+}
+
 export const findRetweetByPostIdAndUserId = async (
   postId: string,
   userId: string
 ) => {
   return await prisma.retweets.findFirst({
     where: {
-      postId,
+      commentsId: postId,
       authorId: userId,
     },
   })

@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import Providers from './providers'
 
 import './globals.css'
+import InitialDataProvider from '@/contexts/initial-data-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} dark overflow-y-scroll`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <InitialDataProvider>{children}</InitialDataProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>

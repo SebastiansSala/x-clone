@@ -185,13 +185,12 @@ export default function usePostActions(postType: string) {
           ...page,
           posts: page.posts.map((post) => {
             if (post.id === postId) {
+              console.log(postId)
               return {
                 ...post,
-                retweets: [
-                  ...post.retweets!.filter(
-                    (retweet) => retweet.authorId !== user.id
-                  ),
-                ],
+                retweets: post.retweets!.filter(
+                  (retweet) => retweet.authorId !== user.id
+                ),
               }
             }
             return post

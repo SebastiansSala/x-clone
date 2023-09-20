@@ -28,6 +28,14 @@ export async function POST(
     })
   }
 
+  const isRetweeted = await findRetweet(postId, userId)
+
+  if (isRetweeted) {
+    return NextResponse.json({
+      error: 'Already retweeted',
+    })
+  }
+
   await createRetweet(postId, userId)
 
   return NextResponse.json({ message: 'Retweet added!' })

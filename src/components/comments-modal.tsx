@@ -31,6 +31,12 @@ type Props = {
   created_at: Date
   author_username: string
   postId: string
+  handleSubmit: (
+    parentId: string,
+    text: string,
+    addCommentMutation: any
+  ) => void
+  addCommentMutation: any
 }
 
 export default function CommentsModal({
@@ -41,6 +47,8 @@ export default function CommentsModal({
   created_at,
   author_username,
   postId,
+  handleSubmit,
+  addCommentMutation,
 }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [textareaValue, setTextareaValue] = useState('')
@@ -51,26 +59,14 @@ export default function CommentsModal({
 
   const handleReply = async (onClose: () => void) => {
     try {
-      if (!userData) {
-        toast.error('Please login...')
-        return
-      }
       if (!textareaValue) return
-      await createComment({
-        postId,
-        user: userData,
-        text: textareaValue,
-      })
+      handleSubmit(postId, textareaValue, addCommentMutation)
       toast.success('Comment created successfully')
     } catch (e) {
       console.error(e)
-      toast.error('Error creating comment')
     } finally {
       setTextareaValue('')
     }
-
-    if (!textareaValue) return
-
     onClose()
   }
 

@@ -212,12 +212,26 @@ export const getCommentsByPostId = async (
         },
         take: takeChildComments,
         include: {
+          _count: {
+            select: {
+              comments: true,
+              likes: true,
+              retweets: true,
+            },
+          },
           author: true,
           retweets: true,
           comments: true,
           likes: true,
           parent: true,
           image: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+          retweets: true,
         },
       },
       likes: true,

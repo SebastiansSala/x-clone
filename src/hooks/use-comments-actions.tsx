@@ -8,6 +8,7 @@ import {
   deleteCommentRetweet,
   likeComment,
   unlikeComment,
+  createChildComment,
 } from '@/services/comments-services'
 import { blockUser } from '@/services/users-services'
 
@@ -27,6 +28,65 @@ type pageParams = string | undefined
 
 export default function useCommentsActions() {
   const queryClient = useQueryClient()
+
+  const addCommentMutation = useMutation(createChildComment, {
+    onMutate: async ({
+      user,
+      text,
+      parentId,
+    }: {
+      user: UserType
+      text: string
+      parentId: string
+    }) => {
+      if (!user) {
+        toast.error('You must be logged in to like a post')
+        return
+      }
+
+      await queryClient.cancelQueries(['comments'])
+      const oldData = queryClient.getQueryData<CommentsObjectType>(['comments'])
+
+      const { user_name, name, avatar_url } = user
+
+      queryClient.setQueryData(['comments'], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          comments: page.comments.map((comment) => {
+            if (comment.id === parentId) {
+              return {
+                ...comment,
+                comments: [
+                  ...comment.comments,
+                  {
+                    id: Math.random().toString(),
+                    text,
+                    user_name,
+                    name,
+                    avatar_url,
+                  },
+                ],
+              }
+            }
+            return comment
+          }),
+        }))
+
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+
+      return { oldData }
+    },
+    onError: (err, commentId, context) => {
+      queryClient.setQueryData(['comments'], context)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['comments'])
+    },
+  })
 
   const deleteLikeMutation = useMutation(unlikeComment, {
     onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
@@ -51,6 +111,110 @@ export default function useCommentsActions() {
             return comment
           }),
         }))
+
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+
+      return { oldData }
+    },
+    onError: (err, commentId, context) => {
+      queryClient.setQueryData(['comments'], context)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['comments'])
+    },
+  })
+
+  const deleteLikeChildMutation = useMutation(unlikeComment, {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
+      if (!user) {
+        toast.error('You must be logged in to like a post')
+        return
+      }
+
+      await queryClient.cancelQueries(['comments'])
+      const oldData = queryClient.getQueryData<CommentsObjectType>(['comments'])
+
+      queryClient.setQueryData(['comments'], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          comments: page.comments.map((comment) => {
+            return {
+              ...comment,
+              comments: comment.comments.map((childComment) => {
+                if (childComment.id === postId) {
+                  return {
+                    ...childComment,
+                    likes: childComment.likes.filter(
+                      (like) => like.id !== user.id
+                    ),
+                  }
+                }
+                return childComment
+              }),
+            }
+          }),
+        }))
+
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+
+      return { oldData }
+    },
+    onError: (err, commentId, context) => {
+      queryClient.setQueryData(['comments'], context)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['comments'])
+    },
+  })
+
+  const addLikeChildMutation = useMutation(likeComment, {
+    onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
+      if (!user) {
+        toast.error('You must be logged in to like a post')
+        return
+      }
+
+      await queryClient.cancelQueries(['comments'])
+      const oldData = queryClient.getQueryData<CommentsObjectType>(['comments'])
+
+      const { id, user_name, name, avatar_url } = user
+
+      queryClient.setQueryData(['comments'], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          comments: page.comments.map((comment) => {
+            return {
+              ...comment,
+              comments: comment.comments.map((childComment) => {
+                if (childComment.id === postId) {
+                  return {
+                    ...childComment,
+                    likes: [
+                      ...childComment.likes,
+                      {
+                        id,
+                        user_name,
+                        name,
+                        avatar_url,
+                      },
+                    ],
+                  }
+                }
+                return childComment
+              }),
+            }
+          }),
+        }))
+
+        console.log(newData)
 
         return {
           ...oldData,
@@ -185,21 +349,21 @@ export default function useCommentsActions() {
             if (comment.id === postId) {
               return {
                 ...comment,
-                retweets: [
-                  ...comment.retweets!.filter(
-                    (retweet) => retweet.authorId !== user.id
-                  ),
-                ],
+                retweets: comment.retweets!.filter(
+                  (retweet) => retweet.authorId !== user.id
+                ),
               }
             }
             return comment
           }),
         }))
+
         return {
           ...oldData,
           pages: newData,
         }
       })
+
       return { oldData }
     },
     onError: (err, commentId, context) => {
@@ -252,5 +416,8 @@ export default function useCommentsActions() {
     addRetweetMutation,
     deleteRetweetMutation,
     blockMutation,
+    addCommentMutation,
+    addLikeChildMutation,
+    deleteLikeChildMutation,
   }
 }

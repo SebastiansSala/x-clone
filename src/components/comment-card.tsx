@@ -26,6 +26,7 @@ type PostProps = {
   addRetweetMutation: any
   deleteRetweetMutation: any
   blockMutation: any
+  addCommentMutation: any
 }
 
 export default function CommentCard({
@@ -40,6 +41,7 @@ export default function CommentCard({
   addRetweetMutation,
   deleteRetweetMutation,
   blockMutation,
+  addCommentMutation,
 }: PostProps) {
   const {
     handleBlock,
@@ -49,6 +51,7 @@ export default function CommentCard({
     isLikedloading,
     isRetweetLoading,
     isRetweetedLocal,
+    handleAddComment,
   } = useActionHandlers(isLiked, isRetweeted)
 
   return (
@@ -105,13 +108,15 @@ export default function CommentCard({
           </section>
           <footer className="flex justify-evenly py-2">
             <CommentsModal
-              commentsCount={comment.comments.length}
+              commentsCount={comment._count.comments}
               author_avatarUrl={comment.author ? comment.author.avatar_url : ''}
               author_name={comment.author ? comment.author.name : ''}
               author_username={comment.author ? comment.author.user_name : ''}
               post_description={comment.text}
               created_at={comment.createdAt}
               postId={comment.id}
+              handleSubmit={handleAddComment}
+              addCommentMutation={addCommentMutation}
             />
             <RetweetButton
               onClick={() =>
@@ -122,7 +127,7 @@ export default function CommentCard({
                   deleteRetweetMutation
                 )
               }
-              retweetsCount={comment.retweets?.length}
+              retweetsCount={comment.retweets.length}
               isRetweeted={isRetweetedLocal}
               isLoading={isRetweetLoading}
             />

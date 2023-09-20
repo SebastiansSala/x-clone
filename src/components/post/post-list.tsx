@@ -46,12 +46,12 @@ export default function PostList({ postType, userId }: Props) {
         const isFollowing = getIsFollowing(post.author.id)
 
         const isRetweeted =
-          userData && post.retweets
-            ? post.retweets.some((retweet) => retweet.authorId === userData.id)
+          userId && post.retweets
+            ? post.retweets.some((retweet) => retweet.authorId === userId)
             : false
 
-        const isLiked = userData
-          ? post.likes.some((like) => like.id === userData.id)
+        const isLiked = userId
+          ? post.likes.some((like) => like.id === userId)
           : false
 
         return (
