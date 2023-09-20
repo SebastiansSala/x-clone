@@ -26,7 +26,6 @@ export default function useActionHandlers(
   ) {
     try {
       if (!user) {
-        setIsLikedLocal(!isLikedLocal)
         toast.error('You must be logged in to block a user')
         return
       }
@@ -53,14 +52,14 @@ export default function useActionHandlers(
   ) {
     try {
       if (!user) {
-        setIsRetweetedLocal(!isRetweetedLocal)
         toast.error('You must be logged in to retweet a post')
         return
       }
 
+      setIsRetweetedLocal(!isRetweetedLocal)
       setIsRetweetLoading(true)
+
       if (isRetweeted) {
-        setIsRetweetedLocal(!isRetweetedLocal)
         await deleteRetweetMutation.mutateAsync({ postId: id, user: user })
       } else {
         setIsRetweetedLocal(!isRetweetedLocal)
@@ -95,16 +94,20 @@ export default function useActionHandlers(
   ) {
     try {
       if (!user) return toast.error('You must be logged in to comment')
-      await commentMutation.mutateAsync({
-        user: user,
-        text: text,
-        parentId: parentId,
-      })
-
-      toast.success('Comment created successfully')
+      toast.promise(
+        commentMutation.mutateAsync({
+          user,
+          text,
+          parentId,
+        }),
+        {
+          loading: 'Creating comment...',
+          success: 'Comment created successfully',
+          error: 'Error creating comment',
+        }
+      )
     } catch (err) {
       console.error(err)
-      toast.error('Error creating comment')
     }
   }
 

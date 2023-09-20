@@ -25,9 +25,9 @@ export const createChildComment = async ({
   text,
   parentId,
 }: {
-  parentId: string
   user: UserType
   text: string
+  parentId: string
 }) => {
   try {
     const res = await fetch(
@@ -52,17 +52,17 @@ export const createChildComment = async ({
 }
 
 export const createComment = async ({
-  postId,
   user,
   text,
+  parentId,
 }: {
-  postId: string
+  parentId: string
   user: UserType
   text: string
 }) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}/comments`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${parentId}/comments`,
       {
         method: 'POST',
         body: JSON.stringify({

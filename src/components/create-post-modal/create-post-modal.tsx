@@ -54,7 +54,7 @@ export default function CreatePostModal() {
   return (
     <>
       <Button
-        className="bg-[#1d9bf0] mx-auto right-4 absolute md:flex md:justify-center bottom-20 md:static z-50 min-w-fit px-4 py-6 hover:bg-blue-500/95 xl:w-11/12 text-white text-center rounded-full font-bold w-fit"
+        className="bg-[#1d9bf0] mx-auto right-4 absolute sm:left-2 sm:flex md:static sm:justify-center bottom-20 z-50 min-w-fit px-4 py-6 hover:bg-blue-500/95 xl:w-11/12 text-white text-center rounded-full font-bold w-fit"
         onClick={onOpen}
       >
         <PostIcon className="h-4 w-4" />

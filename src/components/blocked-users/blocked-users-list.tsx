@@ -1,20 +1,26 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import BlockedUsersCard from './blocked-users-card'
 
-import useFollow from '@/hooks/use-follow'
 import useInfiniteUsers from '@/hooks/use-infinite-users'
+import useBlockedUsersActions from '@/hooks/use-blocked-users-actions'
 
 import type { RootState } from '@/app/store'
 
-export default function BlockedUsersList({ username }: { username: string }) {
-  const { users } = useInfiniteUsers('blocked', username)
+import type { User } from '@supabase/auth-helpers-nextjs'
 
-  const { toggleFollow } = useFollow()
+export default function BlockedUsersList({ user }: { user: User }) {
+  const { user_name } = user.user_metadata
+
+  const { users } = useInfiniteUsers('blocked', user_name)
+
+  console.log(users)
+
+  const userData = useSelector((state: RootState) => state.auth.userData)
+
+  const { blockMutation } = useBlockedUsersActions()
 
   const blockedUsers = useSelector(
     (state: RootState) => state.auth.blockedUsers
@@ -35,7 +41,8 @@ export default function BlockedUsersList({ username }: { username: string }) {
             name={name}
             user_name={user_name}
             isBlocked={blockedUsersIds?.includes(id)}
-            toggleFollow={toggleFollow}
+            blockMutation={blockMutation}
+            user={userData}
           />
         )
       })}

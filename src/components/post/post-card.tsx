@@ -26,6 +26,7 @@ type PostProps = {
   addRetweetMutation: any
   deleteRetweetMutation: any
   blockMutation: any
+  addCommentMutation: any
 }
 
 export default function PostCard({
@@ -40,6 +41,7 @@ export default function PostCard({
   addRetweetMutation,
   deleteRetweetMutation,
   blockMutation,
+  addCommentMutation,
 }: PostProps) {
   const {
     handleBlock,
@@ -49,7 +51,16 @@ export default function PostCard({
     isLikedloading,
     isRetweetLoading,
     isRetweetedLocal,
+    handleAddComment,
   } = useActionHandlers(isLiked, isRetweeted)
+
+  const handleReply = async (text: string) => {
+    try {
+      await handleAddComment(post.id, text, addCommentMutation)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <li key={post.id} className="relative">
@@ -105,13 +116,13 @@ export default function PostCard({
           </section>
           <footer className="flex justify-evenly py-2">
             <CommentsModal
-              commentsCount={post.comments.length}
+              commentsCount={post.comments?.length}
               author_avatarUrl={post.author ? post.author.avatar_url : ''}
               author_name={post.author ? post.author.name : ''}
               author_username={post.author ? post.author.user_name : ''}
               post_description={post.text}
               created_at={post.createdAt}
-              postId={post.id}
+              handleSubmit={handleReply}
             />
             <RetweetButton
               onClick={() =>

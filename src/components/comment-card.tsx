@@ -54,6 +54,14 @@ export default function CommentCard({
     handleAddComment,
   } = useActionHandlers(isLiked, isRetweeted)
 
+  const handleReply = async (text: string) => {
+    try {
+      await handleAddComment(comment.id, text, addCommentMutation)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <li key={comment.id} className="relative">
       <Link
@@ -108,15 +116,13 @@ export default function CommentCard({
           </section>
           <footer className="flex justify-evenly py-2">
             <CommentsModal
-              commentsCount={comment._count.comments}
+              commentsCount={comment.comments ? comment.comments.length : 0}
               author_avatarUrl={comment.author ? comment.author.avatar_url : ''}
               author_name={comment.author ? comment.author.name : ''}
               author_username={comment.author ? comment.author.user_name : ''}
               post_description={comment.text}
               created_at={comment.createdAt}
-              postId={comment.id}
-              handleSubmit={handleAddComment}
-              addCommentMutation={addCommentMutation}
+              handleSubmit={handleReply}
             />
             <RetweetButton
               onClick={() =>
@@ -127,7 +133,7 @@ export default function CommentCard({
                   deleteRetweetMutation
                 )
               }
-              retweetsCount={comment.retweets.length}
+              retweetsCount={comment.retweets ? comment.retweets.length : 0}
               isRetweeted={isRetweetedLocal}
               isLoading={isRetweetLoading}
             />

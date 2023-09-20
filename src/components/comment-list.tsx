@@ -44,6 +44,9 @@ export default function CommentList({
     addCommentMutation,
     addLikeChildMutation,
     deleteLikeChildMutation,
+    addChildRetweetMutation,
+    deleteChildRetweetMutation,
+    addChildCommentMutation,
   } = useCommentsActions()
 
   const { toggleFollow, getIsFollowing } = useFollow()
@@ -53,15 +56,11 @@ export default function CommentList({
       if (!input) return
       if (!userData) return
       setIsDisabled(true)
-      const res = await createComment({
+      await createComment({
         postId,
         user: userData,
         text: input,
       })
-
-      if (res) {
-        toast.success('Comment created successfully')
-      }
     } catch (e) {
       console.error(e)
       toast.error('Error creating comment')
@@ -165,10 +164,10 @@ export default function CommentList({
                       isLiked={isLiked}
                       addLikeMutation={addLikeChildMutation}
                       deleteLikeMutation={deleteLikeChildMutation}
-                      addRetweetMutation={addRetweetMutation}
-                      deleteRetweetMutation={deleteRetweetMutation}
+                      addRetweetMutation={addChildRetweetMutation}
+                      deleteRetweetMutation={deleteChildRetweetMutation}
                       blockMutation={blockMutation}
-                      addCommentMutation={addCommentMutation}
+                      addCommentMutation={addChildCommentMutation}
                     />
                   )
                 })}

@@ -5,10 +5,12 @@ import { Avatar } from '@nextui-org/avatar'
 import { Button } from '@nextui-org/button'
 import Link from 'next/link'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 type Props = UserType & {
-  toggleFollow: (authorId: string) => Promise<void>
   isBlocked: boolean
+  blockMutation: any
+  user: UserType | null
 }
 
 export default function BlockedUsersCard({
@@ -16,17 +18,19 @@ export default function BlockedUsersCard({
   name,
   user_name,
   avatar_url,
-  toggleFollow,
+  blockMutation,
   isBlocked,
+  user,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleToggleFollow = async () => {
     try {
       setIsLoading(true)
-      await toggleFollow(id)
+      await blockMutation.mutateAsync({ user, blockedUserId: id })
     } catch (e) {
       console.error(e)
+      toast.error('Error blocking user')
     } finally {
       setIsLoading(false)
     }
@@ -51,7 +55,7 @@ export default function BlockedUsersCard({
             isLoading && 'bg-gray-300'
           }`}
         >
-          {isLoading ? 'Loading' : isBlocked ? 'Unblock' : 'Block'}
+          {isLoading ? 'Loading' : 'Unblock'}
         </Button>
       </div>
     </li>

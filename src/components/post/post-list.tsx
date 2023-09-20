@@ -28,6 +28,7 @@ export default function PostList({ postType, userId }: Props) {
     blockMutation,
     deleteLikeMutation,
     deleteRetweetMutation,
+    addCommentMutation,
   } = usePostActions(postType)
 
   const { getIsFollowing, toggleFollow } = useFollow()
@@ -68,6 +69,7 @@ export default function PostList({ postType, userId }: Props) {
             addRetweetMutation={addRetweetMutation}
             deleteRetweetMutation={deleteRetweetMutation}
             blockMutation={blockMutation}
+            addCommentMutation={addCommentMutation}
           />
         )
       })}

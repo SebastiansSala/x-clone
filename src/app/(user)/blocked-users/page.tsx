@@ -15,11 +15,11 @@ export default async function Page() {
     return redirect('/login')
   }
 
-  const username = session.user.user_metadata.user_name
+  const user = session.user
 
   return (
     <>
-      <BlockedUsersList username={username} />
+      <BlockedUsersList user={user} />
     </>
   )
 }

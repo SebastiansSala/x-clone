@@ -18,7 +18,6 @@ import { useSelector } from 'react-redux'
 
 import { CommentIcon } from './Icons/utility/comment-icon'
 
-import { createComment } from '@/services/comments-services'
 import formatDate from '@/utils/format-date'
 
 import type { RootState } from '@/app/store'
@@ -30,13 +29,7 @@ type Props = {
   post_description: string
   created_at: Date
   author_username: string
-  postId: string
-  handleSubmit: (
-    parentId: string,
-    text: string,
-    addCommentMutation: any
-  ) => void
-  addCommentMutation: any
+  handleSubmit: (text: string) => void
 }
 
 export default function CommentsModal({
@@ -46,9 +39,7 @@ export default function CommentsModal({
   post_description,
   created_at,
   author_username,
-  postId,
   handleSubmit,
-  addCommentMutation,
 }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [textareaValue, setTextareaValue] = useState('')
@@ -60,14 +51,13 @@ export default function CommentsModal({
   const handleReply = async (onClose: () => void) => {
     try {
       if (!textareaValue) return
-      handleSubmit(postId, textareaValue, addCommentMutation)
-      toast.success('Comment created successfully')
+      handleSubmit(textareaValue)
     } catch (e) {
       console.error(e)
     } finally {
       setTextareaValue('')
+      onClose()
     }
-    onClose()
   }
 
   return (

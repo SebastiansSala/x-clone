@@ -1,8 +1,7 @@
 'use client'
 
-import toast from 'react-hot-toast'
+import { v4 as uuidv4 } from 'uuid'
 import { useMutation, useQueryClient } from 'react-query'
-import { useSelector } from 'react-redux'
 
 import {
   createRetweet,
@@ -13,7 +12,7 @@ import {
 import { blockUser } from '@/services/users-services'
 
 import type { PostType, UserType } from '@/types/posts'
-import type { RootState } from '@/app/store'
+import { createComment } from '@/services/comments-services'
 
 type PostObjectType = {
   pages: PageType[]
@@ -32,9 +31,8 @@ export default function usePostActions(postType: string) {
 
   const deleteLikeMutation = useMutation(unlikePost, {
     onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
-      if (!user) return toast.error('You must be logged in to like a post')
-
       await queryClient.cancelQueries(['posts', postType])
+
       const oldData = queryClient.getQueryData<PostObjectType>([
         'posts',
         postType,
@@ -72,9 +70,8 @@ export default function usePostActions(postType: string) {
 
   const addLikeMutation = useMutation(likePost, {
     onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
-      if (!user) return toast.error('You must be logged in to like a post')
-
       await queryClient.cancelQueries(['posts', postType])
+
       const oldData = queryClient.getQueryData<PostObjectType>([
         'posts',
         postType,
@@ -103,13 +100,11 @@ export default function usePostActions(postType: string) {
             return post
           }),
         }))
-
         return {
           ...oldData,
           pages: newData,
         }
       })
-
       return { oldData }
     },
     onError: (err, postId, context) => {
@@ -122,8 +117,6 @@ export default function usePostActions(postType: string) {
 
   const addRetweetMutation = useMutation(createRetweet, {
     onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
-      if (!user) return toast.error('You must be logged in to retweet a post')
-
       await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
@@ -143,7 +136,8 @@ export default function usePostActions(postType: string) {
                 retweets: [
                   ...post.retweets!,
                   {
-                    id,
+                    id: uuidv4(),
+                    authorId: user.id,
                     user_name,
                     name,
                     avatar_url,
@@ -171,8 +165,6 @@ export default function usePostActions(postType: string) {
 
   const deleteRetweetMutation = useMutation(deleteRetweet, {
     onMutate: async ({ postId, user }: { postId: string; user: UserType }) => {
-      if (!user) return toast.error('You must be logged in to retweet a post')
-
       await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
@@ -219,8 +211,6 @@ export default function usePostActions(postType: string) {
       user: UserType
       blockedUserId: string
     }) => {
-      if (!user) return toast.error('You must be logged in to block a users')
-
       await queryClient.cancelQueries(['posts', postType])
 
       const oldData = queryClient.getQueryData<PostObjectType>([
@@ -248,11 +238,64 @@ export default function usePostActions(postType: string) {
     },
   })
 
+  const addCommentMutation = useMutation(createComment, {
+    onMutate: async ({
+      user,
+      text,
+      parentId,
+    }: {
+      user: UserType
+      text: string
+      parentId: string
+    }) => {
+      await queryClient.cancelQueries(['posts', postType])
+
+      const oldData = queryClient.getQueryData<PostObjectType>([
+        'posts',
+        postType,
+      ])
+
+      queryClient.setQueryData(['posts', postType], (old: any) => {
+        const newData = old?.pages?.map((page: PageType) => ({
+          ...page,
+          posts: page.posts.map((post) => {
+            if (post.id === parentId) {
+              return {
+                ...post,
+                comments: [
+                  ...post.comments,
+                  {
+                    id: uuidv4(),
+                    text,
+                  },
+                ],
+              }
+            }
+            return post
+          }),
+        }))
+        return {
+          ...oldData,
+          pages: newData,
+        }
+      })
+      return { oldData }
+    },
+    onError: (err, postId, context) => {
+      queryClient.setQueryData(['posts', postType], context)
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries(['posts', postType])
+    },
+  })
+
   return {
     addLikeMutation,
     deleteLikeMutation,
     addRetweetMutation,
     deleteRetweetMutation,
     blockMutation,
+    addCommentMutation,
   }
 }
