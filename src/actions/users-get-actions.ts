@@ -19,9 +19,6 @@ export const getBlockedUsers = async (
 ) => {
   return await prisma.users.findMany({
     where: {
-      NOT: {
-        user_name: username,
-      },
       AND: {
         blockedBy: {
           some: {

@@ -16,8 +16,6 @@ export default function BlockedUsersList({ user }: { user: User }) {
 
   const { users } = useInfiniteUsers('blocked', user_name)
 
-  console.log(users)
-
   const userData = useSelector((state: RootState) => state.auth.userData)
 
   const { blockMutation } = useBlockedUsersActions()

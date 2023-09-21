@@ -6,7 +6,7 @@ import {
   DropdownTrigger,
 } from '@nextui-org/dropdown'
 
-import { OptionsIcon } from '../Icons/utility/option-icon'
+import { OptionsIcon } from './Icons/utility/option-icon'
 
 import type { UserType } from '@/types/posts'
 

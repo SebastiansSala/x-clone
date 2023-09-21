@@ -79,3 +79,17 @@ export const deleteLikeFromComment = async (
     },
   })
 }
+
+export const getCommentInfo = async (commentId: string) => {
+  return await prisma.comments.findFirst({
+    where: {
+      id: commentId,
+    },
+    include: {
+      likes: true,
+      comments: true,
+      author: true,
+      retweets: true,
+    },
+  })
+}

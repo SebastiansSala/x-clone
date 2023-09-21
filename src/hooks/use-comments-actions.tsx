@@ -248,8 +248,6 @@ export default function useCommentsActions() {
           }),
         }))
 
-        console.log(newData)
-
         return {
           ...oldData,
           pages: newData,

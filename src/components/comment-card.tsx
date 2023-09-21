@@ -7,12 +7,13 @@ import { Link } from '@nextui-org/link'
 
 import useActionHandlers from '@/hooks/use-actions-handlers'
 
-import OptionsDropdown from './post/post-options-dropdown'
+import OptionsDropdown from './options-dropdown'
 import CommentsModal from './comments-modal'
 import RetweetButton from './retweet-button'
 import LikeButton from './like-button'
 
 import type { CommentType, UserType } from '@/types/posts'
+import { usePathname, useRouter } from 'next/navigation'
 
 type PostProps = {
   comment: CommentType
@@ -54,6 +55,8 @@ export default function CommentCard({
     handleAddComment,
   } = useActionHandlers(isLiked, isRetweeted)
 
+  const pathname = usePathname()
+
   const handleReply = async (text: string) => {
     try {
       await handleAddComment(comment.id, text, addCommentMutation)
@@ -65,7 +68,7 @@ export default function CommentCard({
   return (
     <li key={comment.id} className="relative">
       <Link
-        href={`/${comment.author?.user_name}/status/${comment.id}`}
+        href={`${pathname}/${comment.id}`}
         className="w-full h-full absolute inset-0 z-20"
       />
       <article className="grid grid-cols-12 p-4 relative">
@@ -96,7 +99,7 @@ export default function CommentCard({
               author={comment.author}
               isFollowing={isFollowing}
               toggleFollow={toggleFollow}
-              showPublicButtons={user?.id !== comment.author?.id}
+              showPublicButtons={user?.id === comment.authorId}
               handleBlock={() => handleBlock(comment.author?.id, blockMutation)}
             />
           </div>
@@ -128,7 +131,6 @@ export default function CommentCard({
               onClick={() =>
                 handleRetweet(
                   comment.id,
-                  isRetweeted,
                   addRetweetMutation,
                   deleteRetweetMutation
                 )
@@ -139,12 +141,7 @@ export default function CommentCard({
             />
             <LikeButton
               onClick={() =>
-                handleLike(
-                  comment.id,
-                  isLiked,
-                  addLikeMutation,
-                  deleteLikeMutation
-                )
+                handleLike(comment.id, addLikeMutation, deleteLikeMutation)
               }
               likesCount={comment.likes?.length}
               isLiked={isLikedLocal}

@@ -20,7 +20,6 @@ export default function useActionHandlers(
 
   async function handleLike(
     id: string,
-    isLiked: boolean,
     addLikeMutation: any,
     deleteLikeMutation: any
   ) {
@@ -46,7 +45,6 @@ export default function useActionHandlers(
 
   async function handleRetweet(
     id: string,
-    isRetweeted: boolean,
     addRetweetMutation: any,
     deleteRetweetMutation: any
   ) {

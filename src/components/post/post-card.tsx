@@ -8,7 +8,7 @@ import { Link } from '@nextui-org/link'
 import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
-import OptionsDropdown from './post-options-dropdown'
+import OptionsDropdown from '../options-dropdown'
 
 import useActionHandlers from '@/hooks/use-actions-handlers'
 

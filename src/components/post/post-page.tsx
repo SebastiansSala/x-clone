@@ -5,7 +5,7 @@ import { Divider } from '@nextui-org/divider'
 import Image from 'next/image'
 import { useSelector } from 'react-redux'
 
-import OptionsDropdown from '@/components/post/post-options-dropdown'
+import OptionsDropdown from '@/components/options-dropdown'
 import CommentList from '../comment-list'
 import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
@@ -16,6 +16,8 @@ import useFollow from '@/hooks/use-follow'
 import type { RootState } from '@/app/store'
 import type { PostType } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
+import useActionHandlers from '@/hooks/use-actions-handlers'
+import useCommentsActions from '@/hooks/use-comments-actions'
 
 type Props = {
   postInfo: PostType
@@ -38,11 +40,45 @@ export default function PostPageMain({ postInfo, user }: Props) {
   const isPm = hourCreated > 12
   const hour = isPm ? hourCreated - 12 : hourCreated
 
+  const isLiked = postInfo.likes.some((like) => like.id === user?.id)
+  const isRetweeted =
+    user && postInfo.retweets
+      ? postInfo.retweets?.some((retweet) => retweet.authorId === user?.id)
+      : false
+
+  const {
+    handleAddComment,
+    handleLike,
+    handleRetweet,
+    handleBlock,
+    isLikedLocal,
+    isLikedloading,
+    isRetweetLoading,
+    isRetweetedLocal,
+  } = useActionHandlers(isLiked, isRetweeted)
+
+  const {
+    addCommentMutation,
+    addLikeMutation,
+    addRetweetMutation,
+    deleteRetweetMutation,
+    deleteLikeMutation,
+    blockMutation,
+  } = useCommentsActions()
+
   const fullDate = new Date(postInfo.createdAt).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   })
+
+  const handleReply = async (text: string) => {
+    try {
+      await handleAddComment(postInfo.id, text, addCommentMutation)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <section>
@@ -59,7 +95,9 @@ export default function PostPageMain({ postInfo, user }: Props) {
           isFollowing={getIsFollowing(postInfo.author.id)}
           showPublicButtons={showPublicButtons}
           toggleFollow={toggleFollow}
-          handleBlock={() => {}}
+          handleBlock={() => {
+            handleBlock(postInfo.author.id, blockMutation)
+          }}
         />
       </header>
       <div className="mt-4 px-6">
@@ -87,19 +125,27 @@ export default function PostPageMain({ postInfo, user }: Props) {
             author_username={postInfo.author.user_name}
             post_description={postInfo.text}
             created_at={postInfo.createdAt}
-            postId={postInfo.id}
+            handleSubmit={handleReply}
           />
           <RetweetButton
-            onClick={() => {}}
+            onClick={() =>
+              handleRetweet(
+                postInfo.id,
+                addRetweetMutation,
+                deleteRetweetMutation
+              )
+            }
             retweetsCount={postInfo.retweets?.length}
-            isRetweeted={false}
-            isLoading={false}
+            isRetweeted={isRetweetedLocal}
+            isLoading={isRetweetLoading}
           />
           <LikeButton
-            onClick={() => {}}
+            onClick={() => {
+              handleLike(postInfo.id, addLikeMutation, deleteLikeMutation)
+            }}
             likesCount={postInfo.likes.length}
-            isLiked={false}
-            isLoading={false}
+            isLiked={isLikedLocal}
+            isLoading={isLikedloading}
           />
         </div>
         <Divider className="bg-[#71767b] mt-2" />
