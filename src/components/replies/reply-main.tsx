@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { useSelector } from 'react-redux'
 
 import OptionsDropdown from '@/components/options-dropdown'
-import CommentList from '../comment-list'
 import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
@@ -16,12 +15,12 @@ import useCommentsActions from '@/hooks/use-comments-actions'
 import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
-import type { ReplyType } from '@/types/posts'
+import type { CommentTypeWithMinimalActions } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
 import ReplyList from './reply-list'
 
 type Props = {
-  postInfo: ReplyType
+  postInfo: CommentTypeWithMinimalActions
   user?: User
 }
 

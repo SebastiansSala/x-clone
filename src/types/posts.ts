@@ -57,6 +57,12 @@ export type CommentTypeFull = CommentType & {
   image: ImageType | null
 }
 
+export type CommentTypeWithMinimalActions = CommentTypeFull & {
+  likes: UserType[]
+  comments: CommentType[]
+  retweets: RetweetType[]
+}
+
 export type CommentTypeWithActions = CommentTypeFull & {
   likes: UserType[]
   comments: CommentTypeWithActions[]
