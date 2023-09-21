@@ -54,7 +54,7 @@ export default async function Page({ params }: Props) {
         {allComments.map((comment) => {
           return <div key={comment?.id}>{comment?.id}</div>
         })}
-        <ReplyMain postInfo={allComments.at(0)} user={session?.user} />
+        <ReplyMain postInfo={allComments[0]} user={session?.user} />
       </ul>
     </main>
   )

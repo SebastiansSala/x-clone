@@ -157,6 +157,7 @@ export const getCommentInfo = async (commentId: string) => {
       comments: true,
       author: true,
       retweets: true,
+      image: true,
     },
   })
 }

@@ -16,12 +16,12 @@ import useCommentsActions from '@/hooks/use-comments-actions'
 import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
-import type { PostTypeWithAll } from '@/types/posts'
+import type { ReplyType } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
 import ReplyList from './reply-list'
 
 type Props = {
-  postInfo: PostTypeWithAll
+  postInfo: ReplyType
   user?: User
 }
 
