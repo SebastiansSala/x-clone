@@ -5,14 +5,12 @@ import {
   getRetweetedPostsByUsername,
 } from '@/actions/posts-get-actions'
 
-import type { PostType } from '@/types/posts'
-
 type FetchFunction = (
   userId: string,
   skip: number,
   take: number,
   cursor: { id: string } | undefined
-) => Promise<PostType[]>
+) => Promise<any[]>
 
 type PostTypeFunctions = {
   [key: string]: FetchFunction
