@@ -5,6 +5,8 @@ import PostSection from '@/components/post/post-section'
 
 import { postTabs } from '@/data/tabs'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const supabase = createServerComponentClient({ cookies })
 

@@ -11,6 +11,8 @@ type ProfilePageProps = {
   children: React.ReactNode
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProfilePageLayout({
   params,
   children,

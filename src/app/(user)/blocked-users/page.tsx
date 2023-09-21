@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 
 import BlockedUsersList from '@/components/blocked-users/blocked-users-list'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   const supabase = createServerComponentClient({ cookies })
 

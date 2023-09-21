@@ -11,6 +11,8 @@ type ProfileFollowPageProps = {
   }
 }
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProfileFollowPage({
   params,
 }: ProfileFollowPageProps) {

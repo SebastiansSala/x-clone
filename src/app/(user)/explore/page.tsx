@@ -6,6 +6,8 @@ import { Input } from '@nextui-org/input'
 import UsersList from '@/components/explore/explore-users-list'
 import { SearchIcon } from '@/components/Icons/utility/search-icon'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ExplorePage() {
   const supabase = createServerComponentClient({ cookies })
 

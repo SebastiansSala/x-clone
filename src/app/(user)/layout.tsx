@@ -1,12 +1,12 @@
 import { cookies } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Input } from '@nextui-org/input'
 
 import NavigationAside from '@/components/navigation/navigation-aside'
 import FollowingList from '@/components/following-list'
-import { SearchIcon } from '@/components/Icons/utility/search-icon'
 
 import { getUsers, getUsersNotFollowing } from '@/actions/users-get-actions'
+
+export const dynamic = 'force-dynamic'
 
 export default async function UserLayout({
   children,
