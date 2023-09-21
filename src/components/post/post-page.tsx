@@ -11,9 +11,9 @@ import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
 
-import useFollow from '@/hooks/use-follow'
 import useActionHandlers from '@/hooks/use-actions-handlers'
 import useCommentsActions from '@/hooks/use-comments-actions'
+import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
 import type { PostType } from '@/types/posts'
