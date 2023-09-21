@@ -25,6 +25,29 @@ export type PostType = {
   comments: CommentType[]
 }
 
+export type PostTypeWithAll = {
+  id: string
+  text: string
+  author: UserType
+  authorId: string
+  retweets?: RetweetType[]
+  createdAt: Date
+  image?: ImageType | null
+  updatedAt: Date | null
+  likes: UserType[]
+  comments: PostCommentType[]
+}
+
+export type PostCommentType = {
+  id: string
+  text: string
+  authorId: string
+  createdAt: Date
+  updatedAt: string | null
+  postId: string | null
+  parentId: string | null
+}
+
 export type CommentType = {
   id: string
   text: string
