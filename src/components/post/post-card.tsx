@@ -12,10 +12,10 @@ import OptionsDropdown from '../options-dropdown'
 
 import useActionHandlers from '@/hooks/use-actions-handlers'
 
-import type { PostType, UserType } from '@/types/posts'
+import type { PostTypeWithAllActions, UserType } from '@/types/posts'
 
 type PostProps = {
-  post: PostType
+  post: PostTypeWithAllActions
   user?: UserType | null
   isFollowing: boolean
   isRetweeted: boolean
