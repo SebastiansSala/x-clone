@@ -40,11 +40,11 @@ export default function OptionsDropdown({
       </DropdownTrigger>
       {showPublicButtons ? (
         <DropdownMenu aria-label="Static Actions" className="text-white">
-          <DropdownItem key="unfollow" onPress={() => toggleFollow(author.id)}>
-            {isFollowing ? 'UnFollow' : 'Follow'} @{author.user_name}
+          <DropdownItem key="unfollow" onPress={() => toggleFollow(author?.id)}>
+            {isFollowing ? 'UnFollow' : 'Follow'} @{author?.user_name}
           </DropdownItem>
           <DropdownItem key="block" onPress={handleBlock}>
-            Block @{author.user_name}
+            Block @{author?.user_name}
           </DropdownItem>
         </DropdownMenu>
       ) : (

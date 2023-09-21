@@ -11,20 +11,21 @@ import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
 
-import useFollow from '@/hooks/use-follow'
 import useActionHandlers from '@/hooks/use-actions-handlers'
 import useCommentsActions from '@/hooks/use-comments-actions'
+import useFollow from '@/hooks/use-follow'
 
 import type { RootState } from '@/app/store'
 import type { PostType } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
+import ReplyList from './reply-list'
 
 type Props = {
   postInfo: PostType
   user?: User
 }
 
-export default function PostPageMain({ postInfo, user }: Props) {
+export default function ReplyMain({ postInfo, user }: Props) {
   const userData = useSelector((state: RootState) => state.auth.userData)
 
   const showPublicButtons = userData?.id !== postInfo.author.id
@@ -152,7 +153,7 @@ export default function PostPageMain({ postInfo, user }: Props) {
       </section>
 
       <section>
-        <CommentList
+        <ReplyList
           postId={postInfo.id}
           postAuthorAvatar={postInfo.author.avatar_url}
           userData={userData}

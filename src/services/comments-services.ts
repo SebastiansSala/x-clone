@@ -51,6 +51,26 @@ export const createChildComment = async ({
   }
 }
 
+export const fetchChildComments = async (
+  postId: string,
+  pageParam: number,
+  userId?: string
+) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}/comments?cursor=${pageParam}&userId=${userId}`
+    )
+
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
+
+    return res.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 export const createComment = async ({
   user,
   text,

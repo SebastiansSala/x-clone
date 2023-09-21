@@ -7,16 +7,16 @@ import { Spinner } from '@nextui-org/spinner'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import CommentCard from './comment-card'
+import CommentCard from '../comment-card'
 
 import useCommentsActions from '@/hooks/use-comments-actions'
 import useFollow from '@/hooks/use-follow'
-import useInfiniteComments from '@/hooks/use-infinite-comments'
+import useInfiniteChildComments from '@/hooks/use-infinite-child-comments'
 
 import type { UserType } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
 
-export default function CommentList({
+export default function ReplyList({
   postId,
   postAuthorAvatar,
   userData,
@@ -28,7 +28,7 @@ export default function CommentList({
   user?: User
 }) {
   const { comments, isLoading, isFetchingNextPage, error, ref, isError } =
-    useInfiniteComments(postId, user?.id)
+    useInfiniteChildComments(postId, user?.id)
 
   const [input, setInput] = useState('')
   const [isDisabled, setIsDisabled] = useState(true)
@@ -137,7 +137,7 @@ export default function CommentList({
                 addCommentMutation={addChildCommentMutation}
               />
               {comment.comments &&
-                comment.comments.slice(0, 2).map((childComment) => {
+                comment.comments.map((childComment) => {
                   const isFollowing = getIsFollowing(comment.authorId)
 
                   const isRetweeted =

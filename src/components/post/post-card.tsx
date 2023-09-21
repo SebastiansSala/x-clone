@@ -128,7 +128,6 @@ export default function PostCard({
               onClick={() =>
                 handleRetweet(
                   post.id,
-                  isRetweeted,
                   addRetweetMutation,
                   deleteRetweetMutation
                 )
@@ -139,12 +138,7 @@ export default function PostCard({
             />
             <LikeButton
               onClick={() =>
-                handleLike(
-                  post.id,
-                  isLiked,
-                  addLikeMutation,
-                  deleteLikeMutation
-                )
+                handleLike(post.id, addLikeMutation, deleteLikeMutation)
               }
               likesCount={post.likes?.length}
               isLiked={isLikedLocal}

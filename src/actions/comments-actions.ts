@@ -13,6 +13,73 @@ export const createCommentRetweet = async (
   })
 }
 
+export const getChildCommentsByPostId = async (
+  commentId: string,
+  userId: string,
+  cursor: { id: string } | undefined,
+  skip: number,
+  take: number,
+  maxCommentsPerComment: number
+) => {
+  return await prisma.comments.findMany({
+    where: {
+      parentId: commentId,
+      AND: {
+        author: {
+          blockedBy: {
+            none: {
+              id: userId,
+            },
+          },
+        },
+      },
+    },
+    include: {
+      comments: {
+        where: {
+          author: {
+            blockedBy: {
+              none: {
+                id: userId,
+              },
+            },
+          },
+        },
+        take: maxCommentsPerComment,
+        include: {
+          _count: {
+            select: {
+              comments: true,
+              likes: true,
+              retweets: true,
+            },
+          },
+          author: true,
+          retweets: true,
+          comments: true,
+          likes: true,
+          parent: true,
+          image: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+          likes: true,
+          retweets: true,
+        },
+      },
+      likes: true,
+      retweets: true,
+      image: true,
+      author: true,
+    },
+    skip,
+    take,
+    cursor,
+  })
+}
+
 export const createChildComment = async (
   commentId: string,
   authorId: string,

@@ -68,7 +68,7 @@ export default function CommentCard({
   return (
     <li key={comment.id} className="relative">
       <Link
-        href={`${pathname}/${comment.id}`}
+        href={`/${comment.author?.user_name}/replies/${comment.id}`}
         className="w-full h-full absolute inset-0 z-20"
       />
       <article className="grid grid-cols-12 p-4 relative">
