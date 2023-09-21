@@ -7,10 +7,9 @@ import NextLink from 'next/link'
 import Logo from '@/components/Icons/social/logo-icon'
 import AuthClientButton from '@/components/auth/auth-client-button'
 
-export const dynamic = 'force-dynamic'
-
 export default async function Page() {
-  const supabase = createServerComponentClient({ cookies })
+  const cookieStore = cookies()
+  const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
   const {
     data: { session },

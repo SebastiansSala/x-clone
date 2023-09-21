@@ -1,9 +1,10 @@
 'use client'
 
-import { setFollowers, setFollowing, setUserData } from '@/features/auth-slice'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
+
+import { setFollowers, setFollowing, setUserData } from '@/features/auth-slice'
 
 const SignOutClientButton = () => {
   const supabase = createClientComponentClient()

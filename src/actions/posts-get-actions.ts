@@ -20,10 +20,10 @@ export const getPublicPosts = async (
     },
     include: {
       author: true,
+      image: true,
       likes: true,
       retweets: true,
       comments: true,
-      image: true,
     },
     orderBy: {
       createdAt: 'desc',

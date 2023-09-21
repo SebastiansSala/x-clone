@@ -30,6 +30,18 @@ export const createPost = async (
   }
 }
 
+export const fetchPost = async (postId: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/posts/${postId}`
+  )
+
+  if (!res.ok) {
+    throw new Error(res.statusText)
+  }
+
+  return res.json()
+}
+
 export const fetchPosts = async (
   postType: string,
   pageParam: number,

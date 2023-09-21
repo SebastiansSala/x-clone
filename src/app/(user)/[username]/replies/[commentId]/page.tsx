@@ -45,16 +45,12 @@ export default async function Page({ params }: Props) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  allComments.forEach((comment) => {
-    console.log(comment.id)
-  })
-
   return (
     <main>
       <ul className="space-y-6">
         <PostMain post={lastItem} />
-        {allComments.map((comment) => {
-          return <div key={comment?.id}>{comment?.id}</div>
+        {allComments.slice(1).map((comment) => {
+          return <PostMain key={comment.id} post={comment} />
         })}
         <ReplyMain postInfo={allComments[0]} user={session?.user} />
       </ul>

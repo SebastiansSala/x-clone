@@ -12,11 +12,10 @@ import CommentsModal from './comments-modal'
 import RetweetButton from './retweet-button'
 import LikeButton from './like-button'
 
-import type { CommentType, UserType } from '@/types/posts'
-import { usePathname, useRouter } from 'next/navigation'
+import type { CommentTypeWithActions, UserType } from '@/types/posts'
 
 type PostProps = {
-  comment: CommentType
+  comment: CommentTypeWithActions
   user?: UserType | null
   isFollowing: boolean
   isRetweeted: boolean
@@ -54,8 +53,6 @@ export default function CommentCard({
     isRetweetedLocal,
     handleAddComment,
   } = useActionHandlers(isLiked, isRetweeted)
-
-  const pathname = usePathname()
 
   const handleReply = async (text: string) => {
     try {

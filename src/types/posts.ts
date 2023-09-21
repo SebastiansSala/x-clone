@@ -17,28 +17,32 @@ export type PostType = {
   text: string
   author: UserType
   authorId: string
-  retweets?: RetweetType[]
   createdAt: Date
-  image?: ImageType | null
+  image: ImageType | null
   updatedAt: Date | null
+}
+
+export type PostTypeWithCounts = PostType & {
+  _count: {
+    likes: number
+    comments: number
+    retweets: number
+  }
+}
+
+export type PostTypeWithAllActions = PostType & {
+  likes: UserType[]
+  comments: CommentTypeWithActions[]
+  retweets: RetweetType[]
+}
+
+export type PostTypeWithMinimalActions = PostType & {
   likes: UserType[]
   comments: CommentType[]
+  retweets: RetweetType[]
 }
 
-export type PostTypeWithAll = {
-  id: string
-  text: string
-  author: UserType
-  authorId: string
-  retweets?: RetweetType[]
-  createdAt: Date
-  image?: ImageType | null
-  updatedAt: Date | null
-  likes: UserType[]
-  comments: PostCommentType[]
-}
-
-export type PostCommentType = {
+export type CommentType = {
   id: string
   text: string
   authorId: string
@@ -46,6 +50,17 @@ export type PostCommentType = {
   updatedAt?: string | null
   postId: string | null
   parentId: string | null
+}
+
+export type CommentTypeFull = CommentType & {
+  author: UserType
+  image: ImageType | null
+}
+
+export type CommentTypeWithActions = CommentTypeFull & {
+  likes: UserType[]
+  comments: CommentTypeWithActions[]
+  retweets: RetweetType[]
 }
 
 export type ReplyType = {
@@ -63,28 +78,6 @@ export type ReplyType = {
   postId?: string | null
   parent?: ReplyType
   parentId?: string | null
-}
-
-export type CommentType = {
-  id: string
-  text: string
-  author: UserType
-  authorId: string
-  retweets: RetweetType[]
-  createdAt: Date
-  image?: ImageType | null
-  updatedAt?: Date | null
-  likes: UserType[]
-  comments: CommentType[]
-  post: PostType
-  postId?: string | null
-  parent?: CommentType
-  parentId?: string | null
-  _count: {
-    likes: number
-    comments: number
-    retweets: number
-  }
 }
 
 type RetweetType = {

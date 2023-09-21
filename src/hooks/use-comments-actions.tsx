@@ -1,6 +1,5 @@
 'use client'
 
-import toast from 'react-hot-toast'
 import { useMutation, useQueryClient } from 'react-query'
 
 import {
@@ -13,7 +12,7 @@ import {
 } from '@/services/comments-services'
 import { blockUser } from '@/services/users-services'
 
-import type { PostType, UserType } from '@/types/posts'
+import type { CommentTypeWithActions, UserType } from '@/types/posts'
 import { v4 } from 'uuid'
 
 type CommentsObjectType = {
@@ -23,7 +22,7 @@ type CommentsObjectType = {
 
 type PageType = {
   nextId?: string
-  comments: PostType[]
+  comments: CommentTypeWithActions[]
 }
 
 type pageParams = string | undefined

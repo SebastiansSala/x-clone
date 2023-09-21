@@ -4,7 +4,8 @@ import { useInView } from 'react-intersection-observer'
 import useInfinite from './use-infinite'
 
 import { fetchComments } from '@/services/comments-services'
-import { CommentType } from '@/types/posts'
+
+import type { CommentTypeWithActions } from '@/types/posts'
 
 export default function useInfiniteComments(postId: string, userId?: string) {
   const { ref, inView } = useInView()
@@ -27,7 +28,9 @@ export default function useInfiniteComments(postId: string, userId?: string) {
     }
   }, [inView, fetchNextPage, hasNextPage])
 
-  const comments = data?.pages.flatMap((page) => page.comments) as CommentType[]
+  const comments = data?.pages.flatMap(
+    (page) => page.comments
+  ) as CommentTypeWithActions[]
 
   return {
     comments,

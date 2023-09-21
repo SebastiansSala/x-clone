@@ -11,7 +11,7 @@ import {
 } from '@/services/posts-services'
 import { blockUser } from '@/services/users-services'
 
-import type { PostType, UserType } from '@/types/posts'
+import type { PostTypeWithAllActions, UserType } from '@/types/posts'
 import { createComment } from '@/services/comments-services'
 
 type PostObjectType = {
@@ -21,12 +21,12 @@ type PostObjectType = {
 
 type PageType = {
   nextId?: string
-  posts: PostType[]
+  posts: PostTypeWithAllActions[]
 }
 
 type pageParams = string | undefined
 
-export default function usePostActions(postType: string) {
+export default function usePostActions(postType?: string) {
   const queryClient = useQueryClient()
 
   const deleteLikeMutation = useMutation(unlikePost, {

@@ -11,38 +11,30 @@ import CommentsModal from '../comments-modal'
 import LikeButton from '../like-button'
 import RetweetButton from '../retweet-button'
 
-import useActionHandlers from '@/hooks/use-actions-handlers'
-import useCommentsActions from '@/hooks/use-comments-actions'
 import useFollow from '@/hooks/use-follow'
+import useActionHandlers from '@/hooks/use-actions-handlers'
+import usePostActions from '@/hooks/use-post-actions'
 
 import type { RootState } from '@/app/store'
-import type { PostTypeWithAll } from '@/types/posts'
 import type { User } from '@supabase/supabase-js'
+import usePost from '@/hooks/use-post'
 
 type Props = {
-  postInfo: PostTypeWithAll
+  postId: string
   user?: User
 }
 
-export default function PostPageMain({ postInfo, user }: Props) {
+export default function PostPageMain({ postId, user }: Props) {
   const userData = useSelector((state: RootState) => state.auth.userData)
 
-  const showPublicButtons = userData?.id !== postInfo.author.id
+  const { postInfo, isError, isLoading } = usePost(postId)
 
-  const { toggleFollow, getIsFollowing } = useFollow()
+  const isLiked = postInfo
+    ? postInfo.likes.some((like) => like.id === user?.id)
+    : false
 
-  //get hours and minutes
-  const hourCreated = new Date(postInfo.createdAt).getHours()
-  const minutesCreated = new Date(postInfo.createdAt).getMinutes()
-
-  const isLessThanTen = minutesCreated < 10
-
-  const isPm = hourCreated > 12
-  const hour = isPm ? hourCreated - 12 : hourCreated
-
-  const isLiked = postInfo.likes.some((like) => like.id === user?.id)
   const isRetweeted =
-    user && postInfo.retweets
+    postInfo && user && postInfo.retweets
       ? postInfo.retweets?.some((retweet) => retweet.authorId === user?.id)
       : false
 
@@ -64,7 +56,22 @@ export default function PostPageMain({ postInfo, user }: Props) {
     deleteRetweetMutation,
     deleteLikeMutation,
     blockMutation,
-  } = useCommentsActions()
+  } = usePostActions(postInfo?.id)
+
+  const { toggleFollow, getIsFollowing } = useFollow()
+
+  if (!postInfo) return null
+
+  const showPublicButtons = userData?.id !== postInfo.authorId
+
+  //get hours and minutes
+  const hourCreated = new Date(postInfo.createdAt).getHours()
+  const minutesCreated = new Date(postInfo.createdAt).getMinutes()
+
+  const isLessThanTen = minutesCreated < 10
+
+  const isPm = hourCreated > 12
+  const hour = isPm ? hourCreated - 12 : hourCreated
 
   const fullDate = new Date(postInfo.createdAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -79,6 +86,13 @@ export default function PostPageMain({ postInfo, user }: Props) {
       console.error(err)
     }
   }
+
+  const toggleRetweet = async () => {
+    handleRetweet(postInfo.id, addRetweetMutation, deleteRetweetMutation)
+  }
+
+  if (isError) return <p>Error</p>
+  if (isLoading) return <p>Loading...</p>
 
   return (
     <section>
@@ -102,7 +116,7 @@ export default function PostPageMain({ postInfo, user }: Props) {
       </header>
       <div className="mt-4 px-6">
         <p>{postInfo.text}</p>
-        {postInfo.image && (
+        {postInfo.image && postInfo.image.url && (
           <Image src={postInfo.image?.url} alt={postInfo.image?.url} />
         )}
         <div className="flex gap-4 text-[#71767b]">
@@ -117,7 +131,7 @@ export default function PostPageMain({ postInfo, user }: Props) {
       <Divider className="bg-[#71767b] mt-4" />
 
       <section className="mt-2 px-6">
-        <div className="flex items-center justify-between">
+        <form className="flex items-center justify-between">
           <CommentsModal
             commentsCount={postInfo.comments.length}
             author_avatarUrl={postInfo.author.avatar_url}
@@ -128,13 +142,7 @@ export default function PostPageMain({ postInfo, user }: Props) {
             handleSubmit={handleReply}
           />
           <RetweetButton
-            onClick={() =>
-              handleRetweet(
-                postInfo.id,
-                addRetweetMutation,
-                deleteRetweetMutation
-              )
-            }
+            onClick={toggleRetweet}
             retweetsCount={postInfo.retweets?.length}
             isRetweeted={isRetweetedLocal}
             isLoading={isRetweetLoading}
@@ -147,18 +155,15 @@ export default function PostPageMain({ postInfo, user }: Props) {
             isLiked={isLikedLocal}
             isLoading={isLikedloading}
           />
-        </div>
+        </form>
         <Divider className="bg-[#71767b] mt-2" />
       </section>
-
-      <section>
-        <CommentList
-          postId={postInfo.id}
-          postAuthorAvatar={postInfo.author.avatar_url}
-          userData={userData}
-          user={user}
-        />
-      </section>
+      <CommentList
+        postId={postInfo.id}
+        postAuthorAvatar={postInfo.author.avatar_url}
+        userData={userData}
+        user={user}
+      />
     </section>
   )
 }

@@ -11,7 +11,7 @@ const AuthClientButton = () => {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: 'http://localhost:3000/auth/callback',
+        redirectTo: `${process.env.NEXT_PUBLIC_API_URL}/auth/callback`,
       },
     })
   }

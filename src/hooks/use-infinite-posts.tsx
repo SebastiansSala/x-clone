@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
 
-import useInfinite from "./use-infinite";
+import useInfinite from './use-infinite'
 
-import { fetchPosts } from "@/services/posts-services";
-import { PostType } from "@/types/posts";
+import { fetchPosts } from '@/services/posts-services'
+import type { PostTypeWithAllActions } from '@/types/posts'
 
 export default function useInfinitePosts(postType: string, username?: string) {
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView()
 
   const {
     data,
@@ -19,17 +19,19 @@ export default function useInfinitePosts(postType: string, username?: string) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfinite(["posts", postType], (pageParam) =>
+  } = useInfinite(['posts', postType], (pageParam) =>
     fetchPosts(postType, pageParam, username)
-  );
+  )
 
   useEffect(() => {
     if (inView && hasNextPage) {
-      fetchNextPage();
+      fetchNextPage()
     }
-  }, [inView, fetchNextPage, hasNextPage]);
+  }, [inView, fetchNextPage, hasNextPage])
 
-  const posts = data?.pages?.flatMap((page) => page.posts) as PostType[];
+  const posts = data?.pages?.flatMap(
+    (page) => page.posts
+  ) as PostTypeWithAllActions[]
 
   return {
     posts,
@@ -38,5 +40,5 @@ export default function useInfinitePosts(postType: string, username?: string) {
     isFetchingNextPage,
     error,
     ref,
-  };
+  }
 }

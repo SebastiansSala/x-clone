@@ -1,9 +1,10 @@
-import { cookies } from 'next/headers'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import PostPageMain from '@/components/post/post-page'
 
 import { getPostById } from '@/actions/posts-get-actions'
-import { redirect } from 'next/navigation'
-import PostPageMain from '@/components/post/post-page'
 
 type ProfileFollowPageProps = {
   params: {
@@ -18,12 +19,6 @@ export default async function ProfileFollowPage({
 }: ProfileFollowPageProps) {
   const { postId } = params
 
-  const postInfo = await getPostById(postId)
-
-  if (!postInfo) {
-    redirect('/home')
-  }
-
   const supabase = createServerComponentClient({ cookies })
 
   const {
@@ -32,7 +27,7 @@ export default async function ProfileFollowPage({
 
   return (
     <main>
-      <PostPageMain postInfo={postInfo} user={session?.user} />
+      <PostPageMain postId={postId} user={session?.user} />
     </main>
   )
 }
