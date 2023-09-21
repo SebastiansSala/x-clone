@@ -5,7 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 import GithubIcon from '../Icons/social/github-icon'
 
-const AuthClientButton = () => {
+export default function AuthClientButton() {
   const supabase = createClientComponentClient()
   const handleSignIn = async (provider: 'google' | 'github') => {
     await supabase.auth.signInWithOAuth({
@@ -29,5 +29,3 @@ const AuthClientButton = () => {
     </>
   )
 }
-
-export default AuthClientButton
