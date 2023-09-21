@@ -11,6 +11,8 @@ import getNextId from '@/utils/getNextId'
 
 import { MAX_POSTS_PER_FETCH } from '@/const/posts'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
 

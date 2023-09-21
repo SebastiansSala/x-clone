@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 import { deleteFollow, addFollow } from '@/actions/users-update-actions'
 import { getUserFollowData } from '@/actions/users-get-actions'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } }

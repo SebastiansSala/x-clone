@@ -6,6 +6,8 @@ import {
   findRetweet,
 } from '@/actions/retweet-actions'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   req: Request,
   { params }: { params: { postId: string } }

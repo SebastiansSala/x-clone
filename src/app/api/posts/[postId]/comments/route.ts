@@ -8,6 +8,8 @@ import { MAX_COMMENTS_PER_COMMENT, MAX_COMMENTS_PER_FETCH } from '@/const/posts'
 
 import type { NextRequest } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { postId: string } }

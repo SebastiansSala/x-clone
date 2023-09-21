@@ -5,6 +5,8 @@ import { updatePostLikes } from '@/actions/posts-update-actions'
 
 import type { NextRequest } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function PUT(
   req: NextRequest,
   { params }: { params: { postId: string } }
