@@ -6,10 +6,10 @@ import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { ImageIcon } from '../Icons/utility/image-icon'
 
 import { MAX_NUMBER_OF_IMAGES_ON_POSTS } from '@/const/posts'
-import { PostImage } from '@/types/posts'
+import { ImageType } from '@/types/posts'
 
 type PostModalFooterProps = {
-  images: PostImage[]
+  images: ImageType[]
   handleImageUpload: (
     imagesList: ImageListType,
     addUpdatedIndex: number[] | undefined
