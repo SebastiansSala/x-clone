@@ -51,14 +51,14 @@ export type PostCommentType = {
 export type ReplyType = {
   id: string
   text: string
-  author: UserType
+  author?: UserType
   authorId: string
-  retweets: RetweetType[]
+  retweets?: RetweetType[]
   createdAt: Date
   image?: ImageType | null
   updatedAt?: string | null
-  likes: UserType[]
-  comments: ReplyType[]
+  likes?: UserType[]
+  comments?: ReplyType[]
   post?: PostType
   postId?: string | null
   parent?: ReplyType

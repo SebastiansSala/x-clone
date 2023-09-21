@@ -28,7 +28,7 @@ type Props = {
 export default function ReplyMain({ postInfo, user }: Props) {
   const userData = useSelector((state: RootState) => state.auth.userData)
 
-  const showPublicButtons = userData?.id !== postInfo.author.id
+  const showPublicButtons = userData?.id !== postInfo.author?.id
 
   const { toggleFollow, getIsFollowing } = useFollow()
 
@@ -41,7 +41,9 @@ export default function ReplyMain({ postInfo, user }: Props) {
   const isPm = hourCreated > 12
   const hour = isPm ? hourCreated - 12 : hourCreated
 
-  const isLiked = postInfo.likes.some((like) => like.id === user?.id)
+  const isLiked = postInfo.likes
+    ? postInfo.likes.some((like) => like.id === user?.id)
+    : false
   const isRetweeted =
     user && postInfo.retweets
       ? postInfo.retweets?.some((retweet) => retweet.authorId === user?.id)
@@ -85,21 +87,23 @@ export default function ReplyMain({ postInfo, user }: Props) {
     <section>
       <header className="flex items-center justify-between px-6">
         <div className="flex items-center gap-4">
-          <Avatar className="col-span-2" src={postInfo.author.avatar_url} />
+          <Avatar className="col-span-2" src={postInfo.author?.avatar_url} />
           <div>
-            <h5>{postInfo.author.name}</h5>
-            <h6>{postInfo.author.user_name}</h6>
+            <h5>{postInfo.author?.name}</h5>
+            <h6>{postInfo.author?.user_name}</h6>
           </div>
         </div>
-        <OptionsDropdown
-          author={postInfo.author}
-          isFollowing={getIsFollowing(postInfo.author.id)}
-          showPublicButtons={showPublicButtons}
-          toggleFollow={toggleFollow}
-          handleBlock={() => {
-            handleBlock(postInfo.author.id, blockMutation)
-          }}
-        />
+        {postInfo.author && (
+          <OptionsDropdown
+            author={postInfo.author}
+            isFollowing={getIsFollowing(postInfo.author.id)}
+            showPublicButtons={showPublicButtons}
+            toggleFollow={toggleFollow}
+            handleBlock={() => {
+              handleBlock(postInfo.author!.id, blockMutation)
+            }}
+          />
+        )}
       </header>
       <div className="mt-4 px-6">
         <p>{postInfo.text}</p>
@@ -120,10 +124,10 @@ export default function ReplyMain({ postInfo, user }: Props) {
       <section className="mt-2 px-6">
         <div className="flex items-center justify-between">
           <CommentsModal
-            commentsCount={postInfo.comments.length}
-            author_avatarUrl={postInfo.author.avatar_url}
-            author_name={postInfo.author.name}
-            author_username={postInfo.author.user_name}
+            commentsCount={postInfo.comments!.length}
+            author_avatarUrl={postInfo.author!.avatar_url}
+            author_name={postInfo.author!.name}
+            author_username={postInfo.author!.user_name}
             post_description={postInfo.text}
             created_at={postInfo.createdAt}
             handleSubmit={handleReply}
@@ -144,7 +148,7 @@ export default function ReplyMain({ postInfo, user }: Props) {
             onClick={() => {
               handleLike(postInfo.id, addLikeMutation, deleteLikeMutation)
             }}
-            likesCount={postInfo.likes.length}
+            likesCount={postInfo.likes!.length}
             isLiked={isLikedLocal}
             isLoading={isLikedloading}
           />
@@ -155,7 +159,7 @@ export default function ReplyMain({ postInfo, user }: Props) {
       <section>
         <ReplyList
           postId={postInfo.id}
-          postAuthorAvatar={postInfo.author.avatar_url}
+          postAuthorAvatar={postInfo.author!.avatar_url}
           userData={userData}
           user={user}
         />
