@@ -99,7 +99,7 @@ type RetweetType = {
   commentId?: string | null
 }
 
-type ImageType = {
+export type ImageType = {
   id: string
   createdAt: Date
   url: string
