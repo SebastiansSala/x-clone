@@ -1,7 +1,7 @@
 import {
   getFollowingPosts,
-  getLikedPostsByUsername,
-  getPostsByUsername,
+  getLikedPostsById,
+  getPostsById,
   getRetweetedPostsByUsername,
 } from '@/actions/posts-get-actions'
 
@@ -18,9 +18,9 @@ type PostTypeFunctions = {
 
 const postTypeFunctions: PostTypeFunctions = {
   following: getFollowingPosts,
-  posts: getPostsByUsername,
+  posts: getPostsById,
   retweets: getRetweetedPostsByUsername,
-  likes: getLikedPostsByUsername,
+  likes: getLikedPostsById,
 }
 
 export const fetchPostFunctions = async (

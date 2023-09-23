@@ -52,7 +52,7 @@ export default function ReplyList({
   const handleSubmit = async () => {
     try {
       if (!input) return
-      if (!userData) return
+      if (!userData) return toast.error('You must be logged in to comment')
       setIsDisabled(true)
       await addCommentMutation.mutateAsync({
         user: userData,

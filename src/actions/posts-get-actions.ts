@@ -95,7 +95,7 @@ export const getRetweetedPostsByUsername = async (
   })
 }
 
-export const getLikedPostsByUsername = async (
+export const getLikedPostsById = async (
   userId: string,
   skip: number,
   take: number,
@@ -105,7 +105,7 @@ export const getLikedPostsByUsername = async (
     where: {
       likes: {
         some: {
-          user_name: userId,
+          id: userId,
         },
       },
     },
@@ -125,7 +125,7 @@ export const getLikedPostsByUsername = async (
   })
 }
 
-export const getPostsByUsername = async (
+export const getPostsById = async (
   userId: string,
   skip: number,
   take: number,
@@ -134,7 +134,7 @@ export const getPostsByUsername = async (
   return await prisma.posts.findMany({
     where: {
       author: {
-        user_name: userId,
+        id: userId,
       },
     },
     include: {
