@@ -10,8 +10,8 @@ import {
   useDisclosure,
 } from '@nextui-org/modal'
 import { useState } from 'react'
-import type { ImageListType } from 'react-images-uploading'
 import { useSelector } from 'react-redux'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 import PostModalBody from './create-post-modal-body'
 import PostModalFooter from './create-post-modal-footer'
@@ -20,18 +20,18 @@ import { createPost } from '@/services/posts-services'
 import PostIcon from '../Icons/utility/post-icon'
 
 import type { RootState } from '@/app/store'
+import type { ImageListType } from 'react-images-uploading'
 
 export default function CreatePostModal() {
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<ImageListType>([])
   const [textarea, setTextarea] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const userData = useSelector((state: RootState) => state.auth.userData)
 
-  const handleImageUpload = (
-    imagesList: ImageListType,
-    addUpdatedIndex: number[] | undefined
-  ) => {
+  const supabase = createClientComponentClient()
+
+  const handleImageUpload = (imagesList: ImageListType) => {
     setImages(imagesList as never[])
   }
 
@@ -45,9 +45,11 @@ export default function CreatePostModal() {
   }
 
   const handleSubmit = async () => {
-    const post = await createPost(textarea, images, userData?.id)
+    const post = await createPost(textarea, images[0].dataURL, userData?.id)
 
     if (!post) return
+    setTextarea('')
+    setImages([])
     onClose()
   }
 
@@ -69,7 +71,6 @@ export default function CreatePostModal() {
         className="bg-black text-white"
       >
         <ModalContent>
-          <ModalHeader></ModalHeader>
           <ModalBody>
             <PostModalBody
               images={images}

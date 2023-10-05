@@ -111,6 +111,7 @@ export default function PostCard({
                 width={240}
                 alt={post.image.url}
                 src={post.image.url}
+                className="w-fit"
               />
             )}
           </section>

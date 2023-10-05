@@ -1,10 +1,8 @@
-import type { ImageListType } from 'react-images-uploading'
-
 import type { PostType, UserType } from '@/types/posts'
 
 export const createPost = async (
   text: string,
-  image?: ImageListType,
+  url?: string,
   userId?: string
 ) => {
   try {
@@ -15,7 +13,7 @@ export const createPost = async (
       },
       body: JSON.stringify({
         text,
-        image,
+        url,
         userId,
       }),
     })

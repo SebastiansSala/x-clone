@@ -56,18 +56,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-type imagesPost = {
-  dataURL: string
-  file: File
-}
-
 export const POST = async (req: NextRequest) => {
   try {
-    const {
-      text,
-      image,
-      userId,
-    }: { text: string; image: imagesPost; userId: string } = await req.json()
+    const { text, url, userId }: { text: string; url: string; userId: string } =
+      await req.json()
 
     if (!text) {
       return NextResponse.json('Invalid data', { status: 400 })
@@ -78,8 +70,6 @@ export const POST = async (req: NextRequest) => {
     }
 
     const post = await createPost(userId, text)
-
-    const url = image.dataURL ?? ''
 
     await updatePostImages(post.id, url)
 

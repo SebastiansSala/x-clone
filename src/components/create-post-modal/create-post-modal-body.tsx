@@ -7,10 +7,10 @@ import Image from 'next/image'
 
 import { RemoveIcon } from '../Icons/utility/remove-icon'
 
+import type { ImageListType } from 'react-images-uploading'
+
 type PostModalBodyProps = {
-  images: {
-    dataURL: string
-  }[]
+  images: any
   removeImage: (index: number) => void
   textarea: string
   handleTextAreaChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -39,7 +39,7 @@ export default function CreatePostModalBody({
       </div>
       {images.length > 0 && (
         <>
-          {images.map((image, index) => (
+          {images.map((image: any, index: any) => (
             <div key={index} className="relative p-4">
               <Image
                 src={image.dataURL}

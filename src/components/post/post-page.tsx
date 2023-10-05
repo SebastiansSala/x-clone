@@ -64,7 +64,6 @@ export default function PostPageMain({ postId, user }: Props) {
 
   const showPublicButtons = userData?.id !== postInfo.authorId
 
-  //get hours and minutes
   const hourCreated = new Date(postInfo.createdAt).getHours()
   const minutesCreated = new Date(postInfo.createdAt).getMinutes()
 
@@ -117,7 +116,13 @@ export default function PostPageMain({ postId, user }: Props) {
       <div className="mt-4 px-6">
         <p>{postInfo.text}</p>
         {postInfo.image && postInfo.image.url && (
-          <Image src={postInfo.image?.url} alt={postInfo.image?.url} />
+          <Image
+            src={postInfo.image?.url}
+            alt={postInfo.image?.url}
+            width={1000}
+            height={1000}
+            className="w-full"
+          />
         )}
         <div className="flex gap-4 text-[#71767b]">
           <p>
